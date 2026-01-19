@@ -23,19 +23,34 @@
 
   <img class="banner"
   src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
+  <!-- ===== RAVI SABHA SUMMARY (NEW) ===== -->
+<div class="summary-section">
+  <div class="summary-title">Ravi Sabha Summary</div>
 
-  <!-- SUMMARY -->
-  <div class="summary-section">
-    <div class="summary-title">Ravi Sabha Summary</div>
-    <div class="summary-wrapper" id="summaryWrapper"></div>
+  <div class="summary-wrapper">
+    ${summaries.map(s => `
+      <div class="summary-card">
+        <img src="${s.pic}">
+        <div class="summary-content">
+          <div class="summary-date">${s.date}</div>
+          <div class="summary-text">${s.text}</div>
+        </div>
+      </div>
+    `).join('')}
   </div>
+</div>
+
+
 
   <div class="section">
     <div class="cards">
+
       <div class="info-card">
         <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_01.jpg">
         <p>
           BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple.
+          With its intricate carvings, peaceful atmosphere, and variety of facilities,
+          it's a popular destination for visitors seeking a unique, enriching experience.
         </p>
       </div>
 
@@ -43,28 +58,35 @@
         <img src="https://drive.google.com/thumbnail?id=1vrUvmlSM098Ns86fLhENSnU6TXZAaVHl">
         <p>
           Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
+          Let us embody his virtues of compassion, kindness, and humility, and make a positive
+          impact on the world.
         </p>
       </div>
 
       <div class="info-card">
         <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg">
         <p>
-          Akshar Purushottam Darshan is a Hindu philosophy that emphasizes devotion to God.
+          Akshar Purushottam Darshan is a Hindu philosophy that emphasizes devotion to God,
+          ethical conduct, and pursuit of self-realization. Discover its transformative power.
         </p>
       </div>
+
     </div>
   </div>
+
 </div>
 
-<!-- PDF HEADER -->
+<!-- SCHEDULE -->
+<!-- PDF HEADER (VISIBLE ONLY IN PDF) -->
 <div id="printHeader">
-  <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg">
+  <img
+    src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg"
+    alt="BAPS Logo"
+  >
   <div class="print-title">
     <h2>BAPS Ravi Sabha Program📜 Arusha</h2>
     <div id="printDate"></div>
   </div>
-</div>
-
 </div>
 <div id="pdfBar" style="max-width:720px;margin:10px auto;text-align:right;">
   <button
@@ -84,14 +106,14 @@
 </div>
 
 <div id="scheduleSection"></div>
-
+<!-- PDF TABLE (PRINT ONLY) -->
 <table id="pdfTable" style="display:none;">
   <thead>
     <tr>
-      <th>Time</th>
-      <th>Duty</th>
-      <th>Assigned To</th>
-      <th>Details</th>
+      <th>Time⏳</th>
+      <th>Duty☑️</th>
+      <th>Assigned To👤</th>
+      <th>Details📝</th>
     </tr>
   </thead>
   <tbody id="pdfTableBody"></tbody>
@@ -120,7 +142,6 @@ const homeSection = document.getElementById("homeSection");
 const scheduleSection = document.getElementById("scheduleSection");
 
 function renderMenu(){
-  menu.innerHTML = "";
   dates.forEach(d=>{
     const b=document.createElement("button");
     b.textContent=d.label;
@@ -129,67 +150,137 @@ function renderMenu(){
   });
 }
 
-function renderSummary(){
-  const wrap=document.getElementById("summaryWrapper");
-  wrap.innerHTML = summaries.map(s=>`
-    <div class="summary-card">
-      <img src="${s.pic}">
-      <div class="summary-content">
-        <div class="summary-date">${s.date}</div>
-        <div class="summary-text">${s.text}</div>
-      </div>
-    </div>
-  `).join("");
-}
-
 function selectDate(key,btn){
   [...menu.children].forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-
-  document.getElementById("pdfBar").style.display="block";
+  document.getElementById("pdfBar").style.display = "block";
   document.getElementById("printDate").innerText =
-    "Date: " + dates.find(d=>d.key===key).label;
-
+  "Date: " + dates.find(d => d.key === key).label;
   homeSection.style.display="none";
   scheduleSection.style.display="block";
   scheduleSection.innerHTML="";
-  document.getElementById("pdfTableBody").innerHTML="";
-
+const pdfBody = document.getElementById("pdfTableBody");
+pdfBody.innerHTML = "";
   rows.filter(r=>r.key===key).forEach(r=>{
-    document.getElementById("pdfTableBody").innerHTML += `
-      <tr>
-        <td>${r.time}</td>
-        <td>${r.task}</td>
-        <td>${r.name}</td>
-        <td>${r.details||""}</td>
-      </tr>
-    `;
+    pdfBody.innerHTML +=
+  "<tr>" +
+    "<td>" + r.time + "</td>" +
+    "<td>" + r.task + "</td>" +
+    "<td>" + r.name + "</td>" +
+    "<td>" + (r.details || "") + "</td>" +
+  "</tr>";
 
-    scheduleSection.innerHTML += `
-      <div class="card">
-        <div class="card-header">${r.task}</div>
-        <div class="card-body">
-          <div class="info-box">👤 ${r.name}</div>
-          ${r.details?`<div class="info-box">📝 ${r.details}</div>`:""}
-          <div class="time-badge">⏱ ${r.time}</div>
-        </div>
-      </div>
-    `;
+    let html =
+  "<div class='card'>" +
+
+    /* ✅ HEADER — MUST STAY */
+    "<div class='card-header " + getDutyClass(r.task) + "'>" +
+  "<span>" + r.task + "</span>" +
+  (r.pic
+    ? "<img class='header-avatar' src='" + r.pic + "'>"
+    : ""
+  ) +
+"</div>" +
+
+
+
+    /* ✅ BODY — ENHANCED CONTENT */
+    "<div class='card-body'>" +
+
+      "<div class='info-box'>" +
+        "<span class='icon'>👤</span>" +
+        "<div><b>Assigned To</b><br>" + r.name + "</div>" +
+      "</div>" +
+
+      (r.details
+        ? "<div class='info-box'>" +
+            "<span class='icon'>📝</span>" +
+            "<div><b>Details</b><br>" + r.details + "</div>" +
+          "</div>"
+        : ""
+      ) +
+
+      "<div class='time-badge'>⏱ " + r.time + "</div>" +
+
+    "</div>";
+
+/* ✅ FOOTER (UNCHANGED) */
+if (r.attachment) {
+  html +=
+    "<div class='card-footer'>" +
+      "<a class='download' href='" + r.attachment + "' target='_blank'>Download</a>" +
+    "</div>";
+}
+
+html += "</div>";
+
+    scheduleSection.innerHTML += html;
   });
 }
 
 function showHome(){
-  homeSection.style.display="block";
   scheduleSection.style.display="none";
-  document.getElementById("pdfBar").style.display="none";
+  document.getElementById("pdfBar").style.display = "none";
+  homeSection.style.display="block";
   [...menu.children].forEach(b=>b.classList.remove("active"));
+}
+
+renderMenu();
+</script>
+<script>
+/* ===== AUTO SCROLL FOR SUMMARY ===== */
+const summaryWrapper = document.querySelector('.summary-wrapper');
+
+if (summaryWrapper) {
+  let scrollSpeed = 0.5;     // speed
+  let direction = 1;        // 1 = right, -1 = left
+  let isPaused = false;
+
+  summaryWrapper.addEventListener('mouseenter', () => isPaused = true);
+  summaryWrapper.addEventListener('mouseleave', () => isPaused = false);
+
+  function autoScrollSummary() {
+    if (!isPaused) {
+      summaryWrapper.scrollLeft += scrollSpeed * direction;
+
+      // Reverse at edges
+      if (
+        summaryWrapper.scrollLeft + summaryWrapper.clientWidth >=
+        summaryWrapper.scrollWidth
+      ) {
+        direction = -1;
+      }
+
+      if (summaryWrapper.scrollLeft <= 0) {
+        direction = 1;
+      }
+    }
+    requestAnimationFrame(autoScrollSummary);
+  }
+
+  autoScrollSummary();
+}
+function getDutyClass(task){
+  const t = task.toLowerCase();
+
+  if(t.includes('emcee')) return 'emcee';
+  if(t.includes('dhun')) return 'dhun';
+  if(t.includes('prarth')) return 'prarthana';
+  if(t.includes('speech')) return 'speech';
+  if(t.includes('kirtan')) return 'kirtan';
+  if(t.includes('aarti')) return 'aarti';
+  if(t.includes('announcement')) return 'announcement';
+
+  return 'default';
 }
 function saveAsPDF(){
   window.print();
 }
 
+
 </script>
 
 </body>
 </html>
+
 
