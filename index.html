@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAPS Ravi Sabha Arusha</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="home-area" onclick="showHome()">
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg">
+    <h1>BAPS RAVI SABHA ARUSHA</h1>
+  </div>
+  <div id="menu"></div>
+</div>
+
+<div id="homeSection">
+  <img class="banner"
+    src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
+
+  <div class="summary-section">
+    <div class="summary-title">Ravi Sabha Summary</div>
+    <div class="summary-wrapper" id="summaryWrapper"></div>
+  </div>
+</div>
+
+<div id="pdfBar" style="display:none;text-align:right;max-width:720px;margin:10px auto;">
+  <button onclick="window.print()">📄 Save Program as PDF</button>
+</div>
+
+<div id="scheduleSection"></div>
+
+<script>
+const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+
+let dates = [];
+let rows = [];
+let summaries = [];
+
+fetch(API_URL)
+  .then(res => res.json())
+  .then(data => {
+    dates = data.dates;
+    rows = data.rows;
+    summaries = data.summaries;
+    renderMenu();
+    renderSummary();
+  });
+
+function renderMenu(){
+  const menu = document.getElementById("menu");
+  menu.innerHTML = "";
+  dates.forEach(d=>{
+    const b=document.createElement("button");
+    b.textContent=d.label;
+    b.onclick=()=>selectDate(d.key,b);
+    menu.appendChild(b);
+  });
+}
+
+function renderSummary(){
+  const wrap = document.getElementById("summaryWrapper");
+  wrap.innerHTML = summaries.map(s=>`
+    <div class="summary-card">
+      <img src="${s.pic}">
+      <div>
+        <div class="summary-date">${s.date}</div>
+        <div class="summary-text">${s.text}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function selectDate(key,btn){
+  [...menu.children].forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+
+  document.getElementById("homeSection").style.display="none";
+  document.getElementById("pdfBar").style.display="block";
+
+  const sec=document.getElementById("scheduleSection");
+  sec.innerHTML="";
+
+  rows.filter(r=>r.key===key).forEach(r=>{
+    sec.innerHTML+=`
+      <div class="card">
+        <div class="card-header">${r.task}</div>
+        <div class="card-body">
+          <div><b>👤 ${r.name}</b></div>
+          <div>📝 ${r.details || ""}</div>
+          <div class="time-badge">⏱ ${r.time}</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function showHome(){
+  document.getElementById("homeSection").style.display="block";
+  document.getElementById("scheduleSection").innerHTML="";
+  document.getElementById("pdfBar").style.display="none";
+}
+</script>
+
+</body>
+</html>
