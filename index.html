@@ -26,18 +26,7 @@
   <!-- ===== RAVI SABHA SUMMARY (NEW) ===== -->
 <div class="summary-section">
   <div class="summary-title">Ravi Sabha Summary</div>
-
-  <div class="summary-wrapper">
-    ${summaries.map(s => `
-      <div class="summary-card">
-        <img src="${s.pic}">
-        <div class="summary-content">
-          <div class="summary-date">${s.date}</div>
-          <div class="summary-text">${s.text}</div>
-        </div>
-      </div>
-    `).join('')}
-  </div>
+  <div class="summary-wrapper"></div>
 </div>
 
 
@@ -282,5 +271,6 @@ function saveAsPDF(){
 
 </body>
 </html>
+
 
 
