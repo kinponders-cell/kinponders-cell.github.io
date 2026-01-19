@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <title>BAPS Ravi Sabha Arusha</title>
 
 <link rel="stylesheet" href="style.css">
@@ -9,6 +9,7 @@
 
 <body>
 
+<!-- TOP BAR -->
 <div class="topbar">
   <div class="home-area" onclick="showHome()">
     <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg">
@@ -17,21 +18,70 @@
   <div id="menu"></div>
 </div>
 
+<!-- HOME -->
 <div id="homeSection">
-  <img class="banner"
-    src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
 
+  <img class="banner"
+  src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
+
+  <!-- SUMMARY -->
   <div class="summary-section">
     <div class="summary-title">Ravi Sabha Summary</div>
     <div class="summary-wrapper" id="summaryWrapper"></div>
   </div>
+
+  <div class="section">
+    <div class="cards">
+      <div class="info-card">
+        <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_01.jpg">
+        <p>
+          BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <img src="https://drive.google.com/thumbnail?id=1vrUvmlSM098Ns86fLhENSnU6TXZAaVHl">
+        <p>
+          Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg">
+        <p>
+          Akshar Purushottam Darshan is a Hindu philosophy that emphasizes devotion to God.
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div id="pdfBar" style="display:none;text-align:right;max-width:720px;margin:10px auto;">
+<!-- PDF HEADER -->
+<div id="printHeader">
+  <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg">
+  <div class="print-title">
+    <h2>BAPS Ravi Sabha Program📜 Arusha</h2>
+    <div id="printDate"></div>
+  </div>
+</div>
+
+<div id="pdfBar" style="max-width:720px;margin:10px auto;text-align:right;display:none;">
   <button onclick="window.print()">📄 Save Program as PDF</button>
 </div>
 
 <div id="scheduleSection"></div>
+
+<table id="pdfTable" style="display:none;">
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Duty</th>
+      <th>Assigned To</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody id="pdfTableBody"></tbody>
+</table>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzE3OI3YhAArf_dqauP33K_hTN6GFK_tTuAG-Rr3vCLhvvWOKJtinavDcfZ_Dn7CpLA/exec";
@@ -43,15 +93,19 @@ let summaries = [];
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
-    dates = data.dates;
-    rows = data.rows;
-    summaries = data.summaries;
+    dates = data.dates || [];
+    rows = data.rows || [];
+    summaries = data.summaries || [];
     renderMenu();
     renderSummary();
-  });
+  })
+  .catch(err => console.error(err));
+
+const menu = document.getElementById("menu");
+const homeSection = document.getElementById("homeSection");
+const scheduleSection = document.getElementById("scheduleSection");
 
 function renderMenu(){
-  const menu = document.getElementById("menu");
   menu.innerHTML = "";
   dates.forEach(d=>{
     const b=document.createElement("button");
@@ -62,11 +116,11 @@ function renderMenu(){
 }
 
 function renderSummary(){
-  const wrap = document.getElementById("summaryWrapper");
+  const wrap=document.getElementById("summaryWrapper");
   wrap.innerHTML = summaries.map(s=>`
     <div class="summary-card">
       <img src="${s.pic}">
-      <div>
+      <div class="summary-content">
         <div class="summary-date">${s.date}</div>
         <div class="summary-text">${s.text}</div>
       </div>
@@ -78,19 +132,31 @@ function selectDate(key,btn){
   [...menu.children].forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 
-  document.getElementById("homeSection").style.display="none";
   document.getElementById("pdfBar").style.display="block";
+  document.getElementById("printDate").innerText =
+    "Date: " + dates.find(d=>d.key===key).label;
 
-  const sec=document.getElementById("scheduleSection");
-  sec.innerHTML="";
+  homeSection.style.display="none";
+  scheduleSection.style.display="block";
+  scheduleSection.innerHTML="";
+  document.getElementById("pdfTableBody").innerHTML="";
 
   rows.filter(r=>r.key===key).forEach(r=>{
-    sec.innerHTML+=`
+    document.getElementById("pdfTableBody").innerHTML += `
+      <tr>
+        <td>${r.time}</td>
+        <td>${r.task}</td>
+        <td>${r.name}</td>
+        <td>${r.details||""}</td>
+      </tr>
+    `;
+
+    scheduleSection.innerHTML += `
       <div class="card">
         <div class="card-header">${r.task}</div>
         <div class="card-body">
-          <div><b>👤 ${r.name}</b></div>
-          <div>📝 ${r.details || ""}</div>
+          <div class="info-box">👤 ${r.name}</div>
+          ${r.details?`<div class="info-box">📝 ${r.details}</div>`:""}
           <div class="time-badge">⏱ ${r.time}</div>
         </div>
       </div>
@@ -99,13 +165,12 @@ function selectDate(key,btn){
 }
 
 function showHome(){
-  document.getElementById("homeSection").style.display="block";
-  document.getElementById("scheduleSection").innerHTML="";
+  homeSection.style.display="block";
+  scheduleSection.style.display="none";
   document.getElementById("pdfBar").style.display="none";
+  [...menu.children].forEach(b=>b.classList.remove("active"));
 }
 </script>
 
 </body>
 </html>
-
-
