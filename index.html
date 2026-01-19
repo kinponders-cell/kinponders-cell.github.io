@@ -227,6 +227,18 @@ if (summaryWrapper) {
 
   summaryWrapper.addEventListener('mouseenter', () => isPaused = true);
   summaryWrapper.addEventListener('mouseleave', () => isPaused = false);
+  function renderSummary(){
+  const wrap=document.getElementById("summaryWrapper");
+  wrap.innerHTML = summaries.map(s=>`
+    <div class="summary-card">
+      <img src="${s.pic}">
+      <div class="summary-content">
+        <div class="summary-date">${s.date}</div>
+        <div class="summary-text">${s.text}</div>
+      </div>
+    </div>
+  `).join("");
+}
 
   function autoScrollSummary() {
     if (!isPaused) {
@@ -271,6 +283,7 @@ function saveAsPDF(){
 
 </body>
 </html>
+
 
 
 
