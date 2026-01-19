@@ -65,8 +65,22 @@
   </div>
 </div>
 
-<div id="pdfBar" style="max-width:720px;margin:10px auto;text-align:right;display:none;">
-  <button onclick="window.print()">📄 Save Program as PDF</button>
+</div>
+<div id="pdfBar" style="max-width:720px;margin:10px auto;text-align:right;">
+  <button
+    onclick="saveAsPDF()"
+    style="
+      background:#065f46;
+      color:white;
+      padding:10px 18px;
+      border:none;
+      border-radius:999px;
+      font-size:14px;
+      cursor:pointer;
+    "
+  >
+    📄 Save Program as PDF
+  </button>
 </div>
 
 <div id="scheduleSection"></div>
@@ -174,3 +188,4 @@ function showHome(){
 
 </body>
 </html>
+
