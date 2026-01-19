@@ -138,6 +138,18 @@ function renderMenu(){
     menu.appendChild(b);
   });
 }
+function renderSummary(){
+  const wrap=document.getElementById("summaryWrapper");
+  wrap.innerHTML = summaries.map(s=>`
+    <div class="summary-card">
+      <img src="${s.pic}">
+      <div class="summary-content">
+        <div class="summary-date">${s.date}</div>
+        <div class="summary-text">${s.text}</div>
+      </div>
+    </div>
+  `).join("");
+}
 
 function selectDate(key,btn){
   [...menu.children].forEach(b=>b.classList.remove("active"));
@@ -217,50 +229,8 @@ function showHome(){
 renderMenu();
 </script>
 <script>
-/* ===== AUTO SCROLL FOR SUMMARY ===== */
-const summaryWrapper = document.querySelector('.summarywrapper');
-
-if (summaryWrapper) {
-  let scrollSpeed = 0.5;     // speed
-  let direction = 1;        // 1 = right, -1 = left
-  let isPaused = false;
-
-  summaryWrapper.addEventListener('mouseenter', () => isPaused = true);
-  summaryWrapper.addEventListener('mouseleave', () => isPaused = false);
-  function renderSummary(){
-  const wrap=document.getElementById("summaryWrapper");
-  wrap.innerHTML = summaries.map(s=>`
-    <div class="summary-card">
-      <img src="${s.pic}">
-      <div class="summary-content">
-        <div class="summary-date">${s.date}</div>
-        <div class="summary-text">${s.text}</div>
-      </div>
-    </div>
-  `).join("");
-}
-
-  function autoScrollSummary() {
-    if (!isPaused) {
-      summaryWrapper.scrollLeft += scrollSpeed * direction;
-
-      // Reverse at edges
-      if (
-        summaryWrapper.scrollLeft + summaryWrapper.clientWidth >=
-        summaryWrapper.scrollWidth
-      ) {
-        direction = -1;
-      }
-
-      if (summaryWrapper.scrollLeft <= 0) {
-        direction = 1;
-      }
-    }
-    requestAnimationFrame(autoScrollSummary);
-  }
-
-  autoScrollSummary();
-}
+  
+  
 function getDutyClass(task){
   const t = task.toLowerCase();
 
@@ -283,6 +253,7 @@ function saveAsPDF(){
 
 </body>
 </html>
+
 
 
 
