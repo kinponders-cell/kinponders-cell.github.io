@@ -882,8 +882,23 @@ body{
     display:none !important;
   }
 }
+/* ===== ACTION BAR SLIDE ANIMATION ===== */
+#scheduleActionBar{
+  transform:translateY(-20px);
+  opacity:0;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+}
+
+/* Visible state */
+#scheduleActionBar.show{
+  transform:translateY(0);
+  opacity:1;
+}
 
 
 </style>
+
 
 
