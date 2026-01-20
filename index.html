@@ -17,6 +17,20 @@
   </div>
   <div id="menu"></div>
 </div>
+  <!-- SCHEDULE ACTION BAR (STICKY) -->
+<div id="scheduleActionBar">
+  <input
+    id="searchInput"
+    type="text"
+    placeholder="🔍 Search by name"
+    oninput="filterByName()"
+  >
+
+  <button onclick="saveAsPDF()">
+    📄 Download as PDF
+  </button>
+</div>
+
 
 <!-- HOME -->
 <div id="homeSection">
@@ -194,9 +208,9 @@ pdfBody.innerHTML = "";
     "<div class='card-body'>" +
 
       "<div class='info-box'>" +
-        "<span class='icon'>👤</span>" +
-        "<div><b>Assigned To</b><br>" + r.name + "</div>" +
-      "</div>" +
+    "<span class='icon'>👤</span>" +
+    "<strong>" + r.name + "</strong>" +
+    "</div>" +
 
       (r.details
         ? "<div class='info-box'>" +
@@ -258,6 +272,7 @@ function saveAsPDF(){
 
 </body>
 </html>
+
 
 
 
