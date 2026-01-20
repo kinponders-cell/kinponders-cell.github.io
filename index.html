@@ -289,9 +289,9 @@ function renderScheduleFiltered(searchText = ""){
           "<div class='card-body'>" +
 
             "<div class='info-box'>" +
-              "<span class='icon'>👤</span>" +
-              "<div><b>Assigned To</b><br>" + r.name + "</div>" +
-            "</div>" +
+        "<span class='icon'>👤</span>" +
+        "<strong>" + r.name + "</strong>" +
+        "</div>" +
 
             (r.details
               ? "<div class='info-box'>" +
@@ -335,6 +335,7 @@ document.getElementById("scheduleActionBar").style.display = "none";
 
 </body>
 </html>
+
 
 
 
