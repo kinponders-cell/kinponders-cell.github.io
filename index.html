@@ -162,7 +162,18 @@ function selectDate(key,btn){
   [...menu.children].forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   document.getElementById("pdfBar").style.display = "block";
-  document.getElementById("scheduleActionBar").style.display = "flex";
+  const bar = document.getElementById("scheduleActionBar");
+bar.style.display = "flex";
+
+// allow DOM paint, then animate
+setTimeout(() => {
+  bar.classList.add("show");
+
+  // auto-focus search box
+  const input = document.getElementById("searchInput");
+  if (input) input.focus();
+}, 10);
+
   document.getElementById("printDate").innerText =
   "Date: " + dates.find(d => d.key === key).label;
   homeSection.style.display="none";
@@ -234,7 +245,13 @@ function filterByName(){
 
 function showHome(){
   scheduleSection.style.display="none";
-  document.getElementById("scheduleActionBar").style.display = "none";
+  const bar = document.getElementById("scheduleActionBar");
+bar.classList.remove("show");
+
+// wait for animation to finish, then hide
+setTimeout(() => {
+  bar.style.display = "none";
+}, 300);
   document.getElementById("pdfBar").style.display = "none";
   homeSection.style.display="block";
   [...menu.children].forEach(b=>b.classList.remove("active"));
@@ -335,6 +352,7 @@ document.getElementById("scheduleActionBar").style.display = "none";
 
 </body>
 </html>
+
 
 
 
