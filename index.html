@@ -168,10 +168,6 @@ bar.style.display = "flex";
 // allow DOM paint, then animate
 setTimeout(() => {
   bar.classList.add("show");
-
-  // auto-focus search box
-  const input = document.getElementById("searchInput");
-  if (input) input.focus();
 }, 10);
 
   document.getElementById("printDate").innerText =
@@ -352,6 +348,7 @@ document.getElementById("scheduleActionBar").style.display = "none";
 
 </body>
 </html>
+
 
 
 
