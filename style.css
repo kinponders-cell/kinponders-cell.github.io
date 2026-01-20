@@ -896,9 +896,28 @@ body{
   transform:translateY(0);
   opacity:1;
 }
+/* ===== SEARCH PLACEHOLDER ANIMATION ===== */
+#scheduleActionBar input{
+  position:relative;
+}
+
+/* Default placeholder */
+#scheduleActionBar input::placeholder{
+  color:#6b7280;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* On focus: subtle slide + fade */
+#scheduleActionBar input:focus::placeholder{
+  opacity:0;
+  transform:translateX(8px);
+}
 
 
 </style>
+
 
 
 
