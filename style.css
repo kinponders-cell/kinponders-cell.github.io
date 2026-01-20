@@ -829,6 +829,55 @@ body{
     margin:10mm;
   }
 }
+/* ===== SCHEDULE ACTION BAR ===== */
+#scheduleActionBar{
+  position:sticky;
+  top:64px;                    /* below main header */
+  z-index:45;
+  display:none;                /* shown only on schedule */
+  background:linear-gradient(
+    135deg,
+    #ffedd5,
+    #fed7aa,
+    #fdba74
+  );
+  padding:12px 16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+
+/* Search input */
+#scheduleActionBar input{
+  padding:10px 16px;
+  border-radius:999px;
+  border:none;
+  outline:none;
+  font-size:14px;
+  width:220px;
+}
+
+/* PDF button */
+#scheduleActionBar button{
+  background:#065f46;
+  color:white;
+  padding:10px 20px;
+  border:none;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+  transition:.25s ease;
+}
+
+#scheduleActionBar button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
 
 
 </style>
+
