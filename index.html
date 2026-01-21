@@ -147,10 +147,10 @@ function renderMenu(){
 function renderSummary(){
   const wrap=document.getElementById("summaryWrapper");
   wrap.innerHTML = summaries.map(s=>`
-    <div class="summary-card">
+    <div class="summary-card" onclick="openFromSummary('${s.key}')">
       <img src="${s.pic}">
       <div class="summary-content">
-        <div class="summary-date">${s.date}</div>
+        <div class="summary-date">${s.label}</div>
         <div class="summary-text">${s.text}</div>
       </div>
     </div>
@@ -256,7 +256,23 @@ setTimeout(() => {
 renderMenu();
 </script>
 <script>
-  
+  function openFromSummary(dateKey){
+
+  // Find matching date button
+  const buttons = [...menu.children];
+  const btn = buttons.find(b => {
+    return dates.find(d => d.key === dateKey && b.textContent === d.label);
+  });
+
+  if (!btn) return;
+
+  // Trigger same behavior as clicking date button
+  selectDate(dateKey, btn);
+
+  // Scroll to top smoothly
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
   
 function getDutyClass(task){
   const t = task.toLowerCase();
@@ -348,6 +364,7 @@ document.getElementById("scheduleActionBar").style.display = "none";
 
 </body>
 </html>
+
 
 
 
