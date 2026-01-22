@@ -154,6 +154,19 @@ function renderSummary(){
       <div class="summary-content">
         <div class="summary-date">${s.label}
         ${s.isToday ? "<span class='today-badge'>TODAY</span>" : ""}</div>
+        ${(() => {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const target = new Date(s.key);
+  target.setHours(0,0,0,0);
+
+  const daysLeft = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+  return (!s.isToday && daysLeft > 0)
+    ? `<div class="countdown">${daysLeft} days left</div>`
+    : "";
+})()}
         <div class="summary-text">${s.text}</div>
       </div>
     </div>
@@ -437,6 +450,7 @@ if (summaryWrapper) {
 
 </body>
 </html>
+
 
 
 
