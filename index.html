@@ -367,12 +367,45 @@ function renderScheduleFiltered(searchText = ""){
 }
 // Hide schedule action bar on initial load
 document.getElementById("scheduleActionBar").style.display = "none";
+/* ===== AUTO SCROLL FOR SUMMARY ===== */
+const summaryWrapper = document.querySelector('.summary-wrapper');
+
+if (summaryWrapper) {
+  let scrollSpeed = 0.5;     // speed
+  let direction = 1;        // 1 = right, -1 = left
+  let isPaused = false;
+
+  summaryWrapper.addEventListener('mouseenter', () => isPaused = true);
+  summaryWrapper.addEventListener('mouseleave', () => isPaused = false);
+
+  function autoScrollSummary() {
+    if (!isPaused) {
+      summaryWrapper.scrollLeft += scrollSpeed * direction;
+
+      // Reverse at edges
+      if (
+        summaryWrapper.scrollLeft + summaryWrapper.clientWidth >=
+        summaryWrapper.scrollWidth
+      ) {
+        direction = -1;
+      }
+
+      if (summaryWrapper.scrollLeft <= 0) {
+        direction = 1;
+      }
+    }
+    requestAnimationFrame(autoScrollSummary);
+  }
+
+  autoScrollSummary();
+}
 
 
 </script>
 
 </body>
 </html>
+
 
 
 
