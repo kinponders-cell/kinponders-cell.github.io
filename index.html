@@ -105,6 +105,8 @@
 <table id="pdfTable" style="display:none;">
   <thead>
     <tr>
+       <th>Start</th>
+      <th>End</th>
       <th>Time⏳</th>
       <th>Duty☑️</th>
       <th>Assigned To👤</th>
@@ -304,7 +306,7 @@ function renderScheduleFiltered(searchText = ""){
   rows
     .filter(r => r.key === activeDateKey)
     .filter(r => !q || r.name.toLowerCase().includes(q))
-    .forEach(r => {
+    .forEach(r => {  
 
       // ----- SCREEN CARD -----
       let html =
@@ -316,7 +318,12 @@ function renderScheduleFiltered(searchText = ""){
           "</div>" +
 
           "<div class='card-body'>" +
-
+        (r.startTime && r.endTime
+  ? "<div class='time-range'>🕘 <span>" +
+      r.startTime + "</span> – <span>" + r.endTime +
+    "</span></div>"
+  : ""
+) +
             "<div class='info-box'>" +
         "<span class='icon'>👤</span>" +
         "<strong>" + r.name + "</strong>" +
@@ -348,6 +355,8 @@ function renderScheduleFiltered(searchText = ""){
       if (pdfBody) {
         pdfBody.innerHTML +=
           "<tr>" +
+            "<td>" + r.startTime + "</td>" +
+           "<td>" + r.endTime + "</td>" +
             "<td>" + r.time + "</td>" +
             "<td>" + r.task + "</td>" +
             "<td>" + r.name + "</td>" +
@@ -364,6 +373,7 @@ document.getElementById("scheduleActionBar").style.display = "none";
 
 </body>
 </html>
+
 
 
 
