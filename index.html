@@ -117,7 +117,7 @@
 </table>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzKIBAiWu-jbO2W3KVP-zwRmuf5nbKrRv1d3hCjW3DBsmbylB9uh_4m_Aa8M4ZCsYi7/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwgfFdJ_j0D5cB6J6cbAgdr_Jfc_euvyNWFSdl-ijtfVVr93BG8PlRPp1xVXsMs9Zem/exec";
 let activeDateKey = null;
 let dates = [];
 let rows = [];
@@ -152,7 +152,8 @@ function renderSummary(){
     <div class="summary-card" onclick="openFromSummary('${s.key}')">
       <img src="${s.pic}">
       <div class="summary-content">
-        <div class="summary-date">${s.label}</div>
+        <div class="summary-date">${s.label}
+        ${s.isToday ? "<span class='today-badge'>TODAY</span>" : ""}</div>
         <div class="summary-text">${s.text}</div>
       </div>
     </div>
@@ -436,6 +437,7 @@ if (summaryWrapper) {
 
 </body>
 </html>
+
 
 
 
