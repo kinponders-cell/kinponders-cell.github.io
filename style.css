@@ -914,9 +914,28 @@ body{
   opacity:0;
   transform:translateX(8px);
 }
+/* ===== START & END TIME BOX ===== */
+.time-range{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#fff;
+  border-radius:14px;
+  padding:10px 14px;
+  margin-bottom:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  font-size:14px;
+  color:#374151;
+}
+
+.time-range span{
+  font-weight:600;
+  color:#065f46;
+}
 
 
 </style>
+
 
 
 
