@@ -298,7 +298,7 @@ function renderScheduleFiltered(searchText = ""){
 
   const q = searchText.toLowerCase().trim();
   scheduleSection.innerHTML = "";
-
+  let totalMinutes = 0;
   // Prepare PDF table
   const pdfBody = document.getElementById("pdfTableBody");
   if (pdfBody) pdfBody.innerHTML = "";
@@ -306,7 +306,25 @@ function renderScheduleFiltered(searchText = ""){
   rows
     .filter(r => r.key === activeDateKey)
     .filter(r => !q || r.name.toLowerCase().includes(q))
-    .forEach(r => {  
+    .forEach(r => {
+      // ===== ADD DUTY DURATION TO TOTAL =====
+if (r.startTime && r.endTime) {
+
+  const [sh, sm] = r.startTime.split(":").map(Number);
+  const [eh, em] = r.endTime.split(":").map(Number);
+
+  const start = new Date();
+  start.setHours(sh, sm, 0, 0);
+
+  const end = new Date();
+  end.setHours(eh, em, 0, 0);
+
+  const diffMinutes = (end - start) / (1000 * 60);
+
+  if (!isNaN(diffMinutes) && diffMinutes > 0) {
+    totalMinutes += diffMinutes;
+  }
+}
 
       // ----- SCREEN CARD -----
       let html =
@@ -364,6 +382,19 @@ function renderScheduleFiltered(searchText = ""){
           "</tr>";
       }
     });
+  // ===== SHOW TOTAL PROGRAM DURATION =====
+// ===== SHOW TOTAL PROGRAM DURATION =====
+if (totalMinutes > 0) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  scheduleSection.innerHTML +=
+    "<div class='total-duration'>" +
+      "🧮 Total Program Duration: <b>" +
+      (hours ? hours + " hr " : "") +
+      minutes + " min</b>" +
+    "</div>";
+}
 }
 // Hide schedule action bar on initial load
 document.getElementById("scheduleActionBar").style.display = "none";
@@ -405,6 +436,7 @@ if (summaryWrapper) {
 
 </body>
 </html>
+
 
 
 
