@@ -943,18 +943,23 @@ body{
   color:#065f46;
   box-shadow:0 6px 16px rgba(0,0,0,.1);
 }
+/* ===== TODAY BADGE (HOME SUMMARY) ===== */
 .today-badge{
-  background:#22c55e;
-  color:white;
+  display:inline-block;          /* 🔑 REQUIRED for shape */
+  background:#22c55e;            /* green */
+  color:#ffffff;
   padding:4px 10px;
-  border-radius:999px;
-  font-size:12px;
+  border-radius:999px;           /* pill shape */
+  font-size:11px;
   font-weight:700;
   margin-left:8px;
+  line-height:1;
+  vertical-align:middle;
 }
 
 
 </style>
+
 
 
 
