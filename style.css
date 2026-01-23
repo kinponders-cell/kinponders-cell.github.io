@@ -1102,8 +1102,16 @@ body{
     transform:translateY(-3px);
   }
 }
+@media (prefers-reduced-motion: reduce){
+  .today-badge,
+  .countdown{
+    animation:none !important;
+    -webkit-animation:none !important;
+  }
+}
 
 </style>
+
 
 
 
