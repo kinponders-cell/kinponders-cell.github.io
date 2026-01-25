@@ -24,7 +24,7 @@
         // ==========================================
         // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbx2xDVJe0G5h-T0n39_UX2GUHfntIvsPUaCh6PIuiWOgJWBIMN3AtbFUnqypeUnp2OR/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbwNLdhMjc9fSMxvGrYQEygEnNTl0-_O8AnHh7t3Vr0VjLNZmuDNxRy2sWCj4qYpJLLN/exec";
 
         // State Variables
         let IS_ADMIN = false;
@@ -397,15 +397,25 @@
                     }
                 });
 
-            if (totalMinutes > 0) {
+            // Add Total Duration to PDF Table
+            if (pdfBody) {
                 const hours = Math.floor(totalMinutes / 60);
                 const minutes = totalMinutes % 60;
-                scheduleSection.innerHTML +=
-                    `<div class='total-duration'>
-        🧮 Total Program Duration: <b>${hours ? hours + " hr " : ""}${minutes} min</b>
-      </div>`;
+                const durationText = (hours ? hours + " hr " : "") + minutes + " min";
+
+                pdfBody.innerHTML +=
+                    `<tr style="background-color:#ecfdf5; font-weight:bold;">
+                            <td colspan="5" style="text-align:right;">Total Program Duration:</td>
+                            <td>${durationText}</td>
+                        </tr>`;
             }
+
+            scheduleSection.innerHTML +=
+                `<div class='total-duration'>
+        🧮 Total Program Duration: <b>${Math.floor(totalMinutes / 60) ? Math.floor(totalMinutes / 60) + " hr " : ""}${totalMinutes % 60} min</b>
+      </div>`;
         }
+
 
         function renderMenu() {
             menu.innerHTML = "";
@@ -471,7 +481,7 @@
 
         function renderLoadBalance(forceDateKey = null) {
             // Note: IS_ADMIN will likely be false in static mode unless we impl auth
-            // if (!IS_ADMIN) return;
+            if (!IS_ADMIN) return;
 
             const dateKeyToUse = forceDateKey || activeDateKey;
             if (!dateKeyToUse) return;
