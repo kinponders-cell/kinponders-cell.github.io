@@ -39,7 +39,7 @@
         style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:20px;">
         <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" width="80"
             style="animation:pulse 1.5s infinite;">
-        <div style="font-weight:600;color:#f59e0b;">BAPS RAVI SABHA ARUSHA...</div>
+        <div style="font-weight:600;color:#f59e0b;">Loading Sabha Data...</div>
     </div>
 
     <style>
@@ -66,7 +66,10 @@
             <h1>BAPS RAVI SABHA ARUSHA</h1>
         </div>
         <div id="menu"></div>
-        <!-- Buttons moved to #menu -->
+        <div class="nav-actions">
+            <button class="dash-btn" onclick="openDashboard()">Dashboard</button>
+            <button class="entry-btn" onclick="openAttendance()">Entry</button>
+        </div>
     </div>
 
     <!-- SCHEDULE ACTION BAR (STICKY) -->
@@ -75,7 +78,7 @@
             style="padding:10px 16px; border-radius:999px; border:none; outline:none; font-size:14px; width:220px;">
         <button onclick="saveAsPDF()"
             style="background:#065f46; color:white; padding:10px 20px; border:none; border-radius:999px; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.25);">
-            <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4" style="height: 25px">Download as PDF
+            📄 Download as PDF
         </button>
     </div>
 
@@ -181,7 +184,7 @@
 
         <!-- SUMMARY SECTION -->
         <div class="summary-section">
-            <div class="summary-title">Upcoming Events<img src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
+            <div class="summary-title">Ravi Sabha Summary</div>
             <div class="summary-wrapper" id="summaryContainer">
                 <!-- Injected via JS -->
             </div>
@@ -236,10 +239,10 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th>Time⌛</th>
-                <th>Duty☑️</th>
-                <th>Assigned To👤</th>
-                <th>Details📝</th>
+                <th>Time</th>
+                <th>Duty</th>
+                <th>Assigned To</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
@@ -403,7 +406,7 @@
                 const hours = Math.floor(totalMinutes / 60);
                 const minutes = totalMinutes % 60;
                 const durationText = (hours ? hours + " hr " : "") + minutes + " min";
-                pdfDurationDiv.innerHTML = `<b>Total Program Duration⏰:</b> ${durationText}`;
+                pdfDurationDiv.innerHTML = `<b>Total Program Duration:</b> ${durationText}`;
             }
 
             scheduleSection.innerHTML +=
@@ -415,29 +418,12 @@
 
         function renderMenu() {
             menu.innerHTML = "";
-
-            // 1. Date Buttons
             dates.forEach(d => {
                 const b = document.createElement("button");
                 b.textContent = d.label;
-                b.className = "date-btn";
                 b.onclick = () => selectDate(d.key, b);
                 menu.appendChild(b);
             });
-
-            // 2. Dashboard Button
-            const dashBtn = document.createElement("button");
-            dashBtn.innerHTML = "<img src="https://drive.google.com/thumbnail?id=1QdPVDf7Znv914wjleOBHWVw-U4EmG7Te" style="height: 25px">Dashboard";
-            dashBtn.className = "action-btn dash-btn";
-            dashBtn.onclick = openDashboard;
-            menu.appendChild(dashBtn);
-
-            // 3. Entry Button
-            const entryBtn = document.createElement("button");
-            entryBtn.innerHTML = "<img src="https://drive.google.com/thumbnail?id=1B3OTQQL73-T_SctuGqS4MSnd198iZ2X8" style="height: 25px">Entry";
-            entryBtn.className = "action-btn entry-btn";
-            entryBtn.onclick = openAttendance;
-            menu.appendChild(entryBtn);
         }
 
         function selectDate(key, btn) {
@@ -560,7 +546,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "kinpatel") {
+            if (pass !== "baps123") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -679,7 +665,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "kinpatel") {
+            if (pass === "baps123") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -720,9 +706,9 @@
                 data: {
                     labels: data.labels,
                     datasets: [
-                        { label: 'Gents👦🏻', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+                        { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
                     ]
                 },
                 options: {
@@ -766,7 +752,4 @@
 </body>
 
 </html>
-
-
-
 
