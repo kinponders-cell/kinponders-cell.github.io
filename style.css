@@ -73,11 +73,6 @@ body {
         padding: 10px 14px;
         gap: 10px;
     }
-
-    .nav-actions button {
-        padding: 8px 12px;
-        font-size: 13px;
-    }
 }
 
 /* BUTTONS */
@@ -134,7 +129,7 @@ body {
 }
 
 #menu button {
-    padding: 8px 18px;
+    padding: 8px 16px;
     border: none;
     border-radius: 999px;
     background: #ecfdf5;
@@ -142,12 +137,51 @@ body {
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
-    /* Prevent text wrapping */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     font-size: 14px;
     flex-shrink: 0;
-    /* Don't shrink buttons */
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#menu button:hover {
+    background: #d1fae5;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+#menu button.active {
+    background: linear-gradient(135deg, var(--green), var(--dark));
+    color: white;
+    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.4);
+    transform: scale(1.05);
+}
+
+/* Action Buttons specific styles */
+#menu button.action-btn {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#menu button.dash-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+#menu button.dash-btn:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+#menu button.entry-btn {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+#menu button.entry-btn:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
 }
 
 #menu button:hover {
@@ -1108,38 +1142,4 @@ body {
     border-radius: 99px;
     font-weight: 700;
     font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    letter-spacing: 0.5px;
-}
-
-.dash-btn {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    color: white;
-}
-
-.dash-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(79, 70, 229, 0.4);
-}
-
-.entry-btn {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
-}
-
-.entry-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(245, 158, 11, 0.4);
-}
-
-#attendanceLoadWrapper {
-    margin-top: 40px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.3s forwards;
-}
-
-.hidden {
-    display: none;
-}
+ 
