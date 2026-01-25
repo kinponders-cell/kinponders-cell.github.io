@@ -12,11 +12,15 @@
 <body>
 
 <script>
-  // Placeholder for API data injection
-  // You will need to update this section to fetch data from Code.gs using google.script.run
-  // or simple template variables
-  const IS_ADMIN = ${isAdmin};
-</script>
+    // ⚠️ REPLACE THIS URL AFTER DEPLOYING APPS SCRIPT AS WEB APP
+    const API_URL = "https://script.google.com/macros/s/AKfycbzfeA_7t_-I5HsDKzy8WBdBqqM-9uOSFM8NsRogaickBYW4BSkgUdpsaFZC4hqIoj0g/exec";
+
+    // Global Data Containers
+    let dates = [];
+    let rows = [];
+    let summaries = [];
+    let IS_ADMIN = false; // GitHub Pages version is public, Admin features hidden by default logic
+  </script>
 
 <!-- TOP BAR -->
 <div class="topbar">
@@ -962,3 +966,4 @@ function renderDashboard(data) {
 
 </body>
 </html>
+
