@@ -34,6 +34,8 @@
     </div>
 
     <div id="menu"></div>
+    <!-- MOBILE DROPDOWN (Visible on small screens) -->
+    <select id="mobileMenu" onchange="selectDate(this.value, null)"></select>
 
     <div class="nav-actions">
       <button class="dash-btn" onclick="openDashboard()">Dashboard</button>
@@ -378,299 +380,319 @@
       } else {
         const d = document.getElementById("printDuration");
         if (d) d.remove();
-      }
-    }
+      </div >
+    </div >
 
-    function renderMenu() {
-      menu.innerHTML = "";
-      dates.forEach(d => {
-        const b = document.createElement("button");
-        b.textContent = d.label;
-        b.onclick = () => selectDate(d.key, b);
-        menu.appendChild(b);
-      });
-    }
+          function renderMenu() {
+            menu.innerHTML = "";
+            dates.forEach(d => {
+              const b = document.createElement("button");
+              b.textContent = d.label;
+              b.onclick = () => selectDate(d.key, b);
+              menu.appendChild(b);
+            });
 
-    function selectDate(key, btn) {
-      hideAllPages();
-      activeDateKey = key;
-      [...menu.children].forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+            // Mobile Dropdown Populate
+            const mobileSel = document.getElementById("mobileMenu");
+            mobileSel.innerHTML = "<option value='' disabled selected>📅 Select Date</option>";
+            dates.forEach(d => {
+              const opt = document.createElement("option");
+              opt.value = d.key;
+              opt.textContent = d.label;
+              mobileSel.appendChild(opt);
+            });
+          }
 
-      const bar = document.getElementById("scheduleActionBar");
-      bar.style.display = "flex";
-      setTimeout(() => { bar.classList.add("show"); }, 10);
+        function selectDate(key, btn) {
+          hideAllPages();
+          activeDateKey = key;
 
-      document.getElementById("printDate").innerText = "Date: " + dates.find(d => d.key === key).label;
-      scheduleSection.style.display = "block";
+          // Desktop Update
+          [...menu.children].forEach(b => b.classList.remove("active"));
+          if (btn) {
+            btn.classList.add("active");
+          } else {
+            // Find button matching key if triggered from dropdown
+            const matchingBtn = [...menu.children].find(b => b.textContent === dates.find(d => d.key === key).label);
+            if (matchingBtn) matchingBtn.classList.add("active");
+          }
 
-      renderScheduleFiltered();
-    }
+          // Mobile Update
+          document.getElementById("mobileMenu").value = key;
 
-    function filterByName() {
-      const val = document.getElementById("searchInput").value;
-      renderScheduleFiltered(val);
-    }
+          const bar = document.getElementById("scheduleActionBar");
+          bar.style.display = "flex";
+          setTimeout(() => { bar.classList.add("show"); }, 10);
 
-    function showHome() {
-      hideAllPages();
-      document.getElementById("scheduleActionBar").style.display = "none";
-      homeSection.style.display = "block";
-      [...menu.children].forEach(b => b.classList.remove("active"));
-    }
+          document.getElementById("printDate").innerText = "Date: " + dates.find(d => d.key === key).label;
+          scheduleSection.style.display = "block";
 
-    function setupAutoScroll(el) {
-      let scrollSpeed = 0.5;
-      let direction = 1;
-      let isPaused = false;
-      el.addEventListener('mouseenter', () => isPaused = true);
-      el.addEventListener('mouseleave', () => isPaused = false);
-
-      function loop() {
-        if (!isPaused) {
-          el.scrollLeft += scrollSpeed * direction;
-          if (el.scrollLeft + el.clientWidth >= el.scrollWidth) direction = -1;
-          if (el.scrollLeft <= 0) direction = 1;
+          renderScheduleFiltered();
         }
-        requestAnimationFrame(loop);
-      }
-      loop();
-    }
 
-    function getDutyClass(task) {
-      const t = task.toLowerCase();
-      if (t.includes('emcee')) return 'emcee';
-      if (t.includes('dhun')) return 'dhun';
-      if (t.includes('prarth')) return 'prarthana';
-      if (t.includes('speech')) return 'speech';
-      if (t.includes('kirtan')) return 'kirtan';
-      if (t.includes('aarti')) return 'aarti';
-      if (t.includes('announcement')) return 'announcement';
-      return 'default';
-    }
-
-    function saveAsPDF() { window.print(); }
-
-    function openFromSummary(dateKey) {
-      const buttons = [...menu.children];
-      const btn = buttons.find(b => {
-        return dates.find(d => d.key === dateKey && b.textContent === d.label);
-      });
-      if (!btn) return;
-      selectDate(dateKey, btn);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    // ===== LOAD BALANCE LOGIC =====
-    function renderLoadBalance(forceDateKey = null) {
-      // Admin only feature hidden in public view
-      // To enable, we'd need admin password check for this too
-      return;
-    }
-
-    function setDutyFilter(type) { /* Admin only */ }
-
-    // ===== ATTENDANCE ENTRY LOGIC =====
-    let attendanceUnlocked = false;
-
-    function unlockAttendance() {
-      const pass = document.getElementById("attendancePass").value;
-      if (!pass) return;
-      if (pass !== "baps123") {
-        const err = document.getElementById("attendanceError");
-        err.innerText = "❌ Incorrect Password";
-        err.style.color = "red";
-        err.style.fontWeight = "bold";
-        return;
-      }
-      attendanceUnlocked = true;
-      document.getElementById("attendanceLock").classList.add("hidden");
-      document.getElementById("attendanceContent").classList.remove("hidden");
-    }
-
-    function openAttendance() {
-      hideAllPages();
-      document.getElementById("attendancePage").classList.remove("hidden");
-      document.getElementById("dutyFilterBar").classList.remove("hidden");
-      populateMonthDropdown();
-    }
-
-    document.getElementById("attendanceForm").addEventListener("submit", async e => {
-      e.preventDefault();
-      const form = document.getElementById("attendanceForm");
-      const resultDiv = document.getElementById("attendanceResult");
-      const saveBtn = form.querySelector("button");
-
-      const data = {
-        date: document.getElementById("attDate").value,
-        gents: document.getElementById("attGents").value,
-        ladies: document.getElementById("attLadies").value,
-        children: document.getElementById("attChildren").value
-      };
-      const password = document.getElementById("attendancePass").value;
-
-      saveBtn.disabled = true;
-      saveBtn.innerText = "Saving...";
-
-      try {
-        const response = await fetch(API_URL, {
-          method: "POST",
-          body: JSON.stringify({ action: "saveAttendance", data, password })
-        });
-        const result = await response.json();
-
-        if (result.status === "success") {
-          resultDiv.innerHTML = "<div class='success-card'>✅ Attendance Saved</div>";
-        } else {
-          resultDiv.innerHTML = "<div class='error-card'>❌ " + result.message + "</div>";
+        function filterByName() {
+          const val = document.getElementById("searchInput").value;
+          renderScheduleFiltered(val);
         }
-      } catch (err) {
-        resultDiv.innerHTML = "<div class='error-card'>❌ Network Error</div>";
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.innerText = "Save Attendance";
-      }
-    });
 
-    // Month Filter
-    function populateMonthDropdown() {
-      const select = document.getElementById("monthSelect");
-      select.innerHTML = "";
-      const uniqueMonths = new Set();
-      const today = new Date();
-      const m = String(today.getMonth() + 1).padStart(2, '0');
-      const todayKey = today.getFullYear() + "-" + m;
-      uniqueMonths.add(todayKey);
+        function showHome() {
+          hideAllPages();
+          document.getElementById("scheduleActionBar").style.display = "none";
+          homeSection.style.display = "block";
+          [...menu.children].forEach(b => b.classList.remove("active"));
+        }
 
-      rows.forEach(r => {
-        if (!r.key) return;
-        uniqueMonths.add(r.key.substring(0, 7));
-      });
+        function setupAutoScroll(el) {
+          let scrollSpeed = 0.5;
+          let direction = 1;
+          let isPaused = false;
+          el.addEventListener('mouseenter', () => isPaused = true);
+          el.addEventListener('mouseleave', () => isPaused = false);
 
-      Array.from(uniqueMonths).sort().reverse().forEach(mKey => {
-        const [y, m] = mKey.split("-");
-        const dateObj = new Date(parseInt(y), parseInt(m) - 1, 1);
-        const label = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
-        const opt = document.createElement("option");
-        opt.value = mKey;
-        opt.textContent = label;
-        if (mKey === todayKey) opt.selected = true;
-        select.appendChild(opt);
-      });
-      onMonthFilterChange();
-    }
-
-    function onMonthFilterChange() {
-      // Client side logic for load balance if needed
-    }
-
-    function hideAllPages() {
-      homeSection.style.display = "none";
-      scheduleSection.style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      const att = document.getElementById("attendancePage");
-      if (att) att.classList.add("hidden");
-      const bar = document.getElementById("scheduleActionBar");
-      if (bar) bar.style.display = "none";
-    }
-
-    // ===== DASHBOARD LOGIC =====
-    let chartInstance = null;
-    let dashboardUnlocked = false;
-
-    function openDashboard() {
-      hideAllPages();
-      const sec = document.getElementById("dashboardSection");
-      sec.style.display = "block";
-      document.getElementById("scheduleActionBar").style.display = "none";
-      [...menu.children].forEach(b => b.classList.remove("active"));
-
-      if (!dashboardUnlocked) {
-        document.getElementById("dashboardLock").classList.remove("hidden");
-        document.getElementById("dashboardContent").classList.add("hidden");
-        document.getElementById("dashboardPass").value = "";
-        document.getElementById("dashboardError").innerText = "";
-      } else {
-        document.getElementById("dashboardLock").classList.add("hidden");
-        document.getElementById("dashboardContent").classList.remove("hidden");
-        showDashboardData();
-      }
-    }
-
-    function unlockDashboard() {
-      const pass = document.getElementById("dashboardPass").value;
-      if (pass === "baps123") {
-        dashboardUnlocked = true;
-        document.getElementById("dashboardLock").classList.add("hidden");
-        document.getElementById("dashboardContent").classList.remove("hidden");
-        showDashboardData();
-      } else {
-        const err = document.getElementById("dashboardError");
-        err.innerText = "❌ Incorrect Password";
-        err.style.color = "red";
-        err.style.fontWeight = "bold";
-      }
-    }
-
-    async function showDashboardData() {
-      try {
-        const response = await fetch(API_URL + "?type=dashboard");
-        const data = await response.json();
-        renderDashboard(data);
-      } catch (err) {
-        console.error("Dashboard Error", err);
-      }
-    }
-
-    function renderDashboard(data) {
-      if (data.error) {
-        console.log("Error:", data.error);
-        return;
-      }
-
-      const avg = arr => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
-
-      document.getElementById('avgGents').innerText = avg(data.gents);
-      document.getElementById('avgLadies').innerText = avg(data.ladies);
-      document.getElementById('avgChildren').innerText = avg(data.children);
-
-      const totalArr = data.gents.map((g, i) => g + data.ladies[i] + data.children[i]);
-      document.getElementById('avgTotal').innerText = avg(totalArr);
-
-      const ctx = document.getElementById('attendanceChart').getContext('2d');
-      if (chartInstance) chartInstance.destroy();
-
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: data.labels,
-          datasets: [
-            { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-            { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-            { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: 'top' },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              callbacks: { footer: (tooltipItems) => 'Total: ' + tooltipItems.reduce((a, b) => a + b.raw, 0) }
+          function loop() {
+            if (!isPaused) {
+              el.scrollLeft += scrollSpeed * direction;
+              if (el.scrollLeft + el.clientWidth >= el.scrollWidth) direction = -1;
+              if (el.scrollLeft <= 0) direction = 1;
             }
-          },
-          scales: {
-            x: { stacked: true, grid: { display: false } },
-            y: { stacked: true, beginAtZero: true, grid: { borderDash: [4, 4] } }
+            requestAnimationFrame(loop);
+          }
+          loop();
+        }
+
+        function getDutyClass(task) {
+          const t = task.toLowerCase();
+          if (t.includes('emcee')) return 'emcee';
+          if (t.includes('dhun')) return 'dhun';
+          if (t.includes('prarth')) return 'prarthana';
+          if (t.includes('speech')) return 'speech';
+          if (t.includes('kirtan')) return 'kirtan';
+          if (t.includes('aarti')) return 'aarti';
+          if (t.includes('announcement')) return 'announcement';
+          return 'default';
+        }
+
+        function saveAsPDF() { window.print(); }
+
+        function openFromSummary(dateKey) {
+          const buttons = [...menu.children];
+          const btn = buttons.find(b => {
+            return dates.find(d => d.key === dateKey && b.textContent === d.label);
+          });
+          if (!btn) return;
+          selectDate(dateKey, btn);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // ===== LOAD BALANCE LOGIC =====
+        function renderLoadBalance(forceDateKey = null) {
+          // Admin only feature hidden in public view
+          // To enable, we'd need admin password check for this too
+          return;
+        }
+
+        function setDutyFilter(type) { /* Admin only */ }
+
+        // ===== ATTENDANCE ENTRY LOGIC =====
+        let attendanceUnlocked = false;
+
+        function unlockAttendance() {
+          const pass = document.getElementById("attendancePass").value;
+          if (!pass) return;
+          if (pass !== "baps123") {
+            const err = document.getElementById("attendanceError");
+            err.innerText = "❌ Incorrect Password";
+            err.style.color = "red";
+            err.style.fontWeight = "bold";
+            return;
+          }
+          attendanceUnlocked = true;
+          document.getElementById("attendanceLock").classList.add("hidden");
+          document.getElementById("attendanceContent").classList.remove("hidden");
+        }
+
+        function openAttendance() {
+          hideAllPages();
+          document.getElementById("attendancePage").classList.remove("hidden");
+          document.getElementById("dutyFilterBar").classList.remove("hidden");
+          populateMonthDropdown();
+        }
+
+        document.getElementById("attendanceForm").addEventListener("submit", async e => {
+          e.preventDefault();
+          const form = document.getElementById("attendanceForm");
+          const resultDiv = document.getElementById("attendanceResult");
+          const saveBtn = form.querySelector("button");
+
+          const data = {
+            date: document.getElementById("attDate").value,
+            gents: document.getElementById("attGents").value,
+            ladies: document.getElementById("attLadies").value,
+            children: document.getElementById("attChildren").value
+          };
+          const password = document.getElementById("attendancePass").value;
+
+          saveBtn.disabled = true;
+          saveBtn.innerText = "Saving...";
+
+          try {
+            const response = await fetch(API_URL, {
+              method: "POST",
+              body: JSON.stringify({ action: "saveAttendance", data, password })
+            });
+            const result = await response.json();
+
+            if (result.status === "success") {
+              resultDiv.innerHTML = "<div class='success-card'>✅ Attendance Saved</div>";
+            } else {
+              resultDiv.innerHTML = "<div class='error-card'>❌ " + result.message + "</div>";
+            }
+          } catch (err) {
+            resultDiv.innerHTML = "<div class='error-card'>❌ Network Error</div>";
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerText = "Save Attendance";
+          }
+        });
+
+        // Month Filter
+        function populateMonthDropdown() {
+          const select = document.getElementById("monthSelect");
+          select.innerHTML = "";
+          const uniqueMonths = new Set();
+          const today = new Date();
+          const m = String(today.getMonth() + 1).padStart(2, '0');
+          const todayKey = today.getFullYear() + "-" + m;
+          uniqueMonths.add(todayKey);
+
+          rows.forEach(r => {
+            if (!r.key) return;
+            uniqueMonths.add(r.key.substring(0, 7));
+          });
+
+          Array.from(uniqueMonths).sort().reverse().forEach(mKey => {
+            const [y, m] = mKey.split("-");
+            const dateObj = new Date(parseInt(y), parseInt(m) - 1, 1);
+            const label = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
+            const opt = document.createElement("option");
+            opt.value = mKey;
+            opt.textContent = label;
+            if (mKey === todayKey) opt.selected = true;
+            select.appendChild(opt);
+          });
+          onMonthFilterChange();
+        }
+
+        function onMonthFilterChange() {
+          // Client side logic for load balance if needed
+        }
+
+        function hideAllPages() {
+          homeSection.style.display = "none";
+          scheduleSection.style.display = "none";
+          document.getElementById("dashboardSection").style.display = "none";
+          const att = document.getElementById("attendancePage");
+          if (att) att.classList.add("hidden");
+          const bar = document.getElementById("scheduleActionBar");
+          if (bar) bar.style.display = "none";
+        }
+
+        // ===== DASHBOARD LOGIC =====
+        let chartInstance = null;
+        let dashboardUnlocked = false;
+
+        function openDashboard() {
+          hideAllPages();
+          const sec = document.getElementById("dashboardSection");
+          sec.style.display = "block";
+          document.getElementById("scheduleActionBar").style.display = "none";
+          [...menu.children].forEach(b => b.classList.remove("active"));
+
+          if (!dashboardUnlocked) {
+            document.getElementById("dashboardLock").classList.remove("hidden");
+            document.getElementById("dashboardContent").classList.add("hidden");
+            document.getElementById("dashboardPass").value = "";
+            document.getElementById("dashboardError").innerText = "";
+          } else {
+            document.getElementById("dashboardLock").classList.add("hidden");
+            document.getElementById("dashboardContent").classList.remove("hidden");
+            showDashboardData();
           }
         }
-      });
-    }
+
+        function unlockDashboard() {
+          const pass = document.getElementById("dashboardPass").value;
+          if (pass === "baps123") {
+            dashboardUnlocked = true;
+            document.getElementById("dashboardLock").classList.add("hidden");
+            document.getElementById("dashboardContent").classList.remove("hidden");
+            showDashboardData();
+          } else {
+            const err = document.getElementById("dashboardError");
+            err.innerText = "❌ Incorrect Password";
+            err.style.color = "red";
+            err.style.fontWeight = "bold";
+          }
+        }
+
+        async function showDashboardData() {
+          try {
+            const response = await fetch(API_URL + "?type=dashboard");
+            const data = await response.json();
+            renderDashboard(data);
+          } catch (err) {
+            console.error("Dashboard Error", err);
+          }
+        }
+
+        function renderDashboard(data) {
+          if (data.error) {
+            console.log("Error:", data.error);
+            return;
+          }
+
+          const avg = arr => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
+
+          document.getElementById('avgGents').innerText = avg(data.gents);
+          document.getElementById('avgLadies').innerText = avg(data.ladies);
+          document.getElementById('avgChildren').innerText = avg(data.children);
+
+          const totalArr = data.gents.map((g, i) => g + data.ladies[i] + data.children[i]);
+          document.getElementById('avgTotal').innerText = avg(totalArr);
+
+          const ctx = document.getElementById('attendanceChart').getContext('2d');
+          if (chartInstance) chartInstance.destroy();
+
+          chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [
+                { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                  mode: 'index',
+                  intersect: false,
+                  callbacks: { footer: (tooltipItems) => 'Total: ' + tooltipItems.reduce((a, b) => a + b.raw, 0) }
+                }
+              },
+              scales: {
+                x: { stacked: true, grid: { display: false } },
+                y: { stacked: true, beginAtZero: true, grid: { borderDash: [4, 4] } }
+              }
+            }
+          });
+        }
   </script>
 
 </body>
 
 </html>
-
