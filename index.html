@@ -75,7 +75,7 @@
             style="padding:10px 16px; border-radius:999px; border:none; outline:none; font-size:14px; width:220px;">
         <button onclick="saveAsPDF()"
             style="background:#065f46; color:white; padding:10px 20px; border:none; border-radius:999px; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.25);">
-            📄 Download as PDF
+            <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4" style="height: 25px">Download as PDF
         </button>
     </div>
 
@@ -181,7 +181,7 @@
 
         <!-- SUMMARY SECTION -->
         <div class="summary-section">
-            <div class="summary-title">Ravi Sabha Summary</div>
+            <div class="summary-title">Upcoming Events<img src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
             <div class="summary-wrapper" id="summaryContainer">
                 <!-- Injected via JS -->
             </div>
@@ -427,14 +427,14 @@
 
             // 2. Dashboard Button
             const dashBtn = document.createElement("button");
-            dashBtn.innerHTML = "📊 Dashboard";
+            dashBtn.innerHTML = "<img src="https://drive.google.com/thumbnail?id=1QdPVDf7Znv914wjleOBHWVw-U4EmG7Te" style="height: 25px">Dashboard";
             dashBtn.className = "action-btn dash-btn";
             dashBtn.onclick = openDashboard;
             menu.appendChild(dashBtn);
 
             // 3. Entry Button
             const entryBtn = document.createElement("button");
-            entryBtn.innerHTML = "📝 Entry";
+            entryBtn.innerHTML = "<img src="https://drive.google.com/thumbnail?id=1B3OTQQL73-T_SctuGqS4MSnd198iZ2X8" style="height: 25px">Entry";
             entryBtn.className = "action-btn entry-btn";
             entryBtn.onclick = openAttendance;
             menu.appendChild(entryBtn);
@@ -766,5 +766,6 @@
 </body>
 
 </html>
+
 
 
