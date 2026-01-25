@@ -24,7 +24,7 @@
         // ==========================================
         // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzjpDhqRTt5myRMhWqMO6LqPm9oWpvizq5FOKUnUqZ_mFh2_Vw1QVUWj_eQ07M1Nxx0/exec";
+        const API_URL = "REPLACE_WITH_YOUR_DEPLOYED_GOOGLE_SCRIPT_URL";
 
         // State Variables
         let IS_ADMIN = false;
@@ -239,14 +239,16 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th>Time⌛</th>
-                <th>Duty☑️</th>
-                <th>Assigned To👤</th>
-                <th>Details🔰</th>
+                <th>Time</th>
+                <th>Duty</th>
+                <th>Assigned To</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
     </table>
+    <div id="pdfDuration" style="display:none; text-align:right; font-size:14px; margin-top:15px; padding-right:10px;">
+    </div>
 
     <script>
         // =============================
@@ -398,16 +400,13 @@
                 });
 
             // Add Total Duration to PDF Table
-            if (pdfBody) {
+            // Add Total Duration to PDF (Separate from table)
+            const pdfDurationDiv = document.getElementById("pdfDuration");
+            if (pdfDurationDiv) {
                 const hours = Math.floor(totalMinutes / 60);
                 const minutes = totalMinutes % 60;
                 const durationText = (hours ? hours + " hr " : "") + minutes + " min";
-
-                pdfBody.innerHTML +=
-                    `<tr style="background-color:#ecfdf5; font-weight:bold;">
-                            <td colspan="5" style="text-align:right;">Total Program Duration:</td>
-                            <td>${durationText}</td>
-                        </tr>`;
+                pdfDurationDiv.innerHTML = `<b>Total Program Duration:</b> ${durationText}`;
             }
 
             scheduleSection.innerHTML +=
@@ -547,7 +546,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "kinpatel") {
+            if (pass !== "baps123") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -666,7 +665,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "kinpatel") {
+            if (pass === "baps123") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -707,9 +706,9 @@
                 data: {
                     labels: data.labels,
                     datasets: [
-                        { label: 'Gents🤵', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+                        { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
                     ]
                 },
                 options: {
@@ -753,4 +752,3 @@
 </body>
 
 </html>
-
