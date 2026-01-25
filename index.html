@@ -237,12 +237,12 @@
     <table id="pdfTable" style="display:none;">
         <thead>
             <tr>
-                <th>Start</th>
-                <th>End</th>
-                <th>Time</th>
-                <th>Duty</th>
-                <th>Assigned To</th>
-                <th>Details</th>
+                <th>⏰Start</th>
+                <th>End⏰</th>
+                <th>Time⌛</th>
+                <th>Duty☑️</th>
+                <th>Assigned To👤</th>
+                <th>Details📝</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
@@ -547,7 +547,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "baps123") {
+            if (pass !== "kinpatel") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -666,7 +666,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "baps123") {
+            if (pass === "kinpatel") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -753,3 +753,4 @@
 </body>
 
 </html>
+
