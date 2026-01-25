@@ -239,10 +239,10 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th>Time</th>
-                <th>Duty</th>
-                <th>Assigned To</th>
-                <th>Details</th>
+                <th>Time⌛</th>
+                <th>Duty☑️</th>
+                <th>Assigned To👤</th>
+                <th>Details🔰</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
@@ -547,7 +547,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "baps123") {
+            if (pass !== "kinpatel") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -666,7 +666,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "baps123") {
+            if (pass === "kinpatel") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -707,9 +707,9 @@
                 data: {
                     labels: data.labels,
                     datasets: [
-                        { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+                        { label: 'Gents🤵', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
                     ]
                 },
                 options: {
@@ -753,3 +753,4 @@
 </body>
 
 </html>
+
