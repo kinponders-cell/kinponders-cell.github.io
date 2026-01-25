@@ -114,7 +114,7 @@
                     <button onclick="setDutyFilter('kirtan')">Kirtan</button>
                     <button onclick="setDutyFilter('emcee')">Emcee</button>
                 </div>
-                <div id="loadBalance" class="load-balance hidden admin-only"></div>
+                <div id="loadBalance" class="load-balance hidden"></div>
             </div>
         </div>
     </div>
@@ -471,7 +471,7 @@
 
         function renderLoadBalance(forceDateKey = null) {
             // Note: IS_ADMIN will likely be false in static mode unless we impl auth
-            if (!IS_ADMIN) return;
+            // if (!IS_ADMIN) return;
 
             const dateKeyToUse = forceDateKey || activeDateKey;
             if (!dateKeyToUse) return;
