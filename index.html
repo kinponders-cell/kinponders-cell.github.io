@@ -24,7 +24,7 @@
         // ==========================================
         // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzjpDhqRTt5myRMhWqMO6LqPm9oWpvizq5FOKUnUqZ_mFh2_Vw1QVUWj_eQ07M1Nxx0/exec";
+        const API_URL = "REPLACE_WITH_YOUR_DEPLOYED_GOOGLE_SCRIPT_URL";
 
         // State Variables
         let IS_ADMIN = false;
@@ -66,10 +66,7 @@
             <h1>BAPS RAVI SABHA ARUSHA</h1>
         </div>
         <div id="menu"></div>
-        <div class="nav-actions">
-            <button class="dash-btn" onclick="openDashboard()">Dashboard</button>
-            <button class="entry-btn" onclick="openAttendance()">Entry</button>
-        </div>
+        <!-- Buttons moved to #menu -->
     </div>
 
     <!-- SCHEDULE ACTION BAR (STICKY) -->
@@ -418,12 +415,29 @@
 
         function renderMenu() {
             menu.innerHTML = "";
+
+            // 1. Date Buttons
             dates.forEach(d => {
                 const b = document.createElement("button");
                 b.textContent = d.label;
+                b.className = "date-btn";
                 b.onclick = () => selectDate(d.key, b);
                 menu.appendChild(b);
             });
+
+            // 2. Dashboard Button
+            const dashBtn = document.createElement("button");
+            dashBtn.innerHTML = "📊 Dashboard";
+            dashBtn.className = "action-btn dash-btn";
+            dashBtn.onclick = openDashboard;
+            menu.appendChild(dashBtn);
+
+            // 3. Entry Button
+            const entryBtn = document.createElement("button");
+            entryBtn.innerHTML = "📝 Entry";
+            entryBtn.className = "action-btn entry-btn";
+            entryBtn.onclick = openAttendance;
+            menu.appendChild(entryBtn);
         }
 
         function selectDate(key, btn) {
@@ -752,4 +766,3 @@
 </body>
 
 </html>
-
