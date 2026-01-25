@@ -24,7 +24,7 @@
         // ==========================================
         // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
         // ==========================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbz7gOGkmiwUCHcCgdyPy06uL-XWAJj2BRw5T1X-GF8FCJn0QdF4nkvoAOU8N7wI4JwV/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzjpDhqRTt5myRMhWqMO6LqPm9oWpvizq5FOKUnUqZ_mFh2_Vw1QVUWj_eQ07M1Nxx0/exec";
 
         // State Variables
         let IS_ADMIN = false;
@@ -237,12 +237,12 @@
     <table id="pdfTable" style="display:none;">
         <thead>
             <tr>
-                <th>⏰Start</th>
-                <th>End⏰</th>
-                <th>Time⌛</th>
-                <th>Duty☑️</th>
-                <th>Assigned To👤</th>
-                <th>Details📝</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Time</th>
+                <th>Duty</th>
+                <th>Assigned To</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
@@ -547,7 +547,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "kinpatel") {
+            if (pass !== "baps123") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -666,7 +666,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "kinpatel") {
+            if (pass === "baps123") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -753,7 +753,3 @@
 </body>
 
 </html>
-
-
-
-
