@@ -49,6 +49,7 @@ body {
     align-items: center;
     gap: 12px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .home-area img {
@@ -59,6 +60,24 @@ body {
     font-size: 18px;
     margin: 0;
     color: var(--dark);
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .home-area h1 {
+        display: none;
+        /* Hide title on mobile to save space */
+    }
+
+    .topbar {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .nav-actions button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
 }
 
 /* BUTTONS */
@@ -95,16 +114,40 @@ body {
 }
 
 /* DATE MENU BUTTONS */
+#menu {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    padding: 4px 5px;
+    margin: 0 16px;
+    flex: 1;
+    /* Allow it to take available space */
+}
+
+#menu::-webkit-scrollbar {
+    display: none;
+    /* Safari/Chrome */
+}
+
 #menu button {
-    padding: 10px 22px;
+    padding: 8px 18px;
     border: none;
     border-radius: 999px;
     background: #ecfdf5;
     color: var(--dark);
     font-weight: 700;
     cursor: pointer;
+    white-space: nowrap;
+    /* Prevent text wrapping */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    flex-shrink: 0;
+    /* Don't shrink buttons */
 }
 
 #menu button:hover {
@@ -139,6 +182,7 @@ body {
     font-weight: 800;
     background: linear-gradient(135deg, #0f766e, #14b8a6);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0;
     letter-spacing: -1px;
@@ -710,6 +754,16 @@ body {
 
 #homeSection~#pdfBar {
     display: none;
+}
+
+#pdfDuration {
+    display: none;
+}
+
+@media print {
+    #pdfDuration {
+        display: block !important;
+    }
 }
 
 /* SCHEDULE ACTION BAR */
