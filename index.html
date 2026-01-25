@@ -39,7 +39,7 @@
         style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:20px;">
         <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" width="80"
             style="animation:pulse 1.5s infinite;">
-        <div style="font-weight:600;color:#f59e0b;">Loading Sabha Data...</div>
+        <div style="font-weight:600;color:#f59e0b;">BPAS RAVI SABHA ARUSHA...</div>
     </div>
 
     <style>
@@ -236,10 +236,10 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th>Time</th>
-                <th>Duty</th>
-                <th>Assigned To</th>
-                <th>Details</th>
+                <th>Time⌛</th>
+                <th>Duty☑️</th>
+                <th>Assigned To👤</th>
+                <th>Details📝</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
@@ -403,7 +403,7 @@
                 const hours = Math.floor(totalMinutes / 60);
                 const minutes = totalMinutes % 60;
                 const durationText = (hours ? hours + " hr " : "") + minutes + " min";
-                pdfDurationDiv.innerHTML = `<b>Total Program Duration:</b> ${durationText}`;
+                pdfDurationDiv.innerHTML = `<b>Total Program Duration⏰:</b> ${durationText}`;
             }
 
             scheduleSection.innerHTML +=
@@ -560,7 +560,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "baps123") {
+            if (pass !== "kinpatel") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -679,7 +679,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "baps123") {
+            if (pass === "kinpatel") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -720,9 +720,9 @@
                 data: {
                     labels: data.labels,
                     datasets: [
-                        { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+                        { label: 'Gents👦🏻', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
                     ]
                 },
                 options: {
@@ -766,4 +766,5 @@
 </body>
 
 </html>
+
 
