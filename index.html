@@ -32,6 +32,18 @@
         let dates = [];
         let rows = [];
 
+        // Theme Initialization
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
     </script>
 
     <!-- LOADING INDICATOR -->
@@ -39,7 +51,7 @@
         style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:20px;">
         <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" width="80"
             style="animation:pulse 1.5s infinite;">
-        <div style="font-weight:600;color:#f59e0b;">BAPS TEMPLE ARUSHA...</div>
+        <div style="font-weight:600;color:#f59e0b;">Loading Sabha Data...</div>
     </div>
 
     <style>
@@ -66,6 +78,11 @@
             <h1>BAPS RAVI SABHA ARUSHA</h1>
         </div>
         <div id="menu"></div>
+
+        <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+        </button>
         <!-- Buttons moved to #menu -->
     </div>
 
@@ -75,7 +92,7 @@
             style="padding:10px 16px; border-radius:999px; border:none; outline:none; font-size:14px; width:220px;">
         <button onclick="saveAsPDF()"
             style="background:#065f46; color:white; padding:10px 20px; border:none; border-radius:999px; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.25);">
-             <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4" style="height: 25px">Download as PDF
+            📄 Download as PDF
         </button>
     </div>
 
@@ -181,7 +198,7 @@
 
         <!-- SUMMARY SECTION -->
         <div class="summary-section">
-            <div class="summary-title">Upcoming Events <img src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
+            <div class="summary-title">Ravi Sabha Summary</div>
             <div class="summary-wrapper" id="summaryContainer">
                 <!-- Injected via JS -->
             </div>
@@ -191,7 +208,7 @@
             <div class="cards">
                 <div class="info-card">
                     <img
-                        src="https://drive.google.com/thumbnail?id=10ZU3rVQiVam2Q_zsmqY4h0PkC7g1UaNX">
+                        src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_01.jpg">
                     <p>
                         BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple.
                         With its intricate carvings, peaceful atmosphere, and variety of facilities,
@@ -199,7 +216,7 @@
                     </p>
                 </div>
                 <div class="info-card">
-                    <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg">
+                    <img src="https://drive.google.com/thumbnail?id=1vrUvmlSM098Ns86fLhENSnU6TXZAaVHl">
                     <p>
                         Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
                         Let us embody his virtues of compassion, kindness, and humility, and make a positive
@@ -236,10 +253,10 @@
             <tr>
                 <th>Start</th>
                 <th>End</th>
-                <th>Time⌛</th>
-                <th>Duty☑️</th>
-                <th>Assigned To👤</th>
-                <th>Details🔰</th>
+                <th>Time</th>
+                <th>Duty</th>
+                <th>Assigned To</th>
+                <th>Details</th>
             </tr>
         </thead>
         <tbody id="pdfTableBody"></tbody>
@@ -560,7 +577,7 @@
         function unlockAttendance() {
             const pass = document.getElementById("attendancePass").value;
             if (!pass) return;
-            if (pass !== "kinpatel") {
+            if (pass !== "baps123") {
                 const err = document.getElementById("attendanceError");
                 err.innerText = "❌ Incorrect Password";
                 err.style.color = "red";
@@ -679,7 +696,7 @@
 
         function unlockDashboard() {
             const pass = document.getElementById("dashboardPass").value;
-            if (pass === "kinpatel") {
+            if (pass === "baps123") {
                 dashboardUnlocked = true;
                 document.getElementById("dashboardLock").classList.add("hidden");
                 document.getElementById("dashboardContent").classList.remove("hidden");
@@ -720,9 +737,9 @@
                 data: {
                     labels: data.labels,
                     datasets: [
-                        { label: 'Gents👦🏻', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-                        { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+                        { label: 'Gents', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Ladies', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Children', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
                     ]
                 },
                 options: {
@@ -766,9 +783,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
