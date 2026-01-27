@@ -1,1 +1,770 @@
 
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>BAPS Ravi Sabha Arusha</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Custom Font for premium look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Override font */
+    </style>
+</head>
+
+<body>
+
+    <script>
+        // ==========================================
+        // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
+        // ==========================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbxG8KV520moKzNtjXfwj0IwDCZBmfjeyoIiOyXcHzPtjQZwjVw2pjLJy2ZVBW-iCU3K/exec";
+
+        // State Variables
+        let IS_ADMIN = false;
+        let summaries = [];
+        let dates = [];
+        let rows = [];
+
+    </script>
+
+    <!-- LOADING INDICATOR -->
+    <div id="loader"
+        style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:20px;">
+        <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" width="80"
+            style="animation:pulse 1.5s infinite;">
+        <div style="font-weight:600;color:#f59e0b;">BAPS TEMPLE ARUSHA...</div>
+    </div>
+
+    <style>
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <div class="home-area" onclick="showHome()">
+            <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" alt="BAPS Logo">
+            <h1>BAPS RAVI SABHA ARUSHA</h1>
+        </div>
+        <div id="menu"></div>
+        <!-- Buttons moved to #menu -->
+    </div>
+
+    <!-- SCHEDULE ACTION BAR (STICKY) -->
+    <div id="scheduleActionBar">
+        <input id="searchInput" type="text" placeholder="🔍 Search by name" oninput="filterByName()"
+            style="padding:10px 16px; border-radius:999px; border:none; outline:none; font-size:14px; width:220px;">
+        <button onclick="saveAsPDF()"
+            style="background:#065f46; color:white; padding:10px 20px; border:none; border-radius:999px; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.25);">
+             <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4" style="height: 25px">Download as PDF
+        </button>
+    </div>
+
+    <!-- ATTENDANCE ENTRY PAGE -->
+    <div id="attendancePage" class="hidden">
+        <!-- PASSWORD SCREEN -->
+        <div id="attendanceLock" class="lock-card">
+            <h2>🔒 Attendance Access</h2>
+            <input type="password" id="attendancePass" placeholder="Enter password">
+            <button onclick="unlockAttendance()">Enter</button>
+            <p id="attendanceError"></p>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div id="attendanceContent" class="hidden">
+            <h2 class="page-title">Attendance Entry</h2>
+            <!-- FORM -->
+            <form id="attendanceForm">
+                <input type="date" id="attDate" required>
+                <input type="number" id="attGents" placeholder="Gents" required>
+                <input type="number" id="attLadies" placeholder="Ladies" required>
+                <input type="number" id="attChildren" placeholder="Children" required>
+                <button type="submit">Save Attendance</button>
+            </form>
+            <!-- RESULT -->
+            <div id="attendanceResult"></div>
+
+            <!-- LOAD BALANCE -->
+            <div id="attendanceLoadWrapper">
+                <select id="monthSelect" onchange="onMonthFilterChange()"></select>
+                <div id="dutyFilterBar" class="duty-filter hidden">
+                    <button onclick="setDutyFilter('pravachan')">Pravachan</button>
+                    <button onclick="setDutyFilter('kirtan')">Kirtan</button>
+                    <button onclick="setDutyFilter('emcee')">Emcee</button>
+                </div>
+                <div id="loadBalance" class="load-balance hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATTENDANCE DASHBOARD -->
+    <div id="dashboardSection" style="display:none;">
+        <!-- DASHBOARD LOCK -->
+        <div id="dashboardLock" class="lock-card">
+            <h2>📊 Dashboard Access</h2>
+            <input type="password" id="dashboardPass" placeholder="Enter password">
+            <button onclick="unlockDashboard()">View Dashboard</button>
+            <p id="dashboardError" style="text-align:center;margin-top:10px;"></p>
+        </div>
+
+        <!-- DASHBOARD CONTENT -->
+        <div id="dashboardContent" class="hidden">
+            <div class="dash-header">
+                <h2 class="dash-title">Attendance Insights</h2>
+                <div class="dash-subtitle">Real-time analysis of Ravi Sabha attendance</div>
+            </div>
+
+            <div class="stats-grid">
+                <!-- Total Avg -->
+                <div class="stat-card stat-total">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <h3>Avg. Total</h3>
+                        <span class="value" id="avgTotal">-</span>
+                    </div>
+                </div>
+                <!-- Gents -->
+                <div class="stat-card stat-gents">
+                    <div class="stat-icon">👨</div>
+                    <div class="stat-info">
+                        <h3>Avg. Gents</h3>
+                        <span class="value" id="avgGents">-</span>
+                    </div>
+                </div>
+                <!-- Ladies -->
+                <div class="stat-card stat-ladies">
+                    <div class="stat-icon">👩</div>
+                    <div class="stat-info">
+                        <h3>Avg. Ladies</h3>
+                        <span class="value" id="avgLadies">-</span>
+                    </div>
+                </div>
+                <!-- Children -->
+                <div class="stat-card stat-children">
+                    <div class="stat-icon">👶</div>
+                    <div class="stat-info">
+                        <h3>Avg. Children</h3>
+                        <span class="value" id="avgChildren">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOME SECTION -->
+    <div id="homeSection">
+        <img class="banner"
+            src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
+
+        <!-- SUMMARY SECTION -->
+        <div class="summary-section">
+            <div class="summary-title">Upcoming Events <img src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
+            <div class="summary-wrapper" id="summaryContainer">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="cards">
+                <div class="info-card">
+                    <img
+                        src="https://drive.google.com/thumbnail?id=10ZU3rVQiVam2Q_zsmqY4h0PkC7g1UaNX">
+                    <p>
+                        BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple.
+                        With its intricate carvings, peaceful atmosphere, and variety of facilities,
+                        it's a popular destination for visitors seeking a unique, enriching experience.
+                    </p>
+                </div>
+                <div class="info-card">
+                    <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg">
+                    <p>
+                        Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
+                        Let us embody his virtues of compassion, kindness, and humility, and make a positive
+                        impact on the world.
+                    </p>
+                </div>
+                <div class="info-card">
+                    <img
+                        src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg">
+                    <p>
+                        Akshar Purushottam Darshan is a Hindu philosophy that emphasizes devotion to God,
+                        ethical conduct, and pursuit of self-realization. Discover its transformative power.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCHEDULE SECTION -->
+    <div id="printHeader">
+        <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" alt="BAPS Logo">
+        <div class="print-title">
+            <h2>BAPS Ravi Sabha Program📜 Arusha</h2>
+            <div id="printDate"></div>
+        </div>
+    </div>
+    <div id="pdfBar" style="max-width:720px;margin:10px auto;text-align:right;"></div>
+
+    <div id="scheduleSection"></div>
+
+    <!-- PDF TABLE (PRINT ONLY) -->
+    <table id="pdfTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th>Time⌛</th>
+                <th>Duty☑️</th>
+                <th>Assigned To👤</th>
+                <th>Details🔰</th>
+            </tr>
+        </thead>
+        <tbody id="pdfTableBody"></tbody>
+    </table>
+    <div id="pdfDuration" style="display:none; text-align:right; font-size:14px; margin-top:15px; padding-right:10px;">
+    </div>
+
+    <script>
+        // =============================
+        // 🚀 FETCH DATA (GITHUB MODE)
+        // =============================
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (API_URL.includes("REPLACE")) {
+                alert("⚠️ Please paste your Web App URL in index.html line 20!");
+                document.getElementById("loader").style.display = "none";
+                return;
+            }
+
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(data => {
+                    // 1. Store Data
+                    summaries = data.summaries;
+                    dates = data.dates;
+                    rows = data.rows;
+                    IS_ADMIN = data.isAdmin; // (Likely false in this mode)
+
+                    // 2. Render UI
+                    renderSummaries();
+                    renderMenu();
+
+                    // 3. Hide Loader
+                    document.getElementById("loader").style.display = "none";
+
+                    // Auto-Scroll
+                    const summaryWrapper = document.querySelector('.summary-wrapper');
+                    if (summaryWrapper) autoScrollSummary(summaryWrapper);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById("loader").innerHTML = "<div style='color:red'>❌ Error loading data<br>Check console</div>";
+                });
+        });
+
+
+        // ===== RENDER LOGIC =====
+
+        function renderSummaries() {
+            const summaryContainer = document.getElementById("summaryContainer");
+            if (summaryContainer && summaries.length > 0) {
+                const todayDate = new Date();
+                todayDate.setHours(0, 0, 0, 0);
+
+                const html = summaries.map(s => {
+                    const target = new Date(s.key);
+                    target.setHours(0, 0, 0, 0);
+                    const daysLeft = Math.ceil((target - todayDate) / (1000 * 60 * 60 * 24));
+                    const countdownHtml = (!s.isToday && daysLeft > 0)
+                        ? `<div class="countdown">${daysLeft} days left</div>`
+                        : "";
+
+                    return `
+              <div class="summary-card" onclick="openFromSummary('${s.key}')">
+                <img src="${s.pic}">
+                <div class="summary-content">
+                  <div class="summary-date">${s.label}
+                  ${s.isToday ? "<span class='today-badge'>TODAY</span>" : ""}</div>
+                  ${countdownHtml}
+                  <div class="summary-text">${s.text}</div>
+                </div>
+              </div>
+            `;
+                }).join('');
+
+                summaryContainer.innerHTML = html;
+            }
+        }
+
+
+        let activeDutyType = "pravachan";
+        let activeDateKey = null;
+        const menu = document.getElementById("menu");
+        const homeSection = document.getElementById("homeSection");
+        const scheduleSection = document.getElementById("scheduleSection");
+        const DUTY_GROUPS = {
+            pravachan: ["Speech", "Pravachan"],
+            kirtan: ["Kirtan"],
+            emcee: ["Emcee"]
+        };
+
+        function renderScheduleFiltered(searchText = "") {
+            if (!activeDateKey) return;
+
+            const q = searchText.toLowerCase().trim();
+            scheduleSection.innerHTML = "";
+            let totalMinutes = 0;
+
+            const pdfBody = document.getElementById("pdfTableBody");
+            if (pdfBody) pdfBody.innerHTML = "";
+
+            rows
+                .filter(r => r.key === activeDateKey)
+                .filter(r => !q || r.name.toLowerCase().includes(q))
+                .forEach(r => {
+                    if (r.startTime && r.endTime) {
+                        const [sh, sm] = r.startTime.split(":").map(Number);
+                        const [eh, em] = r.endTime.split(":").map(Number);
+                        const start = new Date(); start.setHours(sh, sm, 0, 0);
+                        const end = new Date(); end.setHours(eh, em, 0, 0);
+                        const diffMinutes = (end - start) / (1000 * 60);
+                        if (!isNaN(diffMinutes) && diffMinutes > 0) totalMinutes += diffMinutes;
+                    }
+
+                    let html =
+                        `<div class='card'>
+          <div class='card-header ${getDutyClass(r.task)}'>
+            <span>${r.task}</span>
+            ${r.pic ? `<img class='header-avatar' src='${r.pic}'>` : ""}
+          </div>
+          <div class='card-body'>
+          ${(r.startTime && r.endTime) ?
+                            `<div class='time-range'>🕘 <span>${r.startTime}</span> – <span>${r.endTime}</span></div>` : ""
+                        }
+            <div class='info-box'>
+              <span class='icon'>👤</span>
+              <strong>${r.name}</strong>
+            </div>
+            ${r.details ?
+                            `<div class='info-box'>
+                  <span class='icon'>📝</span>
+                  <div><b>Details</b><br>${r.details}</div>
+                </div>` : ""
+                        }
+            <div class='time-badge'>⏱ ${r.time}</div>
+          </div>`;
+
+                    if (r.attachment) {
+                        html += `<div class='card-footer'><a class='download' href='${r.attachment}' target='_blank'>Download</a></div>`;
+                    }
+                    html += "</div>";
+                    scheduleSection.innerHTML += html;
+
+                    if (pdfBody) {
+                        pdfBody.innerHTML +=
+                            `<tr>
+            <td>${r.startTime}</td>
+            <td>${r.endTime}</td>
+            <td>${r.time}</td>
+            <td>${r.task}</td>
+            <td>${r.name}</td>
+            <td>${r.details || ""}</td>
+          </tr>`;
+                    }
+                });
+
+            // Add Total Duration to PDF Table
+            // Add Total Duration to PDF (Separate from table)
+            const pdfDurationDiv = document.getElementById("pdfDuration");
+            if (pdfDurationDiv) {
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                const durationText = (hours ? hours + " hr " : "") + minutes + " min";
+                pdfDurationDiv.innerHTML = `<b>Total Program Duration:</b> ${durationText}`;
+            }
+
+            scheduleSection.innerHTML +=
+                `<div class='total-duration'>
+        🧮 Total Program Duration: <b>${Math.floor(totalMinutes / 60) ? Math.floor(totalMinutes / 60) + " hr " : ""}${totalMinutes % 60} min</b>
+      </div>`;
+        }
+
+
+        function renderMenu() {
+            menu.innerHTML = "";
+
+            // 1. Date Buttons
+            dates.forEach(d => {
+                const b = document.createElement("button");
+                b.textContent = d.label;
+                b.className = "date-btn";
+                b.onclick = () => selectDate(d.key, b);
+                menu.appendChild(b);
+            });
+
+            // 2. Dashboard Button
+            const dashBtn = document.createElement("button");
+            dashBtn.innerHTML = "📊 Dashboard";
+            dashBtn.className = "action-btn dash-btn";
+            dashBtn.onclick = openDashboard;
+            menu.appendChild(dashBtn);
+
+            // 3. Entry Button
+            const entryBtn = document.createElement("button");
+            entryBtn.innerHTML = "📝 Entry";
+            entryBtn.className = "action-btn entry-btn";
+            entryBtn.onclick = openAttendance;
+            menu.appendChild(entryBtn);
+        }
+
+        function selectDate(key, btn) {
+            hideAllPages();
+            activeDateKey = key;
+            [...menu.children].forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            document.getElementById("pdfBar").style.display = "block";
+            const bar = document.getElementById("scheduleActionBar");
+            bar.style.display = "flex";
+            setTimeout(() => bar.classList.add("show"), 10);
+
+            document.getElementById("printDate").innerText = "Date: " + dates.find(d => d.key === key).label;
+            scheduleSection.style.display = "block";
+            renderScheduleFiltered(); // First render
+        }
+
+        function filterByName() {
+            const val = document.getElementById("searchInput").value;
+            renderScheduleFiltered(val);
+        }
+
+        function showHome() {
+            hideAllPages();
+            document.getElementById("scheduleActionBar").style.display = "none";
+            document.getElementById("pdfBar").style.display = "none";
+            homeSection.style.display = "block";
+            [...menu.children].forEach(b => b.classList.remove("active"));
+        }
+
+        function getDutyClass(task) {
+            const t = task.toLowerCase();
+            if (t.includes('emcee')) return 'emcee';
+            if (t.includes('dhun')) return 'dhun';
+            if (t.includes('prarth')) return 'prarthana';
+            if (t.includes('speech')) return 'speech';
+            if (t.includes('kirtan')) return 'kirtan';
+            if (t.includes('aarti')) return 'aarti';
+            if (t.includes('announcement')) return 'announcement';
+            return 'default';
+        }
+
+        function saveAsPDF() { window.print(); }
+
+        function openFromSummary(dateKey) {
+            const buttons = [...menu.children];
+            const btn = buttons.find(b => {
+                return dates.find(d => d.key === dateKey && b.textContent === d.label);
+            });
+            if (!btn) return;
+            selectDate(dateKey, btn);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function renderLoadBalance(forceDateKey = null) {
+            // Note: IS_ADMIN will likely be false in static mode unless we impl auth
+            // if (!IS_ADMIN) return;
+
+            const dateKeyToUse = forceDateKey || activeDateKey;
+            if (!dateKeyToUse) return;
+
+            const container = document.getElementById("loadBalance");
+            container.innerHTML =
+                "<h3>Volunteer Load Balance – " +
+                activeDutyType.charAt(0).toUpperCase() +
+                activeDutyType.slice(1) +
+                " (This Month)</h3>";
+
+            const [year, month] = dateKeyToUse.split("-");
+            const counts = {};
+
+            const dutyKeywords = DUTY_GROUPS[activeDutyType];
+
+            if (activeDutyType === "emcee") {
+                const seen = {};
+                rows.filter(r => r.key.startsWith(`${year}-${month}`))
+                    .filter(r => dutyKeywords.some(k => r.task.toLowerCase().includes(k.toLowerCase())))
+                    .forEach(r => {
+                        const name = r.name.trim();
+                        if (!seen[name]) seen[name] = new Set();
+                        seen[name].add(r.key);
+                    });
+                Object.keys(seen).forEach(name => counts[name] = seen[name].size);
+            } else {
+                rows.filter(r => r.key.startsWith(`${year}-${month}`))
+                    .filter(r => dutyKeywords.some(k => r.task.toLowerCase().includes(k.toLowerCase())))
+                    .forEach(r => {
+                        const name = r.name.trim();
+                        counts[name] = (counts[name] || 0) + 1;
+                    });
+            }
+
+            if (Object.keys(counts).length === 0) {
+                container.innerHTML += "<p style='text-align:center'>No duties in this category</p>";
+                container.classList.remove("hidden");
+                return;
+            }
+
+            const max = Math.max(...Object.values(counts));
+            Object.entries(counts).sort((a, b) => b[1] - a[1]).forEach(([name, count]) => {
+                const percent = (count / max) * 100;
+                container.innerHTML +=
+                    `<div class='load-row'>
+          <div class='load-name'>${name}</div>
+          <div class='load-bar'><div class='load-fill' style='width:${percent}%'></div></div>
+          <div class='load-count'>${count}</div>
+        </div>`;
+            });
+            container.classList.remove("hidden");
+        }
+
+        function setDutyFilter(type) {
+            activeDutyType = type;
+            document.querySelectorAll(".duty-filter button").forEach(b => b.classList.remove("active"));
+            event.target.classList.add("active");
+            renderLoadBalance(null);
+        }
+
+        let attendanceUnlocked = false;
+        function unlockAttendance() {
+            const pass = document.getElementById("attendancePass").value;
+            if (!pass) return;
+            if (pass !== "kinpatel") {
+                const err = document.getElementById("attendanceError");
+                err.innerText = "❌ Incorrect Password";
+                err.style.color = "red";
+                err.style.fontWeight = "bold";
+                return;
+            }
+            attendanceUnlocked = true;
+            document.getElementById("attendanceLock").classList.add("hidden");
+            document.getElementById("attendanceContent").classList.remove("hidden");
+        }
+
+        function openAttendance() {
+            hideAllPages();
+            document.getElementById("attendancePage").classList.remove("hidden");
+            document.getElementById("dutyFilterBar").classList.remove("hidden");
+            const lb = document.getElementById("loadBalance");
+            lb.classList.remove("hidden");
+            populateMonthDropdown();
+        }
+
+        document.getElementById("attendanceForm").addEventListener("submit", e => {
+            e.preventDefault();
+
+            const payload = {
+                action: "saveAttendance",
+                password: document.getElementById("attendancePass").value,
+                data: {
+                    date: document.getElementById("attDate").value,
+                    gents: document.getElementById("attGents").value,
+                    ladies: document.getElementById("attLadies").value,
+                    children: document.getElementById("attChildren").value
+                }
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+                .then(res => res.json())
+                .then(resp => {
+                    if (resp.success) {
+                        document.getElementById("attendanceResult").innerHTML = "<div class='success-card'>✅ Attendance Saved</div>";
+                        document.getElementById("attendanceForm").reset();
+                    } else {
+                        throw new Error(resp.error || "Unknown Error");
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("attendanceResult").innerHTML = "<div class='error-card'>❌ " + err.message + "</div>";
+                });
+        });
+
+        function populateMonthDropdown() {
+            const select = document.getElementById("monthSelect");
+            select.innerHTML = "";
+            const months = new Set();
+            const today = new Date();
+            const todayKey = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, '0');
+            months.add(todayKey);
+
+            rows.forEach(r => {
+                if (!r.key) return;
+                months.add(r.key.substring(0, 7));
+            });
+
+            Array.from(months).sort().reverse().forEach(mKey => {
+                const [y, m] = mKey.split("-");
+                const dateObj = new Date(parseInt(y), parseInt(m) - 1, 1);
+                const label = dateObj.toLocaleString('default', { month: 'long', year: 'numeric' });
+                const opt = document.createElement("option");
+                opt.value = mKey;
+                opt.textContent = label;
+                if (mKey === todayKey) opt.selected = true;
+                select.appendChild(opt);
+            });
+            onMonthFilterChange();
+        }
+
+        function onMonthFilterChange() {
+            const val = document.getElementById("monthSelect").value;
+            if (!val) return;
+            activeDateKey = val + "-01"; // Generic first day for logic
+            renderLoadBalance(activeDateKey);
+        }
+
+        function hideAllPages() {
+            homeSection.style.display = "none";
+            scheduleSection.style.display = "none";
+            document.getElementById("dashboardSection").style.display = "none";
+            document.getElementById("attendancePage").classList.add("hidden");
+            document.getElementById("loadBalance").classList.add("hidden");
+            document.getElementById("dutyFilterBar").classList.add("hidden");
+        }
+
+        let chartInstance = null;
+        let dashboardUnlocked = false;
+
+        function openDashboard() {
+            hideAllPages();
+            document.getElementById("dashboardSection").style.display = "block";
+            document.getElementById("scheduleActionBar").style.display = "none";
+            document.getElementById("pdfBar").style.display = "none";
+            [...menu.children].forEach(b => b.classList.remove("active"));
+
+            if (!dashboardUnlocked) {
+                document.getElementById("dashboardLock").classList.remove("hidden");
+                document.getElementById("dashboardContent").classList.add("hidden");
+                document.getElementById("dashboardPass").value = "";
+                document.getElementById("dashboardError").innerText = "";
+            } else {
+                document.getElementById("dashboardLock").classList.add("hidden");
+                document.getElementById("dashboardContent").classList.remove("hidden");
+                showDashboardData();
+            }
+        }
+
+        function unlockDashboard() {
+            const pass = document.getElementById("dashboardPass").value;
+            if (pass === "kinpatel") {
+                dashboardUnlocked = true;
+                document.getElementById("dashboardLock").classList.add("hidden");
+                document.getElementById("dashboardContent").classList.remove("hidden");
+                showDashboardData();
+            } else {
+                const err = document.getElementById("dashboardError");
+                err.innerText = "❌ Incorrect Password";
+                err.style.color = "red";
+                err.style.fontWeight = "bold";
+            }
+        }
+
+        function showDashboardData() {
+            // Fetch specific action
+            fetch(API_URL + "?action=getAttendance")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) { console.error(data.error); return; }
+                    renderDashboard(data);
+                });
+        }
+
+        function renderDashboard(data) {
+            const avg = arr => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
+
+            document.getElementById('avgGents').innerText = avg(data.gents);
+            document.getElementById('avgLadies').innerText = avg(data.ladies);
+            document.getElementById('avgChildren').innerText = avg(data.children);
+
+            const totalArr = data.gents.map((g, i) => g + data.ladies[i] + data.children[i]);
+            document.getElementById('avgTotal').innerText = avg(totalArr);
+
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        { label: 'Gents👦🏻', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+                        { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            mode: 'index', intersecting: false, backgroundColor: 'rgba(255,255,255,0.95)',
+                            titleColor: '#1e293b', bodyColor: '#475569', borderColor: '#e2e8f0', borderWidth: 1,
+                            callbacks: { footer: (items) => 'Total: ' + items.reduce((a, b) => a + b.raw, 0) }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, grid: { borderDash: [4, 4] } }
+                    }
+                }
+            });
+        }
+
+        function autoScrollSummary(wrapper) {
+            let scrollSpeed = 0.5;
+            let direction = 1;
+            let isPaused = false;
+            wrapper.addEventListener('mouseenter', () => isPaused = true);
+            wrapper.addEventListener('mouseleave', () => isPaused = false);
+            function step() {
+                if (!isPaused) {
+                    wrapper.scrollLeft += scrollSpeed * direction;
+                    if (wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth) direction = -1;
+                    if (wrapper.scrollLeft <= 0) direction = 1;
+                }
+                requestAnimationFrame(step);
+            }
+            step();
+        }
+
+    </script>
+
+</body>
+
+</html>
+
