@@ -24,7 +24,7 @@
     // ==========================================
     // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
     // ==========================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxG8KV520moKzNtjXfwj0IwDCZBmfjeyoIiOyXcHzPtjQZwjVw2pjLJy2ZVBW-iCU3K/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxChIIar_bw6ICn0mlw-OshjcrgDM-VNtNPibLBszpv4307t-vTl3pL5tNlNrhNDpk8/exec";
 
     // State Variables
     let IS_ADMIN = false;
@@ -244,6 +244,49 @@
       src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
 
     <!-- SUMMARY SECTION -->
+
+    <!-- SCROLLYTELLING SECTION -->
+    <div id="scrolly-section" style="height: 400vh; position: relative;">
+      <div class="sticky-wrapper">
+        <canvas id="scrolly-canvas"></canvas>
+
+        <!-- Loader -->
+        <div id="scrolly-loader">
+          <div class="spinner"></div>
+          <div class="loading-text">Loading Sequence...</div>
+        </div>
+
+        <!-- Overlays -->
+        <div class="scrolly-overlay center" id="overlay-0">
+          <div class="scrolly-text-content">
+            <h2 class="scrolly-title">BAPS Temple</h2>
+            <p class="scrolly-subtitle">Arusha, Tanzania</p>
+          </div>
+        </div>
+
+        <div class="scrolly-overlay left" id="overlay-1">
+          <div class="scrolly-text-content">
+            <h2 class="scrolly-title">Grand Architecture</h2>
+            <p class="scrolly-subtitle">Built with devotion and precision.</p>
+          </div>
+        </div>
+
+        <div class="scrolly-overlay right" id="overlay-2">
+          <div class="scrolly-text-content">
+            <h2 class="scrolly-title">Spiritual Harmony</h2>
+            <p class="scrolly-subtitle">A place of peace and reflection.</p>
+          </div>
+        </div>
+
+        <div class="scrolly-overlay center" id="overlay-3">
+          <div class="scrolly-text-content">
+            <h2 class="scrolly-title">Welcome Home</h2>
+            <p class="scrolly-subtitle">Experience the divinity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="summary-section">
       <div class="summary-title">Upcoming Events <img
           src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
@@ -487,11 +530,26 @@
       const content = document.getElementById("drawerContent");
       const title = document.getElementById("drawerTitle");
 
-      // Set Title
-      title.innerText = `History: ${name}`;
+      // 1. Find photo from any row associated with this person (prefer drawerPic from Col L)
+      // Check if any row has drawerPic
+      const userRow = rows.find(r => r.name.toLowerCase().trim() === name.toLowerCase().trim() && r.drawerPic);
+      const userPic = userRow ? userRow.drawerPic : null;
+
+      // Set Title with Image if available
+      if (userPic) {
+        title.innerHTML = `
+          <div class="drawer-user-title">
+            <img src="${userPic}" class="drawer-avatar">
+            <span>${name}</span>
+          </div>
+        `;
+      } else {
+        title.innerText = `History: ${name}`;
+      }
+
       content.innerHTML = ""; // Clear previous
 
-      // 1. Filter Duties for this person
+      // 2. Filter Duties for this person
       const now = new Date();
       now.setHours(0, 0, 0, 0);
 
@@ -883,6 +941,177 @@
       }
       step();
     }
+
+    // =========================================
+    // 🎞️ SCROLLYTELLING LOGIC
+    // =========================================
+    (function initScrolly() {
+      const section = document.getElementById('scrolly-section');
+      const canvas = document.getElementById('scrolly-canvas');
+      const loader = document.getElementById('scrolly-loader');
+      if (!section || !canvas) return;
+
+      const context = canvas.getContext('2d');
+      const frameCount = 192;
+      const images = [];
+      const frames = { current: 0 };
+
+      // Define overlays with their active ranges (0.0 - 1.0 of scroll progress)
+      // Adjust these ranges to match the "beats" from the prompt
+      // 0% - Center
+      // 25% - Left
+      // 60% - Right
+      // 90% - Center CTA
+      const overlays = [
+        { id: 'overlay-0', start: 0.0, end: 0.15 },
+        { id: 'overlay-1', start: 0.20, end: 0.40 },
+        { id: 'overlay-2', start: 0.55, end: 0.75 },
+        { id: 'overlay-3', start: 0.85, end: 1.0 }
+      ];
+
+      // Resize Canvas
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        render(); // Re-render current frame on resize
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Load Images
+      // Actual naming: assets/sequence/00001.jpg
+      let imagesLoaded = 0;
+
+      const pad = (num, size) => {
+        let s = num + "";
+        while (s.length < size) s = "0" + s;
+        return s;
+      };
+
+      for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        // Files are 1-indexed (00001.jpg) and jpg format
+        const fileName = pad(i + 1, 5) + ".jpg";
+        img.src = `assets/sequence/${fileName}`;
+
+        img.onload = () => {
+          imagesLoaded++;
+          if (imagesLoaded === frameCount) {
+            loader.style.opacity = 0;
+            setTimeout(() => loader.style.display = 'none', 500);
+            render();
+          }
+        };
+        img.onerror = () => {
+          console.warn(`Failed to load frame: ${fileName}`);
+          // If a frame fails, we still want to clear loader if mostly successful?
+          // For now, let's just log. 
+          // If specific important frames fail, user will see gaps.
+        }
+        images.push(img);
+      }
+
+      // Render Frame
+      function render() {
+        // Draw current frame
+        const img = images[frames.current];
+        if (img && img.complete) {
+          // "Contain" fit logic
+          const hRatio = canvas.width / img.width;
+          const vRatio = canvas.height / img.height;
+          const ratio = Math.min(hRatio, vRatio);
+
+          const centerShift_x = (canvas.width - img.width * ratio) / 2;
+          const centerShift_y = (canvas.height - img.height * ratio) / 2;
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(img,
+            0, 0, img.width, img.height,
+            centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
+          );
+        }
+      }
+
+      // Scroll Handler
+      window.addEventListener('scroll', () => {
+        if (homeSection.style.display === 'none') return; // Don't run if not on home
+
+        const sectionRect = section.getBoundingClientRect();
+        const startY = sectionRect.top;
+        const endY = sectionRect.bottom;
+        const windowHeight = window.innerHeight;
+
+        // Calculate progress 0 to 1
+        // When section top is at 0 (sticky start), progress starts increasing
+        // But we actually want progress relative to the scroll distance of the container
+        // total scrollable distance = section.offsetHeight - windowHeight
+
+        // We need to map the scroll position to [0, 1]
+        // sticky wrapper stays fixed while section moves up
+
+        // Calculate how far we are scrolled INTO the section
+        // sectionRect.top is negative as we scroll down
+        const scrollDistance = -sectionRect.top;
+        const maxScroll = section.offsetHeight - windowHeight;
+
+        let progress = scrollDistance / maxScroll;
+
+        // Clamp 0 to 1
+        progress = Math.max(0, Math.min(1, progress));
+
+        // Map to frame
+        const frameIndex = Math.min(
+          frameCount - 1,
+          Math.floor(progress * (frameCount - 1))
+        );
+
+        if (frameIndex !== frames.current) {
+          frames.current = frameIndex;
+          requestAnimationFrame(render);
+        }
+
+        // DEBUG: Uncomment to see values on screen
+        /*
+        let dbg = document.getElementById('debug-box');
+        if(!dbg) {
+             dbg = document.createElement('div');
+             dbg.id = 'debug-box';
+             dbg.style.position = 'fixed';
+             dbg.style.top = '100px';
+             dbg.style.left = '10px';
+             dbg.style.background = 'rgba(0,0,0,0.8)';
+             dbg.style.color = 'white';
+             dbg.style.padding = '10px';
+             dbg.style.zIndex = '9999';
+             document.body.appendChild(dbg);
+        }
+        dbg.innerHTML = `
+           Progress: ${progress.toFixed(3)}<br>
+           Frame: ${frames.current}<br>
+           Top: ${sectionRect.top.toFixed(0)}<br>
+           H: ${section.offsetHeight}
+        `;
+        */
+
+        // Handle Overlays
+        overlays.forEach(overlay => {
+          const el = document.getElementById(overlay.id);
+          if (el) {
+            // Simple fade in/out logic
+            // If progress is within start/end, opacity 1, else 0
+            // Add a small buffer for transition smoothness if needed
+            if (progress >= overlay.start && progress <= overlay.end) {
+              el.style.opacity = 1;
+              el.style.transform = 'translateY(-50%) translateY(0px)';
+            } else {
+              el.style.opacity = 0;
+              el.style.transform = 'translateY(-50%) translateY(20px)';
+            }
+          }
+        });
+      });
+
+    })();
 
   </script>
 
