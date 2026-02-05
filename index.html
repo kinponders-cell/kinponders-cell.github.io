@@ -1019,7 +1019,10 @@
           // "Contain" fit logic
           const hRatio = canvas.width / img.width;
           const vRatio = canvas.height / img.height;
-          const ratio = Math.min(hRatio, vRatio);
+
+          // Fix: Use 'cover' (Math.max) for mobile to avoid vertical whitespace
+          const isMobile = window.innerWidth < 768;
+          const ratio = isMobile ? Math.max(hRatio, vRatio) : Math.min(hRatio, vRatio);
 
           const centerShift_x = (canvas.width - img.width * ratio) / 2;
           const centerShift_y = (canvas.height - img.height * ratio) / 2;
