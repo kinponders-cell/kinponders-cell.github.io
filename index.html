@@ -24,7 +24,7 @@
     // ==========================================
     // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
     // ==========================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxChIIar_bw6ICn0mlw-OshjcrgDM-VNtNPibLBszpv4307t-vTl3pL5tNlNrhNDpk8/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyt4dzD18S4WWturBxoYvrWzDTGEvrWCcgIvae9iuSjy6AJtBAi_fAPNciFaXFHD5Ee/exec";
 
     // State Variables
     let IS_ADMIN = false;
@@ -238,9 +238,22 @@
     </div>
   </div>
 
+  <!-- ACTIVITIES SECTION -->
+  <div id="activitiesSection" style="display:none;">
+    <div class="page-header">
+      <h2 class="page-title">Our Activities</h2>
+      <p class="page-subtitle">Join us in our spiritual journey through various sabhas customized for every age group.
+      </p>
+    </div>
+
+    <div class="activities-grid">
+      <!-- Injected via JS -->
+    </div>
+  </div>
+
   <!-- HOME SECTION -->
   <div id="homeSection">
-    <img class="banner"
+    <img class="banner animate-hero"
       src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
 
     <!-- SUMMARY SECTION -->
@@ -287,7 +300,7 @@
       </div>
     </div>
 
-    <div class="summary-section">
+    <div class="summary-section animate-up delay-1">
       <div class="summary-title">Upcoming Events <img
           src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
       <div class="summary-wrapper" id="summaryContainer">
@@ -297,7 +310,7 @@
 
     <div class="section">
       <div class="cards">
-        <div class="info-card">
+        <div class="info-card animate-up delay-2">
           <img src="https://drive.google.com/thumbnail?id=10ZU3rVQiVam2Q_zsmqY4h0PkC7g1UaNX">
           <p>
             BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple.
@@ -305,7 +318,7 @@
             it's a popular destination for visitors seeking a unique, enriching experience.
           </p>
         </div>
-        <div class="info-card">
+        <div class="info-card animate-up delay-3">
           <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg">
           <p>
             Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
@@ -313,7 +326,7 @@
             impact on the world.
           </p>
         </div>
-        <div class="info-card">
+        <div class="info-card animate-up delay-4">
           <img
             src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg">
           <p>
@@ -373,11 +386,13 @@
           summaries = data.summaries;
           dates = data.dates;
           rows = data.rows;
-          IS_ADMIN = data.isAdmin; // (Likely false in this mode)
+          const activities = data.activities || []; // New Data
+          IS_ADMIN = data.isAdmin;
 
           // 2. Render UI
           renderSummaries();
           renderMenu();
+          renderActivities(activities); // New Render Call
 
           // 3. Hide Loader
           document.getElementById("loader").style.display = "none";
@@ -393,7 +408,45 @@
     });
 
 
-    // ===== RENDER LOGIC =====
+    // =========================================
+    // 🎭 ACTIVITY CONTENT MAP
+    // =========================================
+    const ACTIVITY_METADATA = {
+      "Ravi Sabha": {
+        quote: "Discover inner peace and spiritual growth in a community of like-minded individuals.",
+        desc: "Weekly assembly for adults to engage in satsang, listen to spiritual discourses, and perform devotion."
+      },
+      "Yuvak Sabha": {
+        quote: "Balance your professional and spiritual life with guidance tailored for the modern youth.",
+        desc: "A dynamic forum for young men to discuss challenges, find spiritual solutions, and perform seva."
+      },
+      "Yuvati Sabha": {
+        quote: "Empowering young women through spirituality, culture, and unity.",
+        desc: "A safe space for young women to grow spiritually, support each other, and celebrate culture."
+      },
+      "Kishore Sabha": {
+        quote: "Navigate your teenage years with strong values, friendship, and fun.",
+        desc: "Interactive sessions for teenage boys focusing on character building, education, and satsang."
+      },
+      "Kishori Sabha": {
+        quote: "Inspiring teenage girls to lead a life of confidence and devotion.",
+        desc: "Engaging activities and discussions for teenage girls to strengthen their bond with God and guru."
+      },
+      "Bal Sabha": {
+        quote: "Nurture moral values and character through fun stories and games.",
+        desc: "Fun-filled assembly for young boys with stories, games, and learning Hindu values."
+      },
+      "Balika Sabha": {
+        quote: "Planting seeds of devotion and culture in young hearts.",
+        desc: "Creative and educational sessions for young girls to learn about their heritage and faith."
+      },
+      "Gujarati Class": {
+        quote: "Connect with your roots and learn the language of our culture.",
+        desc: "Learn to read, write, and speak Gujarati, the language of our scriptures and satsang."
+      }
+    };
+
+    // Old renderActivities removed to avoid duplicate
 
     function renderSummaries() {
       const summaryContainer = document.getElementById("summaryContainer");
@@ -597,14 +650,38 @@
     function renderMenu() {
       menu.innerHTML = "";
 
-      // 1. Date Buttons
+      // 1. Scheduled Dropdown
+      const dropdownWrapper = document.createElement("div");
+      dropdownWrapper.className = "dropdown-wrapper";
+
+      const scheduledBtn = document.createElement("button");
+      scheduledBtn.innerHTML = "📅 Scheduled Sabha <span class='arrow'>▼</span>";
+      scheduledBtn.className = "action-btn scheduled-btn";
+      scheduledBtn.onclick = (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+      };
+
+      const dropdownContent = document.createElement("div");
+      dropdownContent.className = "dropdown-content";
+      dropdownContent.id = "dateDropdown";
+
       dates.forEach(d => {
-        const b = document.createElement("button");
-        b.textContent = d.label;
-        b.className = "date-btn";
-        b.onclick = () => selectDate(d.key, b);
-        menu.appendChild(b);
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+        item.textContent = d.label;
+        item.onclick = () => {
+          selectDate(d.key, scheduledBtn);
+          // Highlight logic for dropdown items
+          document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+        };
+        dropdownContent.appendChild(item);
       });
+
+      dropdownWrapper.appendChild(scheduledBtn);
+      dropdownWrapper.appendChild(dropdownContent);
+      menu.appendChild(dropdownWrapper);
 
       // 2. Dashboard Button
       const dashBtn = document.createElement("button");
@@ -619,13 +696,61 @@
       entryBtn.className = "action-btn entry-btn";
       entryBtn.onclick = openAttendance;
       menu.appendChild(entryBtn);
+
+      // 4. Activities Button (NEW)
+      const activityBtn = document.createElement("button");
+      activityBtn.innerHTML = "✨ Activities";
+      activityBtn.className = "action-btn activity-btn";
+      activityBtn.onclick = openActivities;
+      menu.appendChild(activityBtn);
+
+      // Click outside listener
+      document.addEventListener('click', (e) => {
+        if (!dropdownWrapper.contains(e.target)) {
+          dropdownContent.classList.remove('show');
+          scheduledBtn.classList.remove('open');
+        }
+      });
     }
+
+    function toggleDropdown() {
+      const content = document.getElementById("dateDropdown");
+      const btn = document.querySelector(".scheduled-btn");
+
+      const isShow = content.classList.contains("show");
+
+      if (!isShow) {
+        const rect = btn.getBoundingClientRect();
+        content.style.position = 'fixed';
+        content.style.top = (rect.bottom + 8) + 'px';
+        content.style.left = rect.left + 'px';
+        content.style.width = 'max-content'; // Ensure it fits content
+
+        content.classList.add("show");
+        btn.classList.add("open");
+      } else {
+        content.classList.remove("show");
+        btn.classList.remove("open");
+      }
+    }
+
+    // Close dropdown on scroll to prevent detached UI
+    window.addEventListener('scroll', () => {
+      const content = document.getElementById("dateDropdown");
+      const btn = document.querySelector(".scheduled-btn");
+      if (content && content.classList.contains("show")) {
+        content.classList.remove("show");
+        if (btn) btn.classList.remove("open");
+      }
+    });
 
     function selectDate(key, btn) {
       hideAllPages();
       activeDateKey = key;
       [...menu.children].forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
+
+      // SHOW SEARCH/PDF ONLY ON DATE PAGES
       document.getElementById("pdfBar").style.display = "block";
       const bar = document.getElementById("scheduleActionBar");
       bar.style.display = "flex";
@@ -647,6 +772,78 @@
       document.getElementById("pdfBar").style.display = "none";
       homeSection.style.display = "block";
       [...menu.children].forEach(b => b.classList.remove("active"));
+    }
+
+    function openActivities() {
+      hideAllPages();
+      document.getElementById("activitiesSection").style.display = "block";
+
+      // HIDE SEARCH/PDF ON ACTIVITIES
+      const bar = document.getElementById("scheduleActionBar");
+      bar.classList.remove("show");
+      bar.style.display = "none";
+      document.getElementById("pdfBar").style.display = "none";
+
+      // Highlight button
+      const btns = [...menu.children];
+      btns.forEach(b => b.classList.remove("active"));
+      const actBtn = btns.find(b => b.innerHTML.includes("Activities"));
+      if (actBtn) actBtn.classList.add("active");
+    }
+
+    function hideAllPages() {
+      homeSection.style.display = "none";
+      scheduleSection.style.display = "none";
+      document.getElementById("attendancePage").classList.add("hidden");
+      document.getElementById("dashboardSection").style.display = "none";
+      document.getElementById("activitiesSection").style.display = "none";
+
+      // Also hide attendance sub-elements
+      document.getElementById("loadBalance").classList.add("hidden");
+      document.getElementById("dutyFilterBar").classList.add("hidden");
+
+      // Ensure specific elements are reset if needed
+      document.getElementById("scheduleActionBar").classList.remove("show");
+      document.getElementById("scheduleActionBar").style.display = "none";
+    }
+
+    function renderActivities(activities) {
+      const container = document.querySelector(".activities-grid");
+      if (!container) return;
+
+      if (!activities || activities.length === 0) {
+        container.innerHTML = "<p style='text-align:center;width:100%;color:#666;'>No activities found.</p>";
+        return;
+      }
+
+      container.innerHTML = activities.map((act, index) => {
+        // Trim name for better matching
+        const cleanName = act.name ? act.name.trim() : "";
+        const meta = ACTIVITY_METADATA[cleanName] || {};
+        const quote = meta.quote || "";
+        const desc = meta.desc || "";
+
+        // Alternating Slow Motion Animations
+        const animClass = (index % 2 === 0) ? "animate-left" : "animate-right";
+
+        return `
+          <div class="activity-card ${animClass}">
+            <div class="activity-image">
+              <img src="${act.pic || 'https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg'}" alt="${cleanName}">
+              ${act.age ? `<div class="activity-tag">${act.age}</div>` : ''}
+            </div>
+            <div class="activity-content">
+              <h3>${cleanName}</h3>
+              <div class="activity-time">🗓️ ${act.day} @ ${act.time}</div>
+              
+              ${quote ? `<p class="activity-quote">"${quote}"</p>` : ''}
+              ${desc ? `<p class="activity-desc">${desc}</p>` : ''}
+              
+              ${act.contact ? `<div class="activity-contact">📞 Contact: ${act.contact}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function getDutyClass(task) {
@@ -827,14 +1024,7 @@
       renderLoadBalance(activeDateKey);
     }
 
-    function hideAllPages() {
-      homeSection.style.display = "none";
-      scheduleSection.style.display = "none";
-      document.getElementById("dashboardSection").style.display = "none";
-      document.getElementById("attendancePage").classList.add("hidden");
-      document.getElementById("loadBalance").classList.add("hidden");
-      document.getElementById("dutyFilterBar").classList.add("hidden");
-    }
+    // Old hideAllPages removed to avoid duplicate
 
     let chartInstance = null;
     let dashboardUnlocked = false;
