@@ -16,6 +16,9 @@ body {
   margin: 0;
   font-family: 'Segoe UI', Arial, sans-serif;
   background: var(--bg);
+  cursor: pointer;
+  /* iOS click fix */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* TOP BAR */
