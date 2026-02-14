@@ -713,6 +713,8 @@
       });
     }
 
+    let scrollListener = null;
+
     function toggleDropdown() {
       const content = document.getElementById("dateDropdown");
       const btn = document.querySelector(".scheduled-btn");
@@ -720,29 +722,40 @@
       const isShow = content.classList.contains("show");
 
       if (!isShow) {
+        // Open
         const rect = btn.getBoundingClientRect();
         content.style.position = 'fixed';
         content.style.top = (rect.bottom + 8) + 'px';
         content.style.left = rect.left + 'px';
-        content.style.width = 'max-content'; // Ensure it fits content
+        content.style.width = 'max-content';
 
         content.classList.add("show");
         btn.classList.add("open");
+
+        // Add scroll listener with delay to prevent immediate trigger on touch
+        setTimeout(() => {
+          if (content.classList.contains("show")) {
+            scrollListener = () => closeDropdown();
+            window.addEventListener('scroll', scrollListener, { passive: true });
+          }
+        }, 200);
+
       } else {
-        content.classList.remove("show");
-        btn.classList.remove("open");
+        closeDropdown();
       }
     }
 
-    // Close dropdown on scroll to prevent detached UI
-    window.addEventListener('scroll', () => {
+    function closeDropdown() {
       const content = document.getElementById("dateDropdown");
       const btn = document.querySelector(".scheduled-btn");
-      if (content && content.classList.contains("show")) {
-        content.classList.remove("show");
-        if (btn) btn.classList.remove("open");
+      if (content) content.classList.remove("show");
+      if (btn) btn.classList.remove("open");
+
+      if (scrollListener) {
+        window.removeEventListener('scroll', scrollListener);
+        scrollListener = null;
       }
-    });
+    }
 
     function selectDate(key, btn) {
       hideAllPages();
