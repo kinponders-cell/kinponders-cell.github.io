@@ -24,7 +24,7 @@
     // ==========================================
     // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
     // ==========================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbyt4dzD18S4WWturBxoYvrWzDTGEvrWCcgIvae9iuSjy6AJtBAi_fAPNciFaXFHD5Ee/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbyw9MhA2ps8TSXmbuRMEUKpVPU756QCSXE23MwSLgH3X2Tjr-nvppn7wxyLgDlLCDm-/exec";
 
     // State Variables
     let IS_ADMIN = false;
@@ -251,6 +251,28 @@
     </div>
   </div>
 
+  <!-- ANNOUNCEMENTS SECTION -->
+  <div id="announcementsSection" style="display:none;">
+    <!-- ANNOUNCEMENTS LOCK -->
+    <div id="announcementsLock" class="lock-card">
+      <h2>📢 Announcements Access</h2>
+      <input type="password" id="announcementsPass" placeholder="Enter password">
+      <button onclick="unlockAnnouncements()">View Announcements</button>
+      <p id="announcementsError" style="text-align:center;margin-top:10px;"></p>
+    </div>
+
+    <!-- ANNOUNCEMENTS CONTENT -->
+    <div id="announcementsContent" class="hidden">
+      <div class="page-header">
+        <h2 class="page-title">📢 Announcements</h2>
+        <p class="page-subtitle">Stay updated with the latest news and upcoming events.</p>
+      </div>
+      <div id="announcementContainer" class="announcement-container">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- HOME SECTION -->
   <div id="homeSection">
     <img class="banner"
@@ -386,13 +408,18 @@
           summaries = data.summaries;
           dates = data.dates;
           rows = data.rows;
-          const activities = data.activities || []; // New Data
+          dates = data.dates;
+          rows = data.rows;
+          const activities = data.activities || [];
+          const announcements = data.announcements || []; // New Data
+          window.announcementsData = announcements; // Store globally for unlock access
           IS_ADMIN = data.isAdmin;
 
           // 2. Render UI
           renderSummaries();
           renderMenu();
-          renderActivities(activities); // New Render Call
+          renderActivities(activities);
+          renderAnnouncements(announcements); // New Render Call
 
           // 3. Hide Loader
           document.getElementById("loader").style.display = "none";
@@ -679,6 +706,13 @@
       activityBtn.className = "action-btn activity-btn";
       activityBtn.onclick = openActivities;
       menu.appendChild(activityBtn);
+
+      // 5. Announcements Button (NEW)
+      const announceBtn = document.createElement("button");
+      announceBtn.innerHTML = "📢 Announcements";
+      announceBtn.className = "action-btn announce-btn";
+      announceBtn.onclick = openAnnouncements;
+      menu.appendChild(announceBtn);
     }
 
     function selectDate(key, btn) {
@@ -734,6 +768,7 @@
       document.getElementById("attendancePage").classList.add("hidden");
       document.getElementById("dashboardSection").style.display = "none";
       document.getElementById("activitiesSection").style.display = "none";
+      document.getElementById("announcementsSection").style.display = "none";
 
       // Also hide attendance sub-elements
       document.getElementById("loadBalance").classList.add("hidden");
@@ -777,6 +812,78 @@
               ${desc ? `<p class="activity-desc">${desc}</p>` : ''}
               
               ${act.contact ? `<div class="activity-contact">📞 Contact: ${act.contact}</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openAnnouncements() {
+      hideAllPages();
+      document.getElementById("announcementsSection").style.display = "block";
+
+      // HIDE SEARCH/PDF
+      const bar = document.getElementById("scheduleActionBar");
+      bar.classList.remove("show");
+      bar.style.display = "none";
+      document.getElementById("pdfBar").style.display = "none";
+
+      // Highlight button
+      const btns = [...menu.children];
+      btns.forEach(b => b.classList.remove("active"));
+      const annBtn = btns.find(b => b.innerHTML.includes("Announcements")); // Fixed matching string from 'Updates' to 'Announcements' based on button text
+      if (annBtn) annBtn.classList.add("active");
+
+      // Lock Logic
+      if (!announcementsUnlocked) {
+        document.getElementById("announcementsLock").classList.remove("hidden");
+        document.getElementById("announcementsContent").classList.add("hidden");
+        document.getElementById("announcementsPass").value = "";
+        document.getElementById("announcementsError").innerText = "";
+      } else {
+        document.getElementById("announcementsLock").classList.add("hidden");
+        document.getElementById("announcementsContent").classList.remove("hidden");
+      }
+    }
+
+    function renderAnnouncements(announcements) {
+      const container = document.getElementById("announcementContainer");
+      if (!container) return;
+
+      if (!announcements || announcements.length === 0) {
+        container.innerHTML = "<p style='text-align:center;width:100%;color:#666;'>No announcements at the moment.</p>";
+        return;
+      }
+
+      container.innerHTML = announcements.map((ann, index) => {
+        // Handle multi-line description
+        const descLines = ann.description
+          ? ann.description.split('\n').map(line => `<p>${line.trim()}</p>`).join('')
+          : '';
+
+        // Handle multi-line remarks
+        const remarkLines = ann.remarks
+          ? ann.remarks.split('\n').map(line => `<p>${line.trim()}</p>`).join('')
+          : '';
+
+        // Animation class (odd/even)
+        const animClass = index % 2 === 0 ? "slide-in-left" : "slide-in-right";
+
+        return `
+          <div class="announcement-card ${animClass}">
+            <div class="announcement-image">
+              <img src="${ann.picture || 'https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg'}" alt="Announcement Image">
+            </div>
+            <div class="announcement-content">
+              <h3 class="announcement-title">${ann.heading}</h3>
+              <div class="announcement-desc">
+                ${descLines}
+              </div>
+              ${remarkLines ? `
+              <div class="announcement-remarks">
+                <span class="remarks-label">ℹ️ Note:</span>
+                ${remarkLines}
+              </div>` : ''}
             </div>
           </div>
         `;
@@ -965,6 +1072,22 @@
 
     let chartInstance = null;
     let dashboardUnlocked = false;
+    let announcementsUnlocked = false;
+
+    function unlockAnnouncements() {
+      const pass = document.getElementById("announcementsPass").value;
+      if (pass === "MahantSwami") {
+        announcementsUnlocked = true;
+        document.getElementById("announcementsLock").classList.add("hidden");
+        document.getElementById("announcementsContent").classList.remove("hidden");
+        renderAnnouncements(window.announcementsData); // Ensure data is rendered if not already
+      } else {
+        const err = document.getElementById("announcementsError");
+        err.innerText = "❌ Incorrect Password";
+        err.style.color = "red";
+        err.style.fontWeight = "bold";
+      }
+    }
 
     function openDashboard() {
       hideAllPages();
