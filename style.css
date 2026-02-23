@@ -2455,3 +2455,173 @@ body.dark-mode .remarks-label {
 
   /* Reset content alignment for mobile if needed, but center looks good */
 }
+
+/* ========================================= */
+/* 🤝 SAMPARK PAGE STYLES */
+/* ========================================= */
+
+#samparkSection {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  animation: fadeUp 0.6s ease;
+}
+
+.sampark-controls {
+  margin-bottom: 30px;
+}
+
+.sampark-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.sampark-btn:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+}
+
+/* Premium Select Styles */
+.premium-select-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 250px;
+}
+
+.premium-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 14px 44px 14px 20px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background: #f9fafb;
+  background-clip: padding-box;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  cursor: pointer;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-select:hover {
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15);
+  transform: translateY(-1px);
+  background: white;
+}
+
+.premium-select:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+  background: white;
+}
+
+.premium-select-arrow {
+  transition: transform 0.3s ease;
+}
+
+.premium-select:focus~.premium-select-arrow {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+#samparkSearchInput:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  background: white !important;
+}
+
+.sampark-table-container {
+  overflow-x: auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  background: white;
+}
+
+.sampark-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.sampark-table th {
+  padding: 16px;
+  font-weight: 700;
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.1);
+  border-bottom: 2px solid rgba(245, 158, 11, 0.2);
+  white-space: nowrap;
+}
+
+.sampark-table td {
+  padding: 16px;
+  color: #374151;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.sampark-tr {
+  transition: background-color 0.3s ease;
+}
+
+.sampark-tr:hover {
+  background-color: #fffbeb;
+}
+
+/* Animations */
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode Overrides */
+body.dark-mode .sampark-table-container {
+  background: #1e293b;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .sampark-table th {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+body.dark-mode .sampark-table td {
+  color: #e2e8f0;
+  border-bottom: 1px solid #334155;
+}
+
+body.dark-mode .sampark-tr:hover {
+  background-color: #334155;
+}
+
+body.dark-mode .premium-select {
+  background: rgba(30, 41, 59, 0.9);
+  color: #f8fafc;
+  border-color: #475569;
+}
+
+body.dark-mode .premium-select:hover,
+body.dark-mode .premium-select:focus {
+  background: #1e293b;
+}
+
+body.dark-mode #samparkSearchInput {
+  background: rgba(30, 41, 59, 0.9) !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+body.dark-mode #samparkSearchInput:focus {
+  background: #1e293b !important;
+  border-color: #3b82f6 !important;
+}
