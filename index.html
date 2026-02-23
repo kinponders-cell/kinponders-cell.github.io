@@ -3,7 +3,7 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <title>Arusha Satsang Mandal</title>
+  <title>BAPS Ravi Sabha Arusha</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Link to external CSS -->
   <link rel="stylesheet" href="style.css">
@@ -24,22 +24,24 @@
     // ==========================================
     // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
     // ==========================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbyw9MhA2ps8TSXmbuRMEUKpVPU756QCSXE23MwSLgH3X2Tjr-nvppn7wxyLgDlLCDm-/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbw36i_ICOwW2_mDmn2_BoWcqsrWzA_JjhOjgt4jbu4zeNX1Wg7moLy_wPncn5nMTleW/exec";
 
     // State Variables
     let IS_ADMIN = false;
     let summaries = [];
     let dates = [];
     let rows = [];
+    let samparkDataList = [];
 
   </script>
 
   <!-- LOADING INDICATOR -->
   <div id="loader"
     style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:20px;">
-    <img src="https://github.com/kinponders-cell/kinponders-cell.github.io/blob/main/Shri%20Swaminarayan%20Mandal%20(3).png?raw=true" width="200"
-      style="animation:pulse 1.5s infinite;">
-    <div style="font-weight:600;color:#f59e0b;">ARUSHA SATSANG MANDAL...</div>
+    <img
+      src="https://github.com/kinponders-cell/kinponders-cell.github.io/blob/main/Shri%20Swaminarayan%20Mandal%20(3).png?raw=true"
+      width="300" style="animation:pulse 1.5s infinite;">
+    <div style="font-weight:600;color:#f59e0b;">JAI SWAMINARAYAN</div>
   </div>
 
   <style>
@@ -62,7 +64,8 @@
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="home-area" onclick="showHome()">
-      <img src="https://github.com/kinponders-cell/kinponders-cell.github.io/blob/main/Arusha%20Mandir%20Round.png?raw=true">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRo_j1WG-AefLwy3lKGszgbTfLf9tYW1j78w&s"
+        alt="BAPS Logo">
       <h1>ARUSHA SATSANG MANDAL</h1>
     </div>
 
@@ -235,6 +238,15 @@
       <div class="chart-container">
         <canvas id="attendanceChart"></canvas>
       </div>
+
+      <!-- NEW SAMPARK FAMILIES CHART -->
+      <div class="dash-header" style="margin-top: 30px;">
+        <h2 class="dash-title">Sampark Reporting</h2>
+        <div class="dash-subtitle">Total Families Contacted per Karyakar</div>
+      </div>
+      <div class="chart-container">
+        <canvas id="samparkChart"></canvas>
+      </div>
     </div>
   </div>
 
@@ -271,6 +283,174 @@
         <!-- Injected via JS -->
       </div>
     </div>
+  </div>
+
+  <!-- SAMPARK SECTION -->
+  <div id="samparkSection" style="display:none;">
+    <!-- SAMPARK LOCK -->
+    <div id="samparkLock" class="lock-card">
+      <h2>🔒 Sampark Access</h2>
+      <input type="password" id="samparkPass" placeholder="Enter password">
+      <button onclick="unlockSampark()">View Sampark</button>
+      <p id="samparkError" style="text-align:center;margin-top:10px;"></p>
+    </div>
+
+    <!-- SAMPARK CONTENT -->
+    <div id="samparkContent" class="hidden">
+      <div class="page-header">
+        <h2 class="page-title">🤝 Sampark <span id="badgeTotalFamilies"
+            style="font-size: 0.5em; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 6px 14px; border-radius: 999px; vertical-align: middle; margin-left: 12px; font-weight: 700; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(245,158,11,0.3); display: none;"></span>
+        </h2>
+        <p class="page-subtitle">Volunteer Contact Data & Details</p>
+      </div>
+
+      <div class="sampark-controls">
+        <div style="text-align: right; margin-bottom: 15px;">
+          <button onclick="showSamparkFormModal('add')"
+            style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(245,158,11,0.3); transition: transform 0.2s;">
+            ➕ Add Contact
+          </button>
+        </div>
+        <div class="karyakar-filter"
+          style="display: flex; flex-wrap: wrap; align-items: center; gap: 15px; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+
+          <label for="karyakarSelect" style="font-weight: 700; font-size: 16px; color: #374151; white-space: nowrap;">👤
+            Select Karyakar:</label>
+          <div class="premium-select-wrapper" style="position: relative; flex: 1; min-width: 200px; max-width: 400px;">
+            <select id="karyakarSelect" onchange="filterSamparkData()" class="premium-select">
+              <option value="">-- View All Karyakars --</option>
+            </select>
+            <div class="premium-select-arrow"
+              style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #f59e0b; font-size: 14px; font-weight: 900;">
+              ▼</div>
+          </div>
+
+          <div style="width: 1px; height: 30px; background: #e5e7eb; margin: 0 10px; display: none;"></div>
+          <!-- Divider for desktop -->
+
+          <div style="position: relative; flex: 1; min-width: 200px; max-width: 400px;">
+            <span
+              style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 14px;">🔍</span>
+            <input type="text" id="samparkSearchInput" oninput="filterSamparkData()"
+              placeholder="Search Name or Phone..."
+              style="width: 100%; padding: 14px 20px 14px 44px; border-radius: 999px; border: 2px solid transparent; background: #f9fafb; font-size: 16px; font-weight: 600; color: #1f2937; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); outline: none; transition: all 0.3s ease;">
+          </div>
+
+        </div>
+
+        <div class="stats-grid sampark-stats hidden" id="samparkStats"
+          style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="stat-card stat-total">
+            <div class="stat-icon">🏡</div>
+            <div class="stat-info">
+              <h3>Families Contacted</h3>
+              <span class="value" id="totalFamiliesContacted">-</span>
+            </div>
+          </div>
+          <div class="stat-card stat-gents" style="grid-column: span 2;">
+            <div class="stat-icon" style="background: rgba(236,72,153,0.1); color: #ec4899;">📍</div>
+            <div class="stat-info">
+              <h3>Areas Overview</h3>
+              <div id="areasCoveredText"
+                style="margin-top: 10px; font-size: 14px; color: var(--text-color); line-height: 1.5; font-weight: 500;">
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sampark-table-container hidden" id="samparkTableContainer"
+        style="margin-top: 20px; overflow-x: auto; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background: var(--card-bg);">
+        <table class="sampark-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr style="background: rgba(245,158,11,0.1); border-bottom: 2px solid rgba(245,158,11,0.2);">
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">First Name</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Last Name</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Contact No</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Address</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Remark</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Members</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Address 2</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="samparkTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAMPARK MODAL -->
+  <div id="samparkModalBackdrop"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998; backdrop-filter:blur(4px);"
+    onclick="closeSamparkFormModal()"></div>
+  <div id="samparkModal"
+    style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:30px; border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.2); z-index:9999; max-width:90%; width:400px; max-height:90vh; overflow-y:auto;">
+    <h2 id="samparkModalTitle" style="margin-top:0; color:#1f2937;">Add Contact</h2>
+    <form id="samparkForm" onsubmit="submitSamparkForm(event)">
+      <div style="margin-bottom:15px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Karyakar Name *</label>
+        <input type="text" id="smKaryakar" required
+          style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+      </div>
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <div style="flex:1;">
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">First Name *</label>
+          <input type="text" id="smFirstName" required
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+        </div>
+        <div style="flex:1;">
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Last Name</label>
+          <input type="text" id="smLastName"
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+        </div>
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Contact No *</label>
+        <input type="text" id="smContact" required
+          style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Address</label>
+        <input type="text" id="smAddress"
+          style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Address 2</label>
+        <input type="text" id="smAddress2"
+          style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+      </div>
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <div style="flex:2;">
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Remark</label>
+          <input type="text" id="smRemark"
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+        </div>
+        <div style="flex:1;">
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">Members</label>
+          <input type="number" id="smMembers"
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+        </div>
+      </div>
+      <hr style="border:0; border-top:1px solid #e5e7eb; margin:20px 0;">
+      <div style="margin-bottom:20px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#b45309;">🔒 Karyakar Password *</label>
+        <input type="password" id="smPassword" required placeholder="Enter your password"
+          style="width:100%; padding:10px; border-radius:10px; border:1px solid #f59e0b; box-sizing:border-box; background:#fffbeb;">
+        <p style="margin:5px 0 0 0; font-size:12px; color:#6b7280;">Required to verify your identity.</p>
+      </div>
+
+      <div id="smError" style="color:red; margin-bottom:15px; font-weight:600; font-size:14px; display:none;"></div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" onclick="closeSamparkFormModal()"
+          style="background:#f3f4f6; color:#374151; border:none; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer;">Cancel</button>
+        <button type="submit" id="smSubmitBtn"
+          style="background:#f59e0b; color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer;">Save</button>
+      </div>
+    </form>
   </div>
 
   <!-- HOME SECTION -->
@@ -413,6 +593,7 @@
           const activities = data.activities || [];
           const announcements = data.announcements || []; // New Data
           window.announcementsData = announcements; // Store globally for unlock access
+          samparkDataList = data.sampark || []; // SAMPARK DATA
           IS_ADMIN = data.isAdmin;
 
           // 2. Render UI
@@ -713,6 +894,13 @@
       announceBtn.className = "action-btn announce-btn";
       announceBtn.onclick = openAnnouncements;
       menu.appendChild(announceBtn);
+
+      // 6. Sampark Button
+      const samparkBtn = document.createElement("button");
+      samparkBtn.innerHTML = "🤝 Sampark";
+      samparkBtn.className = "action-btn sampark-btn";
+      samparkBtn.onclick = openSampark;
+      menu.appendChild(samparkBtn);
     }
 
     function selectDate(key, btn) {
@@ -769,6 +957,7 @@
       document.getElementById("dashboardSection").style.display = "none";
       document.getElementById("activitiesSection").style.display = "none";
       document.getElementById("announcementsSection").style.display = "none";
+      document.getElementById("samparkSection").style.display = "none";
 
       // Also hide attendance sub-elements
       document.getElementById("loadBalance").classList.add("hidden");
@@ -889,6 +1078,273 @@
         `;
       }).join('');
     }
+
+    function openSampark() {
+      hideAllPages();
+      document.getElementById("samparkSection").style.display = "block";
+
+      const bar = document.getElementById("scheduleActionBar");
+      bar.classList.remove("show");
+      bar.style.display = "none";
+      document.getElementById("pdfBar").style.display = "none";
+
+      const btns = [...menu.children];
+      btns.forEach(b => b.classList.remove("active"));
+      const sBtn = btns.find(b => b.innerHTML.includes("Sampark"));
+      if (sBtn) sBtn.classList.add("active");
+
+      if (!samparkUnlocked) {
+        document.getElementById("samparkLock").classList.remove("hidden");
+        document.getElementById("samparkContent").classList.add("hidden");
+        document.getElementById("samparkPass").value = "";
+        document.getElementById("samparkError").innerText = "";
+      } else {
+        document.getElementById("samparkLock").classList.add("hidden");
+        document.getElementById("samparkContent").classList.remove("hidden");
+        initSamparkDropdown();
+        // Auto trigger filter to show all initially
+        filterSamparkData();
+      }
+    }
+
+    function initSamparkDropdown() {
+      const select = document.getElementById("karyakarSelect");
+      const badge = document.getElementById("badgeTotalFamilies");
+      if (badge && samparkDataList.length > 0) {
+        badge.innerText = `Total Contacted: ${samparkDataList.length}`;
+        badge.style.display = "inline-block";
+      }
+
+      if (select.options.length > 1) return; // already initialized
+      const names = [...new Set(samparkDataList.map(item => item.karyakar?.trim()).filter(Boolean))].sort();
+      names.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+    }
+
+    function filterSamparkData() {
+      const selectedName = document.getElementById("karyakarSelect").value;
+      const searchQuery = document.getElementById("samparkSearchInput").value.trim().toLowerCase();
+      const stats = document.getElementById("samparkStats");
+      const container = document.getElementById("samparkTableContainer");
+      const tbody = document.getElementById("samparkTableBody");
+
+      let filtered = samparkDataList;
+
+      // Filter by Karyakar
+      if (selectedName) {
+        filtered = filtered.filter(item => item.karyakar?.trim() === selectedName);
+      }
+
+      // Filter by Name or Phone
+      if (searchQuery) {
+        filtered = filtered.filter(item => {
+          const fn = (item.firstName || "").toLowerCase();
+          const ln = (item.lastName || "").toLowerCase();
+          const fullName = fn + " " + ln;
+          const phone = (item.contact || "").toString().toLowerCase();
+
+          return fullName.includes(searchQuery) || phone.includes(searchQuery);
+        });
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color:#6b7280;">No data found.</td></tr>`;
+        stats.classList.add("hidden");
+        container.classList.remove("hidden");
+        return;
+      }
+
+      // Total families contacted (count of rows)
+      document.getElementById("totalFamiliesContacted").textContent = filtered.length;
+
+      // Group by Area/Address
+      const areaCounts = {};
+      filtered.forEach(item => {
+        const area = item.address?.trim() || "Unknown";
+        areaCounts[area] = (areaCounts[area] || 0) + 1;
+      });
+      const areaText = Object.entries(areaCounts).map(([area, count]) => `📍 ${area} : ${count}`).join('<br>');
+      document.getElementById("areasCoveredText").innerHTML = areaText || "-";
+
+      // Render Table Rows with simple animation delay
+      tbody.innerHTML = filtered.map((item, index) => {
+        const delay = index * 0.05;
+        const itemJson = JSON.stringify(item).replace(/"/g, '&quot;');
+        return `<tr class="sampark-tr" style="animation: slideInUp 0.3s ease forwards; animation-delay: ${delay}s; opacity: 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
+            <td style="padding: 16px;">${item.firstName || ''}</td>
+            <td style="padding: 16px;">${item.lastName || ''}</td>
+            <td style="padding: 16px;">${item.contact || ''}</td>
+            <td style="padding: 16px;">${item.address || ''}</td>
+            <td style="padding: 16px;">${item.remark || ''}</td>
+            <td style="padding: 16px;">${item.members || ''}</td>
+            <td style="padding: 16px;">${item.address2 || ''}</td>
+            <td style="padding: 16px; white-space: nowrap;">
+              <button onclick="showSamparkFormModal('edit', ${itemJson})" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 15px; transition: transform 0.2s;" title="Edit" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">✏️</button>
+              <button onclick="confirmDeleteSampark(${itemJson})" style="background: none; border: none; cursor: pointer; font-size: 18px; transition: transform 0.2s;" title="Delete" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🗑️</button>
+            </td>
+          </tr>`;
+      }).join('');
+
+      stats.classList.remove("hidden");
+      container.classList.remove("hidden");
+    }
+
+    // ===================================
+    // SAMPARK ADD/EDIT/DELETE LOGIC
+    // ===================================
+    let samparkFormMode = 'add';
+    let samparkEditOldData = null;
+
+    function showSamparkFormModal(mode, item = null) {
+      samparkFormMode = mode;
+      document.getElementById('smError').style.display = 'none';
+
+      if (mode === 'add') {
+        document.getElementById('samparkModalTitle').innerText = 'Add Contact';
+        document.getElementById('samparkForm').reset();
+
+        // Pre-fill karyakar name if dropdown is selected
+        const selectedK = document.getElementById('karyakarSelect').value;
+        if (selectedK) document.getElementById('smKaryakar').value = selectedK;
+
+      } else {
+        document.getElementById('samparkModalTitle').innerText = 'Edit Contact';
+        samparkEditOldData = item;
+
+        document.getElementById('smKaryakar').value = item.karyakar || '';
+        document.getElementById('smFirstName').value = item.firstName || '';
+        document.getElementById('smLastName').value = item.lastName || '';
+        document.getElementById('smContact').value = item.contact || '';
+        document.getElementById('smAddress').value = item.address || '';
+        document.getElementById('smAddress2').value = item.address2 || '';
+        document.getElementById('smRemark').value = item.remark || '';
+        document.getElementById('smMembers').value = item.members || '';
+        document.getElementById('smPassword').value = '';
+      }
+
+      document.getElementById('samparkModalBackdrop').style.display = 'block';
+      document.getElementById('samparkModal').style.display = 'block';
+    }
+
+    function closeSamparkFormModal() {
+      document.getElementById('samparkModalBackdrop').style.display = 'none';
+      document.getElementById('samparkModal').style.display = 'none';
+    }
+
+    function submitSamparkForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('smSubmitBtn');
+      const err = document.getElementById('smError');
+      err.style.display = 'none';
+
+      const pwd = document.getElementById('smPassword').value;
+      if (!pwd) {
+        err.innerText = "Password is required!";
+        err.style.display = 'block';
+        return;
+      }
+
+      const newData = {
+        karyakar: document.getElementById('smKaryakar').value,
+        firstName: document.getElementById('smFirstName').value,
+        lastName: document.getElementById('smLastName').value,
+        contact: document.getElementById('smContact').value,
+        address: document.getElementById('smAddress').value,
+        address2: document.getElementById('smAddress2').value,
+        remark: document.getElementById('smRemark').value,
+        members: document.getElementById('smMembers').value
+      };
+
+      const payload = {
+        action: samparkFormMode === 'add' ? 'addSampark' : 'editSampark',
+        password: pwd
+      };
+
+      if (samparkFormMode === 'add') {
+        payload.data = newData;
+      } else {
+        payload.oldData = samparkEditOldData;
+        payload.newData = newData;
+      }
+
+      btn.innerText = "Saving...";
+      btn.disabled = true;
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(resp => {
+          if (resp.success) {
+            closeSamparkFormModal();
+            refreshSamparkData();
+          } else {
+            throw new Error(resp.error || "Failed to save");
+          }
+        })
+        .catch(error => {
+          err.innerText = error.message;
+          err.style.display = 'block';
+        })
+        .finally(() => {
+          btn.innerText = "Save";
+          btn.disabled = false;
+        });
+    }
+
+    function confirmDeleteSampark(item) {
+      const pwd = prompt("Enter Karyakar Password to delete this contact:");
+      if (!pwd) return;
+
+      if (!confirm(`Are you sure you want to delete ${item.firstName} ${item.lastName}?`)) return;
+
+      document.getElementById("loader").style.display = "flex";
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          action: 'deleteSampark',
+          data: item,
+          password: pwd
+        })
+      })
+        .then(res => res.json())
+        .then(resp => {
+          if (resp.success) {
+            refreshSamparkData();
+          } else {
+            alert("Error: " + (resp.error || "Delete failed"));
+            document.getElementById("loader").style.display = "none";
+          }
+        })
+        .catch(error => {
+          alert("Error: " + error.message);
+          document.getElementById("loader").style.display = "none";
+        });
+    }
+
+    function refreshSamparkData() {
+      document.getElementById("loader").style.display = "flex";
+      fetch(API_URL)
+        .then(res => res.json())
+        .then(data => {
+          samparkDataList = data.sampark || [];
+          initSamparkDropdown();
+          filterSamparkData();
+          document.getElementById("loader").style.display = "none";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Failed to refresh data.");
+          document.getElementById("loader").style.display = "none";
+        });
+    }
+
 
     function getDutyClass(task) {
       const t = task.toLowerCase();
@@ -1073,6 +1529,23 @@
     let chartInstance = null;
     let dashboardUnlocked = false;
     let announcementsUnlocked = false;
+    let samparkUnlocked = false;
+
+    function unlockSampark() {
+      const pass = document.getElementById("samparkPass").value;
+      if (pass === "MahantSwami") {
+        samparkUnlocked = true;
+        document.getElementById("samparkLock").classList.add("hidden");
+        document.getElementById("samparkContent").classList.remove("hidden");
+        initSamparkDropdown();
+        filterSamparkData();
+      } else {
+        const err = document.getElementById("samparkError");
+        err.innerText = "❌ Incorrect Password";
+        err.style.color = "red";
+        err.style.fontWeight = "bold";
+      }
+    }
 
     function unlockAnnouncements() {
       const pass = document.getElementById("announcementsPass").value;
@@ -1130,6 +1603,7 @@
         .then(data => {
           if (data.error) { console.error(data.error); return; }
           renderDashboard(data);
+          renderSamparkDashboard();
         });
     }
 
@@ -1170,6 +1644,51 @@
           scales: {
             x: { stacked: true, grid: { display: false } },
             y: { stacked: true, beginAtZero: true, grid: { borderDash: [4, 4] } }
+          }
+        }
+      });
+    }
+
+    let samparkChartInstance = null;
+    function renderSamparkDashboard() {
+      const ctx = document.getElementById('samparkChart').getContext('2d');
+      if (samparkChartInstance) samparkChartInstance.destroy();
+
+      if (!samparkDataList || samparkDataList.length === 0) return;
+
+      const counts = {};
+      samparkDataList.forEach(item => {
+        const k = item.karyakar?.trim() || "Unknown";
+        counts[k] = (counts[k] || 0) + 1;
+      });
+
+      const sortedKaryakars = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+      const data = sortedKaryakars.map(k => counts[k]);
+
+      samparkChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: sortedKaryakars,
+          datasets: [{
+            label: 'Families Contacted',
+            data: data,
+            backgroundColor: '#f59e0b',
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(255,255,255,0.95)',
+              titleColor: '#1e293b', bodyColor: '#475569', borderColor: '#e2e8f0', borderWidth: 1
+            }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: { beginAtZero: true, grid: { borderDash: [4, 4] } }
           }
         }
       });
@@ -1371,9 +1890,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
