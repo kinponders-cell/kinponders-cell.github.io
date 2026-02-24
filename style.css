@@ -1417,6 +1417,32 @@ body.dark-mode .time-range span {
   color: var(--gold);
 }
 
+/* Sidebar Menu (Dark Mode) */
+body.dark-mode #sidebarMenu {
+  background: #111827 !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-mode #sidebarMenu h2 {
+  color: #f3f4f6 !important;
+}
+
+body.dark-mode #sidebarMenu>div {
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+body.dark-mode #sidebarOverlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+body.dark-mode #hamburgerBtn span {
+  background: #e5e7eb !important;
+}
+
+body.dark-mode #sidebarMenu button.sidebar-btn {
+  color: #d1d5db !important;
+}
+
 body.dark-mode .time-badge {
   background: rgba(251, 191, 36, 0.1);
   color: var(--gold);
