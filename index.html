@@ -332,29 +332,64 @@
             <span
               style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 14px;">🔍</span>
             <input type="text" id="samparkSearchInput" oninput="filterSamparkData()"
-              placeholder="Search Name or Phone..."
+              placeholder="Search Name, Phone, or Address..."
               style="width: 100%; padding: 14px 20px 14px 44px; border-radius: 999px; border: 2px solid transparent; background: #f9fafb; font-size: 16px; font-weight: 600; color: #1f2937; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); outline: none; transition: all 0.3s ease; box-sizing: border-box;">
           </div>
 
         </div>
 
         <div class="stats-grid sampark-stats hidden" id="samparkStats"
-          style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-          <div class="stat-card stat-total">
-            <div class="stat-icon">🏡</div>
+          style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;">
+          <div class="stat-card stat-total" style="padding: 15px;">
+            <div class="stat-icon" style="width: 35px; height: 35px; font-size: 18px;">🏡</div>
             <div class="stat-info">
-              <h3>Families Contacted</h3>
-              <span class="value" id="totalFamiliesContacted">-</span>
+              <h3 style="font-size: 12px; margin-bottom: 2px;">Total Contacted</h3>
+              <span class="value" id="totalFamiliesContacted" style="font-size: 18px;">-</span>
             </div>
           </div>
-          <div class="stat-card stat-gents" style="grid-column: span 2;">
-            <div class="stat-icon" style="background: rgba(236,72,153,0.1); color: #ec4899;">📍</div>
+          <div class="stat-card stat-gents" style="padding: 15px; grid-column: span 1;">
+            <div class="stat-icon"
+              style="background: rgba(236,72,153,0.1); color: #ec4899; width: 35px; height: 35px; font-size: 18px;">📍
+            </div>
             <div class="stat-info">
-              <h3>Areas Overview</h3>
+              <h3 style="font-size: 12px; margin-bottom: 2px;">Areas</h3>
               <div id="areasCoveredText"
-                style="margin-top: 10px; font-size: 14px; color: var(--text-color); line-height: 1.5; font-weight: 500;">
+                style="margin-top: 5px; font-size: 12px; color: var(--text-color); line-height: 1.2; font-weight: 500; max-height: 40px; overflow-y: auto;">
                 -
               </div>
+            </div>
+          </div>
+          <div class="stat-card stat-missing transition-all cursor-pointer" id="cardMissingContact"
+            onclick="toggleSamparkFilter('missing_contact')"
+            style="padding: 15px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s;">
+            <div class="stat-icon"
+              style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 35px; height: 35px; font-size: 18px;">📞
+            </div>
+            <div class="stat-info" style="display: flex; flex-direction: column;">
+              <h3 style="font-size: 12px; margin-bottom: 2px;">No Contact</h3>
+              <span class="value" id="countMissingContact" style="color: #ef4444; font-size: 18px;">-</span>
+            </div>
+          </div>
+          <div class="stat-card stat-blank cursor-pointer" id="cardBlankAddress"
+            onclick="toggleSamparkFilter('blank_address')"
+            style="padding: 15px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s;">
+            <div class="stat-icon"
+              style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 35px; height: 35px; font-size: 18px;">🏠
+            </div>
+            <div class="stat-info" style="display: flex; flex-direction: column;">
+              <h3 style="font-size: 12px; margin-bottom: 2px;">Blank Address</h3>
+              <span class="value" id="countBlankAddress" style="color: #ef4444; font-size: 18px;">-</span>
+            </div>
+          </div>
+          <div class="stat-card stat-duplicate cursor-pointer" id="cardDuplicateContact"
+            onclick="toggleSamparkFilter('duplicate_contact')"
+            style="padding: 15px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s;">
+            <div class="stat-icon"
+              style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 35px; height: 35px; font-size: 18px;">👥
+            </div>
+            <div class="stat-info" style="display: flex; flex-direction: column;">
+              <h3 style="font-size: 12px; margin-bottom: 2px;">Duplicate No.</h3>
+              <span class="value" id="countDuplicateContact" style="color: #ef4444; font-size: 18px;">-</span>
             </div>
           </div>
         </div>
@@ -456,7 +491,7 @@
   <!-- HOME SECTION -->
   <div id="homeSection">
     <img class="banner"
-      src="https://github.com/kinponders-cell/kinponders-cell.github.io/blob/main/Banner.png?raw=true">
+      src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
 
     <!-- SUMMARY SECTION -->
 
@@ -1125,6 +1160,30 @@
       });
     }
 
+    let activeSamparkFilter = null;
+    function toggleSamparkFilter(filterMode) {
+      if (activeSamparkFilter === filterMode) {
+        activeSamparkFilter = null; // Toggle off
+      } else {
+        activeSamparkFilter = filterMode;
+      }
+
+      // Update visual selection of cards
+      const applyStyle = (id, isActive) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.style.borderColor = isActive ? '#ef4444' : 'transparent';
+          el.style.background = isActive ? 'rgba(239,68,68,0.05)' : 'white';
+        }
+      };
+
+      applyStyle("cardMissingContact", activeSamparkFilter === 'missing_contact');
+      applyStyle("cardBlankAddress", activeSamparkFilter === 'blank_address');
+      applyStyle("cardDuplicateContact", activeSamparkFilter === 'duplicate_contact');
+
+      filterSamparkData();
+    }
+
     function filterSamparkData() {
       const selectedName = document.getElementById("karyakarSelect").value;
       const searchQuery = document.getElementById("samparkSearchInput").value.trim().toLowerCase();
@@ -1139,15 +1198,57 @@
         filtered = filtered.filter(item => item.karyakar?.trim() === selectedName);
       }
 
-      // Filter by Name or Phone
+      // Filter by Name, Phone, or Address
       if (searchQuery) {
         filtered = filtered.filter(item => {
           const fn = (item.firstName || "").toLowerCase();
           const ln = (item.lastName || "").toLowerCase();
           const fullName = fn + " " + ln;
           const phone = (item.contact || "").toString().toLowerCase();
+          const addr1 = (item.address || "").toLowerCase();
+          const addr2 = (item.address2 || "").toLowerCase();
 
-          return fullName.includes(searchQuery) || phone.includes(searchQuery);
+          return fullName.includes(searchQuery) || phone.includes(searchQuery) || addr1.includes(searchQuery) || addr2.includes(searchQuery);
+        });
+      }
+
+      // Calculate missing, blank address, duplicates counts
+      let missingCount = 0;
+      let blankAddressCount = 0;
+      let duplicateCount = 0;
+
+      const baseContactCounts = {};
+      filtered.forEach(item => {
+        const phone = (item.contact || "").toString().trim();
+        if (phone) {
+          baseContactCounts[phone] = (baseContactCounts[phone] || 0) + 1;
+        }
+      });
+
+      filtered.forEach(item => {
+        const phone = (item.contact || "").toString().trim();
+        const address = (item.address || "").toString().trim();
+        if (!phone) missingCount++;
+        if (!address) blankAddressCount++;
+        if (phone && baseContactCounts[phone] > 1) duplicateCount++;
+      });
+
+      const countMissingEl = document.getElementById("countMissingContact");
+      if (countMissingEl) countMissingEl.textContent = missingCount;
+      const countBlankEl = document.getElementById("countBlankAddress");
+      if (countBlankEl) countBlankEl.textContent = blankAddressCount;
+      const countDupEl = document.getElementById("countDuplicateContact");
+      if (countDupEl) countDupEl.textContent = duplicateCount;
+
+      // Apply card filter if active
+      if (activeSamparkFilter === 'missing_contact') {
+        filtered = filtered.filter(item => !(item.contact || "").toString().trim());
+      } else if (activeSamparkFilter === 'blank_address') {
+        filtered = filtered.filter(item => !(item.address || "").toString().trim());
+      } else if (activeSamparkFilter === 'duplicate_contact') {
+        filtered = filtered.filter(item => {
+          const phone = (item.contact || "").toString().trim();
+          return phone && baseContactCounts[phone] > 1;
         });
       }
 
@@ -1173,12 +1274,27 @@
       // Render Table Rows with simple animation delay
       tbody.innerHTML = filtered.map((item, index) => {
         const delay = index * 0.05;
+        const phoneStr = (item.contact || "").toString().trim();
+        const addressStr = (item.address || "").toString().trim();
+
+        const isMissingContact = !phoneStr;
+        const isBlankAddress = !addressStr;
+        const isDuplicateContact = phoneStr && baseContactCounts[phoneStr] > 1;
+
+        const phoneStyle = (isMissingContact || isDuplicateContact) ? "color: red; font-weight: bold;" : "";
+        const addressStyle = isBlankAddress ? "color: red; font-weight: bold; background: rgba(239, 68, 68, 0.1);" : "";
+
+        const phoneCellContent = isMissingContact ? "<span style='color:red;'>Missing</span>" :
+          (isDuplicateContact ? `<span style='color:red;'>${phoneStr} (Duplicate)</span>` : phoneStr);
+
+        const addressCellContent = isBlankAddress ? "<span style='color:red;'>Missing</span>" : addressStr;
+
         const itemJson = JSON.stringify(item).replace(/"/g, '&quot;');
         return `<tr class="sampark-tr" style="animation: slideInUp 0.3s ease forwards; animation-delay: ${delay}s; opacity: 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
             <td style="padding: 16px;">${item.firstName || ''}</td>
             <td style="padding: 16px;">${item.lastName || ''}</td>
-            <td style="padding: 16px;">${item.contact || ''}</td>
-            <td style="padding: 16px;">${item.address || ''}</td>
+            <td style="padding: 16px; ${phoneStyle}">${phoneCellContent}</td>
+            <td style="padding: 16px; ${addressStyle}">${addressCellContent}</td>
             <td style="padding: 16px;">${item.remark || ''}</td>
             <td style="padding: 16px;">${item.members || ''}</td>
             <td style="padding: 16px;">${item.address2 || ''}</td>
@@ -1890,4 +2006,3 @@
 </body>
 
 </html>
-
