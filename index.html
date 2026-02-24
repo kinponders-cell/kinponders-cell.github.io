@@ -305,7 +305,12 @@
       </div>
 
       <div class="sampark-controls">
-        <div style="text-align: right; margin-bottom: 15px;">
+        <div style="text-align: right; margin-bottom: 15px; display: flex; justify-content: flex-end; gap: 10px;">
+          <button onclick="printSamparkPDF()"
+            style="background: #065f46; color: white; border: none; padding: 10px 20px; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(6,95,70,0.3); transition: transform 0.2s;">
+            <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4"
+              style="height: 20px; vertical-align: middle; margin-right: 5px;"> Export PDF
+          </button>
           <button onclick="showSamparkFormModal('add')"
             style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(245,158,11,0.3); transition: transform 0.2s;">
             ➕ Add Contact
@@ -603,6 +608,20 @@
   </table>
   <div id="pdfDuration" style="display:none; text-align:right; font-size:14px; margin-top:15px; padding-right:10px;">
   </div>
+
+  <!-- SAMPARK PDF TABLE (PRINT ONLY) -->
+  <table id="samparkPdfTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>👤 Name</th>
+        <th>📞 Contact</th>
+        <th>🏠 Address</th>
+        <th>📝 Remark</th>
+        <th>👥 Members</th>
+      </tr>
+    </thead>
+    <tbody id="samparkPdfTableBody"></tbody>
+  </table>
 
   <script>
     // =============================
@@ -1190,6 +1209,7 @@
       const stats = document.getElementById("samparkStats");
       const container = document.getElementById("samparkTableContainer");
       const tbody = document.getElementById("samparkTableBody");
+      const pdfBody = document.getElementById("samparkPdfTableBody");
 
       let filtered = samparkDataList;
 
@@ -1304,6 +1324,23 @@
             </td>
           </tr>`;
       }).join('');
+
+      // Render PDF Table
+      if (pdfBody) {
+        pdfBody.innerHTML = filtered.map(item => {
+          const fullName = `${item.firstName || ''} ${item.lastName || ''}`.trim();
+          const addressParts = [item.address || '', item.address2 || ''].map(s => s.trim()).filter(Boolean);
+          const address = addressParts.join(', ');
+
+          return `<tr>
+              <td><span style="font-weight:600; color:#065f46;">${fullName}</span></td>
+              <td>${item.contact || '<span style="color:#ef4444; font-weight:bold;">Missing</span>'}</td>
+              <td>${address || '<span style="color:#ef4444; font-weight:bold;">Missing</span>'}</td>
+              <td>${item.remark || '-'}</td>
+              <td style="text-align:center;">${item.members || '-'}</td>
+            </tr>`;
+        }).join('');
+      }
 
       stats.classList.remove("hidden");
       container.classList.remove("hidden");
@@ -1463,6 +1500,7 @@
 
 
     function getDutyClass(task) {
+      if (!task) return 'default'; // safeguard
       const t = task.toLowerCase();
       if (t.includes('emcee')) return 'emcee';
       if (t.includes('dhun')) return 'dhun';
@@ -1475,6 +1513,35 @@
     }
 
     function saveAsPDF() { window.print(); }
+
+    function printSamparkPDF() {
+      document.body.classList.add('printing-sampark');
+
+      const printTitleEl = document.querySelector('.print-title h2');
+      const oldTitle = printTitleEl.innerHTML;
+      printTitleEl.innerHTML = "BAPS Ravi Sabha 📜 Sampark List";
+
+      const selectedName = document.getElementById("karyakarSelect").value;
+      const printDateEl = document.getElementById("printDate");
+      const oldDate = printDateEl.innerText;
+
+      let dateText = "<b>Date:</b> " + new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      if (selectedName) dateText += " | <b>Karyakar:</b> " + selectedName;
+      if (activeSamparkFilter) {
+        let fName = activeSamparkFilter === 'missing_contact' ? 'No Contact' :
+          (activeSamparkFilter === 'blank_address' ? 'Blank Address' : 'Duplicate No.');
+        dateText += " | <b>Filter:</b> " + fName;
+      }
+      printDateEl.innerHTML = dateText;
+
+      window.print();
+
+      setTimeout(() => {
+        document.body.classList.remove('printing-sampark');
+        printTitleEl.innerHTML = oldTitle;
+        printDateEl.innerHTML = oldDate;
+      }, 500);
+    }
 
     function openFromSummary(dateKey) {
       const buttons = [...menu.children];
