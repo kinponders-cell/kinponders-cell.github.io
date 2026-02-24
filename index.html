@@ -66,7 +66,20 @@
     <div class="home-area" onclick="showHome()">
       <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRo_j1WG-AefLwy3lKGszgbTfLf9tYW1j78w&s"
         alt="BAPS Logo">
-      <h1>ARUSHA SATSANG MANDAL</h1>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h1>ARUSHA SATSANG MANDAL</h1>
+        <span id="pageIndicator" style="
+          display: none; 
+          font-weight: 700; 
+          font-size: 15px; 
+          color: #065f46; 
+          background: rgba(255, 255, 255, 0.4); 
+          padding: 4px 10px; 
+          border-radius: 999px;
+          backdrop-filter: blur(4px);
+          animation: slideInLeft 0.3s ease;">
+        </span>
+      </div>
     </div>
 
     <!-- THEME TOGGLE BUTTON -->
@@ -86,8 +99,49 @@
       🌙
     </button>
 
-    <div id="menu"></div>
-    <!-- Buttons moved to #menu -->
+    <!-- HAMBURGER MENU ICON -->
+    <button id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Open Menu" style="
+            background: transparent; 
+            border: none; 
+            width: 40px; 
+            height: 40px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-around; 
+            cursor: pointer; 
+            padding: 8px;
+            z-index: 60;">
+      <span
+        style="display: block; width: 100%; height: 3px; background: var(--dark); border-radius: 2px; transition: all 0.3s ease;"></span>
+      <span
+        style="display: block; width: 100%; height: 3px; background: var(--dark); border-radius: 2px; transition: all 0.3s ease;"></span>
+      <span
+        style="display: block; width: 100%; height: 3px; background: var(--dark); border-radius: 2px; transition: all 0.3s ease;"></span>
+    </button>
+  </div>
+
+  <!-- SIDEBAR OVERLAY & MENU -->
+  <div id="sidebarOverlay" onclick="toggleSidebar()" style="
+      position: fixed; top: 0; right: 0; width: 100%; height: 100%; 
+      background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; visibility: hidden; 
+      transition: all 0.4s ease; backdrop-filter: blur(4px);">
+  </div>
+
+  <div id="sidebarMenu" style="
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100%; 
+      background: white; z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.1); 
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; 
+      flex-direction: column; padding: 20px 0; overflow-y: auto;">
+
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px; border-bottom: 1px solid #f3f4f6; margin-bottom: 10px;">
+      <h2 style="margin: 0; font-size: 20px; color: var(--dark); font-weight: 800;">Navigation</h2>
+      <button onclick="toggleSidebar()"
+        style="background: none; border: none; font-size: 24px; color: #6b7280; cursor: pointer; padding: 5px;">✕</button>
+    </div>
+
+    <!-- Dynamic Buttons Go Here -->
+    <div id="menu" style="display: flex; flex-direction: column; padding: 0 15px; gap: 10px;"></div>
   </div>
 
   <script>
@@ -952,13 +1006,48 @@
       // 6. Sampark Button
       const samparkBtn = document.createElement("button");
       samparkBtn.innerHTML = "🤝 Sampark";
-      samparkBtn.className = "action-btn sampark-btn";
+      samparkBtn.className = "action-btn sampark-btn sidebar-btn";
       samparkBtn.onclick = openSampark;
       menu.appendChild(samparkBtn);
     }
 
+    // SIDEBAR TOGGLE LOGIC
+    let isSidebarOpen = false;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebarMenu');
+      const overlay = document.getElementById('sidebarOverlay');
+      const hamburgerSpans = document.querySelectorAll('#hamburgerBtn span');
+
+      isSidebarOpen = !isSidebarOpen;
+
+      if (isSidebarOpen) {
+        sidebar.style.right = '0';
+        overlay.style.opacity = '1';
+        overlay.style.visibility = 'visible';
+
+        // Animate hamburger to X
+        if (hamburgerSpans.length === 3) {
+          hamburgerSpans[0].style.transform = 'translateY(11px) rotate(45deg)';
+          hamburgerSpans[1].style.opacity = '0';
+          hamburgerSpans[2].style.transform = 'translateY(-11px) rotate(-45deg)';
+        }
+      } else {
+        sidebar.style.right = '-320px';
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+
+        // Reset hamburger
+        if (hamburgerSpans.length === 3) {
+          hamburgerSpans[0].style.transform = 'none';
+          hamburgerSpans[1].style.opacity = '1';
+          hamburgerSpans[2].style.transform = 'none';
+        }
+      }
+    }
+
     function selectDate(key, btn) {
       hideAllPages();
+      toggleSidebar(); // Close sidebar on selection
       activeDateKey = key;
       [...menu.children].forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
@@ -970,6 +1059,10 @@
       setTimeout(() => bar.classList.add("show"), 10);
 
       document.getElementById("printDate").innerText = "Date: " + dates.find(d => d.key === key).label;
+
+      const labelData = dates.find(d => d.key === key);
+      updatePageIndicator("📅 " + (labelData ? labelData.label : key));
+
       scheduleSection.style.display = "block";
       renderScheduleFiltered(); // First render
     }
@@ -979,8 +1072,20 @@
       renderScheduleFiltered(val);
     }
 
+    function updatePageIndicator(title) {
+      const ind = document.getElementById("pageIndicator");
+      if (!title || title === "Home") {
+        ind.style.display = "none";
+      } else {
+        ind.style.display = "inline-block";
+        ind.innerHTML = title;
+      }
+    }
+
     function showHome() {
       hideAllPages();
+      updatePageIndicator("Home");
+      if (isSidebarOpen) toggleSidebar();
       document.getElementById("scheduleActionBar").style.display = "none";
       document.getElementById("pdfBar").style.display = "none";
       homeSection.style.display = "block";
@@ -989,6 +1094,8 @@
 
     function openActivities() {
       hideAllPages();
+      updatePageIndicator("✨ Activities");
+      if (isSidebarOpen) toggleSidebar();
       document.getElementById("activitiesSection").style.display = "block";
 
       // HIDE SEARCH/PDF ON ACTIVITIES
@@ -1063,6 +1170,8 @@
 
     function openAnnouncements() {
       hideAllPages();
+      updatePageIndicator("📢 Announcements");
+      if (isSidebarOpen) toggleSidebar();
       document.getElementById("announcementsSection").style.display = "block";
 
       // HIDE SEARCH/PDF
@@ -1135,6 +1244,8 @@
 
     function openSampark() {
       hideAllPages();
+      updatePageIndicator("🤝 Sampark");
+      if (isSidebarOpen) toggleSidebar();
       document.getElementById("samparkSection").style.display = "block";
 
       const bar = document.getElementById("scheduleActionBar");
@@ -1635,6 +1746,8 @@
 
     function openAttendance() {
       hideAllPages();
+      updatePageIndicator("📝 Entry");
+      if (isSidebarOpen) toggleSidebar();
       document.getElementById("attendancePage").classList.remove("hidden");
       document.getElementById("dutyFilterBar").classList.remove("hidden");
       const lb = document.getElementById("loadBalance");
@@ -1747,6 +1860,8 @@
 
     function openDashboard() {
       hideAllPages();
+      updatePageIndicator("📊 Dashboard");
+      if (isSidebarOpen) toggleSidebar();
       document.getElementById("dashboardSection").style.display = "block";
       document.getElementById("scheduleActionBar").style.display = "none";
       document.getElementById("pdfBar").style.display = "none";
