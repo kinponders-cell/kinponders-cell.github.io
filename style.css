@@ -786,11 +786,75 @@ body {
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    color-adjust: exact;
   }
+
+  /* SAMPARK SPECIFIC PRINT STYLES */
+  body.printing-sampark #pdfTable,
+  body.printing-sampark #scheduleSection,
+  body.printing-sampark #pdfDuration {
+    display: none !important;
+  }
+
+  body.printing-sampark #samparkSection {
+    display: block !important;
+  }
+
+  body.printing-sampark .sampark-controls,
+  body.printing-sampark .stats-grid,
+  body.printing-sampark #samparkLock,
+  body.printing-sampark .page-header p {
+    display: none !important;
+  }
+
+  body.printing-sampark #printHeader {
+    display: flex !important;
+  }
+
+  body.printing-sampark .page-header h2 {
+    display: none !important;
+  }
+
+  body.printing-sampark .sampark-table-container {
+    display: none !important;
+  }
+
+  body.printing-sampark #samparkPdfTable {
+    display: table !important;
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 20px;
+  }
+
+  body.printing-sampark #samparkPdfTable th,
+  body.printing-sampark #samparkPdfTable td {
+    border: 1px solid #d1d5db;
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: middle;
+    color: black !important;
+  }
+
+  body.printing-sampark #samparkPdfTable th {
+    background: #f0fdf4 !important;
+    /* light green premium */
+    color: #065f46 !important;
+    font-weight: bold;
+    font-size: 14px;
+    border-bottom: 2px solid #16a34a !important;
+  }
+
+  body.printing-sampark #samparkPdfTable tr:nth-child(even) td {
+    background: #f9fafb !important;
+  }
+
 }
 
 #printHeader,
-#pdfTable {
+#pdfTable,
+#samparkPdfTable {
   display: none;
 }
 
