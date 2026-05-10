@@ -2686,9 +2686,23 @@
         data: {
           labels: data.labels,
           datasets: [
-            { label: 'Gents👦🏻', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
-            { label: 'Ladies👩🏻', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
-            { label: 'Children👦🏻👧🏻', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' }
+            { label: 'Gents👦🏻', type: 'bar', data: data.gents, backgroundColor: '#3b82f6', borderRadius: 4, stack: 'Stack 0' },
+            { label: 'Ladies👩🏻', type: 'bar', data: data.ladies, backgroundColor: '#ec4899', borderRadius: 4, stack: 'Stack 0' },
+            { label: 'Children👦🏻👧🏻', type: 'bar', data: data.children, backgroundColor: '#f59e0b', borderRadius: 4, stack: 'Stack 0' },
+            {
+              label: 'Total 🧮',
+              type: 'line',
+              data: totalArr,
+              borderColor: '#7c3aed',
+              backgroundColor: 'rgba(124,58,237,0.12)',
+              borderWidth: 2.5,
+              pointBackgroundColor: '#7c3aed',
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              fill: false,
+              tension: 0.3,
+              order: 0
+            }
           ]
         },
         options: {
@@ -2699,7 +2713,13 @@
             tooltip: {
               mode: 'index', intersecting: false, backgroundColor: 'rgba(255,255,255,0.95)',
               titleColor: '#1e293b', bodyColor: '#475569', borderColor: '#e2e8f0', borderWidth: 1,
-              callbacks: { footer: (items) => 'Total: ' + items.reduce((a, b) => a + b.raw, 0) }
+              callbacks: {
+                footer: (items) => {
+                  const barItems = items.filter(i => i.dataset.type === 'bar' || i.dataset.type === undefined);
+                  const sum = barItems.reduce((a, b) => a + (b.raw || 0), 0);
+                  return sum > 0 ? '━━━━━━━━━━━━\nTotal: ' + sum : '';
+                }
+              }
             }
           },
           scales: {
