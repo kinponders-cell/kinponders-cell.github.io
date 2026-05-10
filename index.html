@@ -24,7 +24,7 @@
     // ==========================================
     // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
     // ==========================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbw36i_ICOwW2_mDmn2_BoWcqsrWzA_JjhOjgt4jbu4zeNX1Wg7moLy_wPncn5nMTleW/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbz5tdN_LE0CYtt5S3YbiEeWOOQsROuA9Yc48Ozgma2CD6HadDo41gxy0C-3R0bXYq3w/exec";
 
     // State Variables
     let IS_ADMIN = false;
@@ -84,7 +84,7 @@
 
     <!-- THEME TOGGLE BUTTON -->
     <button id="themeToggle" onclick="toggleTheme()" aria-label="Toggle Theme" style="
-            background: rgba(255,255,255,0.2); 
+            background: rgba(0,0,0,0.05); 
             border: none; 
             width: 40px; 
             height: 40px; 
@@ -95,7 +95,9 @@
             cursor: pointer; 
             font-size: 20px; 
             margin-right: 10px;
-            transition: all 0.3s ease;">
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"
+      onmouseover="this.style.transform='scale(1.1) rotate(15deg)';"
+      onmouseout="this.style.transform='scale(1) rotate(0deg)';">
       🌙
     </button>
 
@@ -157,7 +159,7 @@
       const btn = document.getElementById('themeToggle');
       if (btn) {
         btn.innerHTML = isDark ? '☀️' : '🌙';
-        btn.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.2)';
+        btn.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
       }
     }
 
@@ -300,6 +302,74 @@
       </div>
       <div class="chart-container">
         <canvas id="samparkChart"></canvas>
+      </div>
+
+      <!-- ===== DUTY ASSIGNMENT REPORT ===== -->
+      <div class="duty-report-section">
+        <div class="duty-report-header">
+          <div class="duty-report-header-text">
+            <h2 class="duty-report-title">📋 Next Month Duty Assignment Report</h2>
+            <div class="duty-report-subtitle">Smart recommendations based on fairness & historical data</div>
+          </div>
+          <div class="duty-report-controls">
+            <div class="duty-report-month-wrap">
+              <label class="duty-report-label">Target Month</label>
+              <select id="dutyReportMonthSelect" onchange="renderDutyReport()" class="duty-report-select"></select>
+            </div>
+            <div class="duty-report-lookback-wrap">
+              <label class="duty-report-label">Look Back</label>
+              <select id="dutyReportLookback" onchange="renderDutyReport()" class="duty-report-select">
+                <option value="3">3 months</option>
+                <option value="6" selected>6 months</option>
+                <option value="12">12 months</option>
+                <option value="all">All time</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommendation Cards -->
+        <div id="dutyRecommendationCards" class="duty-rec-grid"></div>
+
+        <!-- Full Volunteer Eligibility Table -->
+        <div class="duty-table-section">
+          <div class="duty-table-header">
+            <h3 class="duty-table-title">🏅 Volunteer Eligibility Overview</h3>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+              <select id="dutyTableDutyFilter" onchange="renderDutyEligibilityTable()" class="duty-report-select"
+                style="min-width:140px;">
+                <option value="all">All Duties</option>
+                <option value="pravachan">Pravachan / Speech</option>
+                <option value="kirtan">Kirtan</option>
+                <option value="emcee">Emcee</option>
+                <option value="dhun">Dhun</option>
+                <option value="prarthana">Prarthana</option>
+                <option value="aarti">Aarti</option>
+              </select>
+            </div>
+          </div>
+          <div id="dutyEligibilityTableWrap" class="duty-eligibility-wrap"></div>
+        </div>
+
+        <!-- All-time Distribution Chart -->
+        <div class="dash-header" style="margin-top:30px;">
+          <h2 class="dash-title">📊 All-Time Duty Distribution</h2>
+          <div class="dash-subtitle">Total duties by volunteer across all dates</div>
+        </div>
+        <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+          <select id="dutyAllTimeFilter" onchange="renderAllTimeDutyChart()" class="duty-report-select">
+            <option value="all">All Duties</option>
+            <option value="pravachan">Pravachan / Speech</option>
+            <option value="kirtan">Kirtan</option>
+            <option value="emcee">Emcee</option>
+            <option value="dhun">Dhun</option>
+            <option value="prarthana">Prarthana</option>
+            <option value="aarti">Aarti</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="allTimeDutyChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -454,6 +524,49 @@
         </div>
       </div>
 
+      <!-- SAMPARK REPORTING DASHBOARD -->
+      <div class="sampark-report-section hidden" id="samparkReportSection" style="margin-top: 20px;">
+        <div
+          style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+          <h3 style="margin:0; font-size:18px; font-weight:800; color:var(--dark);">📊 Sampark Insights</h3>
+        </div>
+        <div class="sampark-report-grid"
+          style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; margin-bottom:20px;">
+          <!-- Attend Ravi Sabha Breakdown -->
+          <div class="sampark-rpt-card"
+            style="background:var(--card-bg, white); border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.04);">
+            <div
+              style="font-size:13px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px;">
+              🏛️ Ravi Sabha Attendance</div>
+            <div id="rptAttendBreakdown" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+          <!-- Sampark Method Breakdown -->
+          <div class="sampark-rpt-card"
+            style="background:var(--card-bg, white); border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.04);">
+            <div
+              style="font-size:13px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px;">
+              📞 Sampark Method</div>
+            <div id="rptMethodBreakdown" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+          <!-- Sampark Progress -->
+          <div class="sampark-rpt-card"
+            style="background:var(--card-bg, white); border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.04);">
+            <div
+              style="font-size:13px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px;">
+              📋 Sampark Progress</div>
+            <div id="rptSamparkProgress" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+        </div>
+        <!-- Per-Karyakar Sampark Leaderboard -->
+        <div class="sampark-rpt-card" id="rptKaryakarLeaderboard"
+          style="background:var(--card-bg, white); border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.04);">
+          <div
+            style="font-size:13px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px;">
+            🏅 Karyakar Sampark Leaderboard</div>
+          <div id="rptKaryakarRows"></div>
+        </div>
+      </div>
+
       <div class="sampark-table-container hidden" id="samparkTableContainer"
         style="margin-top: 20px; overflow-x: auto; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background: var(--card-bg);">
         <table class="sampark-table" style="width: 100%; border-collapse: collapse; text-align: left;">
@@ -466,6 +579,9 @@
               <th style="padding: 16px; font-weight: 700; color: #b45309;">Remark</th>
               <th style="padding: 16px; font-weight: 700; color: #b45309;">Members</th>
               <th style="padding: 16px; font-weight: 700; color: #b45309;">Address 2</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">📅 Sampark Date</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">📞 Sampark Via</th>
+              <th style="padding: 16px; font-weight: 700; color: #b45309;">🏛️ Attend Ravi Sabha?</th>
               <th style="padding: 16px; font-weight: 700; color: #b45309;">Actions</th>
             </tr>
           </thead>
@@ -528,6 +644,43 @@
             style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
         </div>
       </div>
+
+      <!-- Sampark Visit Fields -->
+      <div
+        style="background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.15); border-radius:14px; padding:15px; margin-bottom:15px;">
+        <div
+          style="font-weight:700; font-size:13px; color:#b45309; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+          📋 Sampark Visit Details <span style="font-weight:400; color:#9ca3af; font-size:11px;">(Optional)</span></div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563; font-size:13px;">📅 Sampark
+            Date</label>
+          <input type="date" id="smSamparkDate"
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563; font-size:13px;">📞 Sampark
+            Via</label>
+          <select id="smSamparkBy"
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box; background:var(--card-bg, white); cursor:pointer;">
+            <option value="">-- Select Method --</option>
+            <option value="Phone">📱 Phone Call</option>
+            <option value="Visit">🏠 Home Visit</option>
+            <option value="WhatsApp">💬 WhatsApp</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563; font-size:13px;">🏛️ Attend
+            Ravi Sabha?</label>
+          <select id="smAttendRaviSabha"
+            style="width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; box-sizing:border-box; background:white; cursor:pointer;">
+            <option value="">-- Select --</option>
+            <option value="Yes">Yes ✅</option>
+            <option value="No">No ❌</option>
+            <option value="Sometimes">Sometimes 🔄</option>
+          </select>
+        </div>
+      </div>
+
       <hr style="border:0; border-top:1px solid #e5e7eb; margin:20px 0;">
       <div style="margin-bottom:20px;">
         <label style="display:block; font-weight:600; margin-bottom:5px; color:#b45309;">🔒 Karyakar Password *</label>
@@ -543,6 +696,60 @@
           style="background:#f3f4f6; color:#374151; border:none; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer;">Cancel</button>
         <button type="submit" id="smSubmitBtn"
           style="background:#f59e0b; color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer;">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- LOG SAMPARK MODAL -->
+  <div id="logSamparkBackdrop"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998; backdrop-filter:blur(4px);"
+    onclick="closeLogSamparkModal()"></div>
+  <div id="logSamparkModal"
+    style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:30px; border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.2); z-index:9999; max-width:90%; width:420px; max-height:90vh; overflow-y:auto;">
+    <h2 style="margin-top:0; color:#1f2937; display:flex; align-items:center; gap:8px;">📋 Log Sampark Visit</h2>
+    <p style="color:#6b7280; font-size:14px; margin-bottom:20px;">Record visit details for <strong id="logSamparkName"
+        style="color:#b45309;"></strong></p>
+    <form id="logSamparkForm" onsubmit="submitLogSampark(event)">
+      <div style="margin-bottom:18px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">📅 Sampark Date *</label>
+        <input type="date" id="lsDate" required
+          style="width:100%; padding:12px; border-radius:12px; border:1px solid #d1d5db; box-sizing:border-box; font-size:15px;">
+      </div>
+      <div style="margin-bottom:18px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">📞 Sampark Via *</label>
+        <select id="lsSamparkBy" required
+          style="width:100%; padding:12px; border-radius:12px; border:1px solid #d1d5db; box-sizing:border-box; font-size:15px; background:white; cursor:pointer;">
+          <option value="">-- Select Method --</option>
+          <option value="Phone">📱 Phone Call</option>
+          <option value="Visit">🏠 Home Visit</option>
+          <option value="WhatsApp">💬 WhatsApp</option>
+        </select>
+      </div>
+      <div style="margin-bottom:18px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#4b5563;">🏛️ Do They Attend Ravi Sabha?
+          *</label>
+        <select id="lsAttendRaviSabha" required
+          style="width:100%; padding:12px; border-radius:12px; border:1px solid #d1d5db; box-sizing:border-box; font-size:15px; background:white; cursor:pointer;">
+          <option value="">-- Select --</option>
+          <option value="Yes">Yes ✅</option>
+          <option value="No">No ❌</option>
+          <option value="Sometimes">Sometimes 🔄</option>
+        </select>
+      </div>
+      <hr style="border:0; border-top:1px solid #e5e7eb; margin:20px 0;">
+      <div style="margin-bottom:20px;">
+        <label style="display:block; font-weight:600; margin-bottom:5px; color:#b45309;">🔒 Karyakar Password *</label>
+        <input type="password" id="lsPassword" required placeholder="Enter your password"
+          style="width:100%; padding:12px; border-radius:12px; border:1px solid #f59e0b; box-sizing:border-box; background:#fffbeb; font-size:15px;">
+        <p style="margin:5px 0 0 0; font-size:12px; color:#6b7280;">Required to verify your identity.</p>
+      </div>
+      <div id="lsError" style="color:red; margin-bottom:15px; font-weight:600; font-size:14px; display:none;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" onclick="closeLogSamparkModal()"
+          style="background:#f3f4f6; color:#374151; border:none; padding:10px 20px; border-radius:10px; font-weight:600; cursor:pointer;">Cancel</button>
+        <button type="submit" id="lsSubmitBtn"
+          style="background:linear-gradient(135deg, #10b981, #059669); color:white; border:none; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.3);">Save
+          Visit</button>
       </div>
     </form>
   </div>
@@ -672,6 +879,9 @@
         <th>🏠 Address</th>
         <th>📝 Remark</th>
         <th>👥 Members</th>
+        <th>📅 Sampark Date</th>
+        <th>📞 Sampark Via</th>
+        <th>🏛️ Attend?</th>
       </tr>
     </thead>
     <tbody id="samparkPdfTableBody"></tbody>
@@ -775,17 +985,23 @@
           target.setHours(0, 0, 0, 0);
           const daysLeft = Math.ceil((target - todayDate) / (1000 * 60 * 60 * 24));
           const countdownHtml = (!s.isToday && daysLeft > 0)
-            ? `<div class="countdown">${daysLeft} days left</div>`
+            ? `<div style="background: rgba(245,158,11,0.1); color: #b45309; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; width: max-content; margin-bottom: 8px;">⏳ ${daysLeft} days left</div>`
             : "";
+
+          const todayBadgeHtml = s.isToday ? `<span style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; margin-left: auto; letter-spacing: 0.5px;">TODAY</span>` : "";
 
           return `
               <div class="summary-card" onclick="openFromSummary('${s.key}')">
-                <img src="${s.pic}">
+                <div class="img-wrapper">
+                  <img src="${s.pic}">
+                </div>
                 <div class="summary-content">
-                  <div class="summary-date">${s.label}
-                  ${s.isToday ? "<span class='today-badge'>TODAY</span>" : ""}</div>
+                  <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                    <span style="font-weight: 800; font-size: 18px; color: #065f46;">${s.label}</span>
+                    ${todayBadgeHtml}
+                  </div>
                   ${countdownHtml}
-                  <div class="summary-text">${s.text}</div>
+                  <div style="font-size: 15px; line-height: 1.6; color: #4b5563; font-weight: 500;">${s.text}</div>
                 </div>
               </div>
             `;
@@ -966,12 +1182,22 @@
     function renderMenu() {
       menu.innerHTML = "";
 
+      let delayIndex = 0;
+      const getDelay = () => `${(delayIndex++) * 0.05}s`;
+
+      const animateBtn = (btn) => {
+        btn.style.opacity = "0";
+        btn.style.animation = `fadeUpMenu 0.4s ease forwards`;
+        btn.style.animationDelay = getDelay();
+      };
+
       // 1. Date Buttons
       dates.forEach(d => {
         const b = document.createElement("button");
         b.textContent = d.label;
         b.className = "date-btn";
         b.onclick = () => selectDate(d.key, b);
+        animateBtn(b);
         menu.appendChild(b);
       });
 
@@ -980,6 +1206,7 @@
       dashBtn.innerHTML = "📊 Dashboard";
       dashBtn.className = "action-btn dash-btn";
       dashBtn.onclick = openDashboard;
+      animateBtn(dashBtn);
       menu.appendChild(dashBtn);
 
       // 3. Entry Button
@@ -987,6 +1214,7 @@
       entryBtn.innerHTML = "📝 Entry";
       entryBtn.className = "action-btn entry-btn";
       entryBtn.onclick = openAttendance;
+      animateBtn(entryBtn);
       menu.appendChild(entryBtn);
 
       // 4. Activities Button (NEW)
@@ -994,6 +1222,7 @@
       activityBtn.innerHTML = "✨ Activities";
       activityBtn.className = "action-btn activity-btn";
       activityBtn.onclick = openActivities;
+      animateBtn(activityBtn);
       menu.appendChild(activityBtn);
 
       // 5. Announcements Button (NEW)
@@ -1001,6 +1230,7 @@
       announceBtn.innerHTML = "📢 Announcements";
       announceBtn.className = "action-btn announce-btn";
       announceBtn.onclick = openAnnouncements;
+      animateBtn(announceBtn);
       menu.appendChild(announceBtn);
 
       // 6. Sampark Button
@@ -1008,6 +1238,7 @@
       samparkBtn.innerHTML = "🤝 Sampark";
       samparkBtn.className = "action-btn sampark-btn sidebar-btn";
       samparkBtn.onclick = openSampark;
+      animateBtn(samparkBtn);
       menu.appendChild(samparkBtn);
     }
 
@@ -1127,6 +1358,278 @@
       // Ensure specific elements are reset if needed
       document.getElementById("scheduleActionBar").classList.remove("show");
       document.getElementById("scheduleActionBar").style.display = "none";
+    }
+
+    // =============================================
+    // 📋 DUTY ASSIGNMENT REPORT LOGIC
+    // =============================================
+
+    const DUTY_TYPE_CONFIG = {
+      pravachan: { label: "Pravachan / Speech", icon: "🎙️", color: "#6366f1", bg: "rgba(99,102,241,0.1)", keywords: ["speech", "pravachan"] },
+      kirtan: { label: "Kirtan", icon: "🎵", color: "#ec4899", bg: "rgba(236,72,153,0.1)", keywords: ["kirtan"] },
+      emcee: { label: "Emcee", icon: "🎤", color: "#f59e0b", bg: "rgba(245,158,11,0.1)", keywords: ["emcee"] },
+      dhun: { label: "Dhun", icon: "🪘", color: "#10b981", bg: "rgba(16,185,129,0.1)", keywords: ["dhun"] },
+      prarthana: { label: "Prarthana", icon: "🙏", color: "#8b5cf6", bg: "rgba(139,92,246,0.1)", keywords: ["prarth"] },
+      aarti: { label: "Aarti", icon: "🪔", color: "#ef4444", bg: "rgba(239,68,68,0.1)", keywords: ["aarti"] }
+    };
+
+    let allTimeDutyChartInstance = null;
+
+    function getTaskDutyType(taskStr) {
+      if (!taskStr) return null;
+      const t = taskStr.toLowerCase();
+      for (const [key, cfg] of Object.entries(DUTY_TYPE_CONFIG)) {
+        if (cfg.keywords.some(k => t.includes(k))) return key;
+      }
+      return null;
+    }
+
+    function initDutyReportMonthSelect() {
+      const sel = document.getElementById("dutyReportMonthSelect");
+      sel.innerHTML = "";
+      const today = new Date();
+      // Offer next 3 months as target
+      for (let i = 1; i <= 3; i++) {
+        const d = new Date(today.getFullYear(), today.getMonth() + i, 1);
+        const val = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0');
+        const label = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+        const opt = document.createElement("option");
+        opt.value = val;
+        opt.textContent = label;
+        if (i === 1) opt.selected = true;
+        sel.appendChild(opt);
+      }
+    }
+
+    function getDutyStats(lookbackMonths) {
+      // Returns: { volName: { dutyType: { count, lastDate } } }
+      const now = new Date();
+      const cutoff = lookbackMonths === 'all' ? new Date(2000, 0, 1) :
+        new Date(now.getFullYear(), now.getMonth() - parseInt(lookbackMonths), 1);
+
+      const stats = {}; // name -> dutyType -> { count, lastDate }
+
+      rows.forEach(r => {
+        const rowDate = new Date(r.key);
+        if (rowDate < cutoff) return;
+        const dtype = getTaskDutyType(r.task);
+        if (!dtype) return;
+        const name = r.name.trim();
+        if (!name) return;
+        if (!stats[name]) stats[name] = {};
+        if (!stats[name][dtype]) stats[name][dtype] = { count: 0, lastDate: null };
+        stats[name][dtype].count++;
+        const d = new Date(r.key);
+        if (!stats[name][dtype].lastDate || d > stats[name][dtype].lastDate) {
+          stats[name][dtype].lastDate = d;
+        }
+      });
+      return stats;
+    }
+
+    function renderDutyReport() {
+      const targetMonth = document.getElementById("dutyReportMonthSelect")?.value;
+      const lookback = document.getElementById("dutyReportLookback")?.value || 6;
+      if (!targetMonth) return;
+
+      const stats = getDutyStats(lookback);
+      const allVolunteers = [...new Set(rows.map(r => r.name.trim()).filter(Boolean))];
+
+      // Ensure every volunteer has an entry
+      allVolunteers.forEach(name => {
+        if (!stats[name]) stats[name] = {};
+      });
+
+      renderDutyRecommendationCards(stats, allVolunteers, targetMonth, lookback);
+      renderDutyEligibilityTable();
+      renderAllTimeDutyChart();
+    }
+
+    function renderDutyRecommendationCards(stats, allVolunteers, targetMonth, lookback) {
+      const container = document.getElementById("dutyRecommendationCards");
+      if (!container) return;
+
+      container.innerHTML = Object.entries(DUTY_TYPE_CONFIG).map(([dtype, cfg]) => {
+        // Score each volunteer: lower count = higher eligibility
+        // Also factor in how long since last duty
+        const scored = allVolunteers.map(name => {
+          const dt = stats[name]?.[dtype] || { count: 0, lastDate: null };
+          const daysSinceLast = dt.lastDate
+            ? Math.floor((new Date() - dt.lastDate) / (1000 * 60 * 60 * 24))
+            : 9999;
+          return { name, count: dt.count, lastDate: dt.lastDate, daysSinceLast };
+        })
+          .filter(v => v.name)
+          .sort((a, b) => {
+            if (a.count !== b.count) return a.count - b.count; // fewer duties = better
+            return b.daysSinceLast - a.daysSinceLast; // longer ago = better
+          });
+
+        const top3 = scored.slice(0, 3);
+        const medals = ['🥇', '🥈', '🥉'];
+
+        const recommendHtml = top3.map((v, i) => {
+          const lastDateStr = v.lastDate
+            ? v.lastDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+            : 'Never assigned';
+          return `
+            <div class="duty-rec-volunteer" style="animation-delay:${i * 0.1}s">
+              <span class="duty-medal">${medals[i]}</span>
+              <div class="duty-rec-info">
+                <div class="duty-rec-name">${v.name}</div>
+                <div class="duty-rec-meta">${v.count} duties &bull; Last: ${lastDateStr}</div>
+              </div>
+              <div class="duty-rec-badge" style="background:${cfg.bg};color:${cfg.color}">${v.count}</div>
+            </div>`;
+        }).join('');
+
+        return `
+          <div class="duty-rec-card" style="--duty-color:${cfg.color};--duty-bg:${cfg.bg}">
+            <div class="duty-rec-card-header">
+              <span class="duty-rec-icon">${cfg.icon}</span>
+              <span class="duty-rec-type">${cfg.label}</span>
+            </div>
+            <div class="duty-rec-label">Recommended Volunteers</div>
+            <div class="duty-rec-list">${recommendHtml}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderDutyEligibilityTable() {
+      const wrap = document.getElementById("dutyEligibilityTableWrap");
+      if (!wrap) return;
+
+      const lookback = document.getElementById("dutyReportLookback")?.value || 6;
+      const dutyFilter = document.getElementById("dutyTableDutyFilter")?.value || 'all';
+      const stats = getDutyStats(lookback);
+      const allVolunteers = [...new Set(rows.map(r => r.name.trim()).filter(Boolean))].sort();
+
+      // Determine which duty types to show
+      const dtypes = dutyFilter === 'all'
+        ? Object.keys(DUTY_TYPE_CONFIG)
+        : [dutyFilter];
+
+      // Compute total duty count per volunteer (for selected types)
+      const volSummary = allVolunteers.map(name => {
+        let total = 0, lastDate = null;
+        dtypes.forEach(dt => {
+          const d = stats[name]?.[dt];
+          if (d) {
+            total += d.count;
+            if (!lastDate || (d.lastDate && d.lastDate > lastDate)) lastDate = d.lastDate;
+          }
+        });
+        const daysSinceLast = lastDate ? Math.floor((new Date() - lastDate) / (1000 * 60 * 60 * 24)) : 9999;
+        return { name, total, lastDate, daysSinceLast };
+      }).sort((a, b) => a.total - b.total); // fewest first = most eligible
+
+      const maxTotal = Math.max(...volSummary.map(v => v.total), 1);
+
+      wrap.innerHTML = `
+        <table class="duty-elg-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Volunteer</th>
+              <th>Duties (${lookback === 'all' ? 'All Time' : lookback + ' mo'})</th>
+              <th>Load Bar</th>
+              <th>Last Duty</th>
+              <th>Days Since</th>
+              <th>Eligibility</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${volSummary.map((v, i) => {
+        const pct = (v.total / maxTotal) * 100;
+        const lastStr = v.lastDate
+          ? v.lastDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+          : 'Never';
+        const days = v.daysSinceLast === 9999 ? '∞' : v.daysSinceLast + 'd';
+        // Eligibility: 10 if never, decreases with more duties
+        const eligPct = Math.max(0, Math.round(100 - (v.total / Math.max(maxTotal, 1)) * 80));
+        const eligColor = eligPct >= 70 ? '#10b981' : eligPct >= 40 ? '#f59e0b' : '#ef4444';
+        const rankEmoji = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
+        return `
+                <tr class="duty-elg-row" style="animation-delay:${i * 0.04}s">
+                  <td><span class="duty-rank">${rankEmoji}</span></td>
+                  <td><b>${v.name}</b></td>
+                  <td style="text-align:center;font-weight:700;">${v.total}</td>
+                  <td>
+                    <div class="duty-elg-bar-wrap">
+                      <div class="duty-elg-bar" style="width:${pct}%"></div>
+                    </div>
+                  </td>
+                  <td style="font-size:13px;color:#6b7280;">${lastStr}</td>
+                  <td style="text-align:center;font-weight:600;color:#6b7280;">${days}</td>
+                  <td>
+                    <div class="duty-elig-pill" style="background:${eligColor}20;color:${eligColor}">
+                      ${eligPct}% Ready
+                    </div>
+                  </td>
+                </tr>`;
+      }).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function renderAllTimeDutyChart() {
+      const canvasId = 'allTimeDutyChart';
+      const ctx = document.getElementById(canvasId);
+      if (!ctx) return;
+
+      const filter = document.getElementById("dutyAllTimeFilter")?.value || 'all';
+      const stats = getDutyStats('all');
+      const allVolunteers = [...new Set(rows.map(r => r.name.trim()).filter(Boolean))].sort();
+
+      let labels = [];
+      let datasets = [];
+
+      if (filter === 'all') {
+        // Stacked bar per duty type
+        labels = allVolunteers;
+        datasets = Object.entries(DUTY_TYPE_CONFIG).map(([dtype, cfg]) => ({
+          label: cfg.label,
+          data: allVolunteers.map(name => stats[name]?.[dtype]?.count || 0),
+          backgroundColor: cfg.color,
+          borderRadius: 4,
+          stack: 'Stack 0'
+        }));
+      } else {
+        const cfg = DUTY_TYPE_CONFIG[filter];
+        const vol = allVolunteers
+          .map(name => ({ name, count: stats[name]?.[filter]?.count || 0 }))
+          .sort((a, b) => b.count - a.count);
+        labels = vol.map(v => v.name);
+        datasets = [{
+          label: cfg.label,
+          data: vol.map(v => v.count),
+          backgroundColor: cfg.color,
+          borderRadius: 4
+        }];
+      }
+
+      if (allTimeDutyChartInstance) allTimeDutyChartInstance.destroy();
+      allTimeDutyChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              mode: 'index', intersecting: false,
+              backgroundColor: 'rgba(255,255,255,0.95)',
+              titleColor: '#1e293b', bodyColor: '#475569',
+              borderColor: '#e2e8f0', borderWidth: 1
+            }
+          },
+          scales: {
+            x: { stacked: filter === 'all', grid: { display: false } },
+            y: { stacked: filter === 'all', beginAtZero: true, grid: { borderDash: [4, 4] } }
+          }
+        }
+      });
     }
 
     function renderActivities(activities) {
@@ -1291,6 +1794,32 @@
     }
 
     let activeSamparkFilter = null;
+
+    // Helper: Format ISO date to dd-MM-yyyy
+    function formatSamparkDate(dateStr) {
+      if (!dateStr || dateStr === '-') return '-';
+      try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${dd}-${mm}-${yyyy}`;
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    // Helper: Format sampark method with icon
+    function formatSamparkMethod(method) {
+      if (!method || method === '-') return '-';
+      const m = method.trim();
+      if (m === 'Phone') return '<span style="background:rgba(59,130,246,0.1);color:#2563eb;padding:3px 10px;border-radius:999px;font-weight:600;font-size:12px;">📱 Phone</span>';
+      if (m === 'Visit') return '<span style="background:rgba(16,185,129,0.1);color:#059669;padding:3px 10px;border-radius:999px;font-weight:600;font-size:12px;">🏠 Visit</span>';
+      if (m === 'WhatsApp') return '<span style="background:rgba(34,197,94,0.1);color:#16a34a;padding:3px 10px;border-radius:999px;font-weight:600;font-size:12px;">💬 WhatsApp</span>';
+      return m;
+    }
+
     function toggleSamparkFilter(filterMode) {
       if (activeSamparkFilter === filterMode) {
         activeSamparkFilter = null; // Toggle off
@@ -1384,7 +1913,7 @@
       }
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color:#6b7280;">No data found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 20px; color:#6b7280;">No data found.</td></tr>`;
         stats.classList.add("hidden");
         container.classList.remove("hidden");
         return;
@@ -1421,6 +1950,14 @@
         const addressCellContent = isBlankAddress ? "<span style='color:red;'>Missing</span>" : addressStr;
 
         const itemJson = JSON.stringify(item).replace(/"/g, '&quot;');
+
+        // Attend badge styling
+        let attendBadge = '-';
+        const attendVal = (item.attendRaviSabha || '').trim();
+        if (attendVal === 'Yes') attendBadge = '<span style="background:#dcfce7;color:#16a34a;padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;">Yes ✅</span>';
+        else if (attendVal === 'No') attendBadge = '<span style="background:#fee2e2;color:#dc2626;padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;">No ❌</span>';
+        else if (attendVal === 'Sometimes') attendBadge = '<span style="background:#fef3c7;color:#d97706;padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;">Sometimes 🔄</span>';
+
         return `<tr class="sampark-tr" style="animation: slideInUp 0.3s ease forwards; animation-delay: ${delay}s; opacity: 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
             <td style="padding: 16px;">${item.firstName || ''}</td>
             <td style="padding: 16px;">${item.lastName || ''}</td>
@@ -1429,8 +1966,12 @@
             <td style="padding: 16px;">${item.remark || ''}</td>
             <td style="padding: 16px;">${item.members || ''}</td>
             <td style="padding: 16px;">${item.address2 || ''}</td>
+            <td style="padding: 16px; font-size:14px; white-space:nowrap;">${formatSamparkDate(item.samparkDate)}</td>
+            <td style="padding: 16px; font-size:14px;">${formatSamparkMethod(item.samparkBy)}</td>
+            <td style="padding: 16px; text-align:center;">${attendBadge}</td>
             <td style="padding: 16px; white-space: nowrap;">
-              <button onclick="showSamparkFormModal('edit', ${itemJson})" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 15px; transition: transform 0.2s;" title="Edit" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">✏️</button>
+              <button onclick="showLogSamparkModal(${itemJson})" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 8px; transition: transform 0.2s;" title="Log Visit" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">📋</button>
+              <button onclick="showSamparkFormModal('edit', ${itemJson})" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-right: 8px; transition: transform 0.2s;" title="Edit" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">✏️</button>
               <button onclick="confirmDeleteSampark(${itemJson})" style="background: none; border: none; cursor: pointer; font-size: 18px; transition: transform 0.2s;" title="Delete" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">🗑️</button>
             </td>
           </tr>`;
@@ -1449,12 +1990,139 @@
               <td>${address || '<span style="color:#ef4444; font-weight:bold;">Missing</span>'}</td>
               <td>${item.remark || '-'}</td>
               <td style="text-align:center;">${item.members || '-'}</td>
+              <td>${formatSamparkDate(item.samparkDate)}</td>
+              <td>${item.samparkBy || '-'}</td>
+              <td style="text-align:center;">${item.attendRaviSabha || '-'}</td>
             </tr>`;
         }).join('');
       }
 
       stats.classList.remove("hidden");
       container.classList.remove("hidden");
+      renderSamparkReport(filtered);
+    }
+
+    // ===================================
+    // 📊 SAMPARK REPORT DASHBOARD
+    // ===================================
+    function renderSamparkReport(data) {
+      const section = document.getElementById('samparkReportSection');
+      if (!section || data.length === 0) {
+        if (section) section.classList.add('hidden');
+        return;
+      }
+      section.classList.remove('hidden');
+
+      // 1. Ravi Sabha Attendance Breakdown
+      const attendCounts = { Yes: 0, No: 0, Sometimes: 0, Pending: 0 };
+      data.forEach(item => {
+        const v = (item.attendRaviSabha || '').trim();
+        if (v === 'Yes') attendCounts.Yes++;
+        else if (v === 'No') attendCounts.No++;
+        else if (v === 'Sometimes') attendCounts.Sometimes++;
+        else attendCounts.Pending++;
+      });
+      const total = data.length;
+      const attendEl = document.getElementById('rptAttendBreakdown');
+      attendEl.innerHTML = [
+        { label: 'Yes ✅', count: attendCounts.Yes, color: '#16a34a', bg: '#dcfce7' },
+        { label: 'No ❌', count: attendCounts.No, color: '#dc2626', bg: '#fee2e2' },
+        { label: 'Sometimes 🔄', count: attendCounts.Sometimes, color: '#d97706', bg: '#fef3c7' },
+        { label: 'Not Yet Asked', count: attendCounts.Pending, color: '#6b7280', bg: '#f3f4f6' }
+      ].map(r => {
+        const pct = total > 0 ? Math.round((r.count / total) * 100) : 0;
+        return `<div style="display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:13px;font-weight:600;color:var(--text-color, #374151);">${r.label}</span>
+              <span style="font-size:13px;font-weight:700;color:${r.color};">${r.count} (${pct}%)</span>
+            </div>
+            <div style="height:8px;border-radius:999px;background:#f1f5f9;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:${r.color};border-radius:999px;transition:width 0.6s ease;"></div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      // 2. Sampark Method Breakdown
+      const methodCounts = { Phone: 0, Visit: 0, WhatsApp: 0, Pending: 0 };
+      data.forEach(item => {
+        const m = (item.samparkBy || '').trim();
+        if (m === 'Phone') methodCounts.Phone++;
+        else if (m === 'Visit') methodCounts.Visit++;
+        else if (m === 'WhatsApp') methodCounts.WhatsApp++;
+        else methodCounts.Pending++;
+      });
+      const methodEl = document.getElementById('rptMethodBreakdown');
+      methodEl.innerHTML = [
+        { label: '📱 Phone', count: methodCounts.Phone, color: '#2563eb', bg: 'rgba(59,130,246,0.1)' },
+        { label: '🏠 Visit', count: methodCounts.Visit, color: '#059669', bg: 'rgba(16,185,129,0.1)' },
+        { label: '💬 WhatsApp', count: methodCounts.WhatsApp, color: '#16a34a', bg: 'rgba(34,197,94,0.1)' },
+        { label: '⏳ Not Done', count: methodCounts.Pending, color: '#6b7280', bg: '#f3f4f6' }
+      ].map(r => {
+        const pct = total > 0 ? Math.round((r.count / total) * 100) : 0;
+        return `<div style="display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:13px;font-weight:600;color:var(--text-color, #374151);">${r.label}</span>
+              <span style="font-size:13px;font-weight:700;color:${r.color};">${r.count} (${pct}%)</span>
+            </div>
+            <div style="height:8px;border-radius:999px;background:#f1f5f9;overflow:hidden;">
+              <div style="height:100%;width:${pct}%;background:${r.color};border-radius:999px;transition:width 0.6s ease;"></div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      // 3. Sampark Progress
+      const contacted = data.filter(d => (d.samparkBy || '').trim()).length;
+      const notContacted = total - contacted;
+      const progPct = total > 0 ? Math.round((contacted / total) * 100) : 0;
+      const progressEl = document.getElementById('rptSamparkProgress');
+      progressEl.innerHTML = `
+        <div style="text-align:center; margin-bottom:10px;">
+          <div style="font-size:36px; font-weight:800; color:${progPct >= 70 ? '#16a34a' : progPct >= 40 ? '#d97706' : '#dc2626'};">${progPct}%</div>
+          <div style="font-size:12px; color:#6b7280; font-weight:600;">Families Contacted</div>
+        </div>
+        <div style="height:10px;border-radius:999px;background:#f1f5f9;overflow:hidden;">
+          <div style="height:100%;width:${progPct}%;background:linear-gradient(90deg, #10b981, #059669);border-radius:999px;transition:width 0.8s ease;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#6b7280;font-weight:600;">
+          <span>✅ Done: ${contacted}</span>
+          <span>⏳ Pending: ${notContacted}</span>
+        </div>`;
+
+      // 4. Karyakar Leaderboard
+      const karyakarStats = {};
+      data.forEach(item => {
+        const k = (item.karyakar || '').trim();
+        if (!k) return;
+        if (!karyakarStats[k]) karyakarStats[k] = { total: 0, contacted: 0, yesCount: 0 };
+        karyakarStats[k].total++;
+        if ((item.samparkBy || '').trim()) karyakarStats[k].contacted++;
+        if ((item.attendRaviSabha || '').trim() === 'Yes') karyakarStats[k].yesCount++;
+      });
+      const sortedK = Object.entries(karyakarStats).sort((a, b) => b[1].contacted - a[1].contacted);
+      const maxContacted = sortedK.length > 0 ? Math.max(...sortedK.map(([, s]) => s.total)) : 1;
+      const medals = ['🥇', '🥈', '🥉'];
+      const leaderEl = document.getElementById('rptKaryakarRows');
+      leaderEl.innerHTML = sortedK.map(([name, s], i) => {
+        const barPct = (s.total / maxContacted) * 100;
+        const contactPct = s.total > 0 ? Math.round((s.contacted / s.total) * 100) : 0;
+        const medal = i < 3 ? medals[i] : `#${i + 1}`;
+        return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.04);">
+          <span style="font-size:20px;min-width:32px;text-align:center;">${medal}</span>
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-weight:700;font-size:14px;color:var(--text-color, #1f2937);">${name}</span>
+              <span style="font-size:12px;color:#6b7280;">${s.contacted}/${s.total} contacted • ${s.yesCount} attending</span>
+            </div>
+            <div style="height:6px;border-radius:999px;background:#f1f5f9;overflow:hidden;">
+              <div style="height:100%;width:${barPct}%;background:linear-gradient(90deg, #f59e0b, #d97706);border-radius:999px;"></div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
     }
 
     // ===================================
@@ -1487,6 +2155,9 @@
         document.getElementById('smAddress2').value = item.address2 || '';
         document.getElementById('smRemark').value = item.remark || '';
         document.getElementById('smMembers').value = item.members || '';
+        document.getElementById('smSamparkDate').value = item.samparkDate || '';
+        document.getElementById('smSamparkBy').value = item.samparkBy || '';
+        document.getElementById('smAttendRaviSabha').value = item.attendRaviSabha || '';
         document.getElementById('smPassword').value = '';
       }
 
@@ -1520,7 +2191,10 @@
         address: document.getElementById('smAddress').value,
         address2: document.getElementById('smAddress2').value,
         remark: document.getElementById('smRemark').value,
-        members: document.getElementById('smMembers').value
+        members: document.getElementById('smMembers').value,
+        samparkDate: document.getElementById('smSamparkDate').value,
+        samparkBy: document.getElementById('smSamparkBy').value,
+        attendRaviSabha: document.getElementById('smAttendRaviSabha').value
       };
 
       const payload = {
@@ -1606,6 +2280,92 @@
           console.error(err);
           alert("Failed to refresh data.");
           document.getElementById("loader").style.display = "none";
+        });
+    }
+
+    // ===================================
+    // 📋 LOG SAMPARK VISIT (SEPARATE POPUP)
+    // ===================================
+    let logSamparkTargetItem = null;
+
+    function showLogSamparkModal(item) {
+      logSamparkTargetItem = item;
+      const nameEl = document.getElementById('logSamparkName');
+      nameEl.textContent = `${item.firstName || ''} ${item.lastName || ''}`.trim();
+
+      // Pre-fill with existing values if they exist
+      document.getElementById('lsDate').value = item.samparkDate || '';
+      document.getElementById('lsSamparkBy').value = item.samparkBy || '';
+      document.getElementById('lsAttendRaviSabha').value = item.attendRaviSabha || '';
+      document.getElementById('lsPassword').value = '';
+      document.getElementById('lsError').style.display = 'none';
+
+      document.getElementById('logSamparkBackdrop').style.display = 'block';
+      document.getElementById('logSamparkModal').style.display = 'block';
+    }
+
+    function closeLogSamparkModal() {
+      document.getElementById('logSamparkBackdrop').style.display = 'none';
+      document.getElementById('logSamparkModal').style.display = 'none';
+      logSamparkTargetItem = null;
+    }
+
+    function submitLogSampark(e) {
+      e.preventDefault();
+      const btn = document.getElementById('lsSubmitBtn');
+      const err = document.getElementById('lsError');
+      err.style.display = 'none';
+
+      const pwd = document.getElementById('lsPassword').value;
+      if (!pwd) {
+        err.innerText = 'Password is required!';
+        err.style.display = 'block';
+        return;
+      }
+
+      if (!logSamparkTargetItem) {
+        err.innerText = 'No contact selected.';
+        err.style.display = 'block';
+        return;
+      }
+
+      // Build updated data: keep all old fields, update the 3 new ones
+      const newData = Object.assign({}, logSamparkTargetItem, {
+        samparkDate: document.getElementById('lsDate').value,
+        samparkBy: document.getElementById('lsSamparkBy').value,
+        attendRaviSabha: document.getElementById('lsAttendRaviSabha').value
+      });
+
+      const payload = {
+        action: 'editSampark',
+        password: pwd,
+        oldData: logSamparkTargetItem,
+        newData: newData
+      };
+
+      btn.innerText = 'Saving...';
+      btn.disabled = true;
+
+      fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(resp => {
+          if (resp.success) {
+            closeLogSamparkModal();
+            refreshSamparkData();
+          } else {
+            throw new Error(resp.error || 'Failed to save visit');
+          }
+        })
+        .catch(error => {
+          err.innerText = error.message;
+          err.style.display = 'block';
+        })
+        .finally(() => {
+          btn.innerText = 'Save Visit';
+          btn.disabled = false;
         });
     }
 
@@ -1902,6 +2662,9 @@
           if (data.error) { console.error(data.error); return; }
           renderDashboard(data);
           renderSamparkDashboard();
+          // Init duty report
+          initDutyReportMonthSelect();
+          renderDutyReport();
         });
     }
 
