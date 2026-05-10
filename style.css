@@ -3394,18 +3394,24 @@ body.dark-mode .duty-report-label {
 /* Modal backgrounds */
 body.dark-mode #samparkModal,
 body.dark-mode #logSamparkModal {
-  background: #1e293b;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #1e293b !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  color: #f1f5f9 !important;
 }
 
 body.dark-mode #samparkModal h2,
 body.dark-mode #logSamparkModal h2 {
-  color: #f1f5f9;
+  color: #f1f5f9 !important;
 }
 
 body.dark-mode #samparkModal p,
 body.dark-mode #logSamparkModal p {
-  color: #94a3b8;
+  color: #94a3b8 !important;
+}
+
+body.dark-mode #samparkModal p strong,
+body.dark-mode #logSamparkModal p strong {
+  color: #fbbf24 !important;
 }
 
 body.dark-mode #samparkModal label,
@@ -3417,9 +3423,9 @@ body.dark-mode #samparkModal input,
 body.dark-mode #samparkModal select,
 body.dark-mode #logSamparkModal input,
 body.dark-mode #logSamparkModal select {
-  background: #0f172a;
-  color: #f1f5f9;
-  border-color: #334155;
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
 }
 
 body.dark-mode #samparkModal input::placeholder,
