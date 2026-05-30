@@ -2062,6 +2062,16 @@ textarea.form-input {
     padding: 6px 14px !important;
   }
 
+  .spark-nav-links {
+    gap: 4px !important;
+    justify-content: space-around !important;
+  }
+
+  .spark-nav-links a {
+    font-size: 10.5px !important;
+    letter-spacing: 0.1px !important;
+  }
+
   .spark-logo {
     font-size: 15px !important;
   }
