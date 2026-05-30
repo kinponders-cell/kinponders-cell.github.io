@@ -38,8 +38,11 @@
   font-family: var(--sans-font);
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
-  padding-bottom: 120px;
+  /* overflow:clip clips visually WITHOUT creating a scroll container,
+     so position:sticky still works on children. overflow:hidden breaks sticky! */
+  overflow: clip;
+  overflow-clip-margin: 0px;
+  padding-bottom: 0;
 }
 
 /* Base dark noise/grain background */
@@ -263,8 +266,33 @@
 }
 
 @media (max-width: 900px) {
+  .spark-navbar {
+    flex-wrap: wrap !important;
+    border-radius: 20px !important;
+    padding: 12px 20px !important;
+  }
+
+  .spark-logo {
+    margin-bottom: 4px;
+  }
+
   .spark-nav-links {
-    display: none; /* Desktop optimized */
+    display: flex !important;
+    width: 100%;
+    justify-content: space-evenly;
+    margin-top: 10px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 10px !important;
+    gap: 8px;
+  }
+
+  .spark-nav-links li.hide-mobile-nav {
+    display: none !important;
+  }
+
+  .spark-nav-links a {
+    font-size: 12px !important;
+    white-space: nowrap;
   }
 }
 
@@ -371,6 +399,186 @@
   position: relative;
   z-index: 10;
   box-sizing: border-box;
+}
+
+/* Title-only variant — remove bottom padding, add scroll prompt space */
+.spark-hero-title-only {
+  padding-bottom: 60px;
+}
+
+/* Scroll down prompt */
+.scroll-down-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+  opacity: 0;
+  animation: cinematicFadeUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards;
+}
+
+.scroll-arrow-wrap {
+  width: 36px;
+  height: 56px;
+  border: 2px solid var(--gold-border);
+  border-radius: 99px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 8px;
+  box-sizing: border-box;
+}
+
+.scroll-arrow {
+  width: 6px;
+  height: 6px;
+  background: var(--gold-accent);
+  border-radius: 50%;
+  animation: scrollBounce 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  80% { transform: translateY(24px); opacity: 0.3; }
+}
+
+.scroll-prompt-text {
+  font-family: var(--sans-font);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(231, 212, 179, 0.4);
+}
+
+/* ==========================================================================
+   🎬 SCROLLYTELLING SECTION (Sticky Scroll-Driven Temple Animation)
+   ========================================================================== */
+
+/* Outer wrapper — tall enough to scrub all 192 frames.
+   500vh means user scrolls 4x the viewport height through the animation. */
+.scrolly-section-wrapper {
+  position: relative;
+  width: 100%;
+  height: 500vh;
+  z-index: 20;
+}
+
+/* Sticky panel — sticks to viewport top and fills 100vh */
+.scrolly-sticky-panel {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+
+/* Canvas fills the sticky panel completely */
+.scrolly-sticky-panel #scrolly-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay text — cinematic bottom-left caption */
+.scrolly-text-overlay {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 300;
+  color: rgba(231, 212, 179, 0.9);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.6);
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 0 20px;
+}
+
+@media (max-width: 600px) {
+  .scrolly-text-overlay {
+    font-size: 16px;
+    bottom: 60px;
+    white-space: normal;
+    max-width: 90vw;
+  }
+}
+
+/* Cinematic gradient darkening at top and bottom */
+.scrolly-sticky-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(to bottom, rgba(8, 16, 7, 0.5) 0%, transparent 20%, transparent 75%, rgba(8, 16, 7, 0.7) 100%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Progress bar — thin gold line at the very bottom */
+.scrolly-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  z-index: 40;
+}
+
+.scrolly-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--gold-accent), #E7D4B3);
+  box-shadow: 0 0 10px rgba(201, 154, 78, 0.6);
+  transition: width 0.1s linear;
+}
+
+/* Scrolly loader inside sticky panel */
+.scrolly-sticky-panel #scrolly-loader {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-deep);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE — Scrolly Section
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .scrolly-section-wrapper {
+    height: 400vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .scrolly-section-wrapper {
+    height: 380vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .spark-hero-title-only {
+    padding-top: 100px !important;
+    padding-bottom: 40px !important;
+  }
 }
 
 /* Small animated glowing badge */
@@ -1777,19 +1985,9 @@ textarea.form-input {
   .btn-nav-login {
     display: none !important;
   }
-
-  /* Make interactive canvas mockup height responsive to preserve landscape ratio */
-  .canvas-viewport-container {
-    height: 360px !important;
-  }
 }
 
-@media (max-width: 600px) {
-  /* Keep canvas aspect ratio perfectly landscape on small tablets and large mobiles */
-  .canvas-viewport-container {
-    height: 240px !important;
-  }
-}
+
 
 @media (max-width: 480px) {
   /* Sleeker, proportional mobile adjustments for headers and padding */
@@ -1818,16 +2016,6 @@ textarea.form-input {
     margin-bottom: 24px !important;
   }
 
-  /* Compact canvas mockup height on small mobile screens to keep it exactly like desktop */
-  .canvas-viewport-container {
-    height: 180px !important;
-    padding: 0 10px !important;
-    transform: translateY(20px) scale(1) !important;
-  }
-
-  .canvas-viewport {
-    border-radius: 16px !important;
-  }
 
   /* Compact grid margins for perfect mobile grid stacking */
   .feature-editorial-card,
