@@ -773,7 +773,7 @@
           <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a></li>
         </ul>
         <div class="spark-nav-btns">
-          <button class="btn-nav-cta" onclick="toggleSidebar()">&#9776; Schedule</button>
+          <button class="btn-nav-cta" onclick="toggleSidebar()">&#9776;<span class="btn-nav-cta-label"> Schedule</span></button>
         </div>
       </nav>
     </div>
@@ -1488,6 +1488,9 @@
       const sidebar = document.getElementById('sidebarMenu');
       const overlay = document.getElementById('sidebarOverlay');
       const hamburgerSpans = document.querySelectorAll('#hamburgerBtn span');
+      const topbar = document.querySelector('.topbar');
+      const actionBar = document.getElementById('scheduleActionBar');
+      const sparkNavbar = document.querySelector('.spark-navbar-container');
 
       isSidebarOpen = !isSidebarOpen;
 
@@ -1495,6 +1498,18 @@
         sidebar.style.right = '0';
         overlay.style.opacity = '1';
         overlay.style.visibility = 'visible';
+        // Prevent body scroll while sidebar is open
+        document.body.style.overflow = 'hidden';
+
+        // Push topbar behind the overlay so it doesn't show through
+        if (topbar) topbar.style.zIndex = '1';
+        if (sparkNavbar) sparkNavbar.style.zIndex = '1';
+        // Hide action bar if visible
+        if (actionBar && actionBar.style.display !== 'none') {
+          actionBar.dataset.wasVisible = 'true';
+          actionBar.style.opacity = '0';
+          actionBar.style.pointerEvents = 'none';
+        }
 
         // Animate hamburger to X
         if (hamburgerSpans.length === 3) {
@@ -1506,6 +1521,18 @@
         sidebar.style.right = '-360px';
         overlay.style.opacity = '0';
         overlay.style.visibility = 'hidden';
+        // Restore body scroll
+        document.body.style.overflow = '';
+
+        // Restore topbar z-index
+        if (topbar) topbar.style.zIndex = '';
+        if (sparkNavbar) sparkNavbar.style.zIndex = '';
+        // Restore action bar if it was visible
+        if (actionBar && actionBar.dataset.wasVisible === 'true') {
+          actionBar.style.opacity = '';
+          actionBar.style.pointerEvents = '';
+          delete actionBar.dataset.wasVisible;
+        }
 
         // Reset hamburger
         if (hamburgerSpans.length === 3) {
