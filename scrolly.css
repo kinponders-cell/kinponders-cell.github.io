@@ -255,6 +255,23 @@
   height: 18px;
 }
 
+/* Responsive nav text helpers */
+.mobile-nav-text {
+  display: none !important;
+}
+.full-nav-text {
+  display: inline !important;
+}
+
+@media (max-width: 600px) {
+  .mobile-nav-text {
+    display: inline !important;
+  }
+  .full-nav-text {
+    display: none !important;
+  }
+}
+
 /* Nav links */
 .spark-nav-links {
   display: flex;
@@ -1582,6 +1599,11 @@ textarea.form-input {
   box-sizing: border-box;
 }
 
+/* Open state — class added by JS. Works on all screen sizes. */
+.sidebar-menu.sidebar-open {
+  right: 0 !important;
+}
+
 /* Background visual effects to match home page */
 .sidebar-bg-effects {
   position: absolute;
@@ -2006,10 +2028,15 @@ textarea.form-input {
 @media (max-width: 480px) {
   .sidebar-menu {
     width: 92vw !important;
-    right: -92vw !important;
+    /* Note: right offset is controlled by JS class toggle below */
+    right: -92vw; /* default closed state — no !important so JS class can override */
   }
 
-  /* When open — use JS to set right:0, but the width above controls it */
+  /* When open — class is added by JS */
+  .sidebar-menu.sidebar-open {
+    right: 0 !important;
+  }
+
   .sidebar-header {
     padding: 16px 18px 12px 18px !important;
   }
