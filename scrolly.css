@@ -291,11 +291,15 @@
 
   .spark-logo {
     margin-bottom: 4px;
-    order: 1;
+    order: 1 !important;
+    flex-shrink: 0 !important;
   }
 
   .spark-nav-btns {
-    order: 2;
+    order: 2 !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
   .spark-nav-links {
