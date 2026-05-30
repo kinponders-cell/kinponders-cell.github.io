@@ -291,6 +291,11 @@
 
   .spark-logo {
     margin-bottom: 4px;
+    order: 1;
+  }
+
+  .spark-nav-btns {
+    order: 2;
   }
 
   .spark-nav-links {
@@ -301,6 +306,7 @@
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding-top: 10px !important;
     gap: 8px;
+    order: 3;
   }
 
   .spark-nav-links li.hide-mobile-nav {
