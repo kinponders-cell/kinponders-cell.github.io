@@ -7,8 +7,11 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Link to external CSS -->
   <link rel="stylesheet" href="style.css">
-  <!-- Custom Font for premium look -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="scrolly.css">
+  <!-- Custom Fonts for premium editorial look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -68,17 +71,7 @@
         alt="BAPS Logo">
       <div style="display: flex; align-items: center; gap: 8px;">
         <h1>ARUSHA SATSANG MANDAL</h1>
-        <span id="pageIndicator" style="
-          display: none; 
-          font-weight: 700; 
-          font-size: 15px; 
-          color: #065f46; 
-          background: rgba(255, 255, 255, 0.4); 
-          padding: 4px 10px; 
-          border-radius: 999px;
-          backdrop-filter: blur(4px);
-          animation: slideInLeft 0.3s ease;">
-        </span>
+        <span id="pageIndicator" class="premium-page-indicator"></span>
       </div>
     </div>
 
@@ -123,27 +116,22 @@
   </div>
 
   <!-- SIDEBAR OVERLAY & MENU -->
-  <div id="sidebarOverlay" onclick="toggleSidebar()" style="
-      position: fixed; top: 0; right: 0; width: 100%; height: 100%; 
-      background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; visibility: hidden; 
-      transition: all 0.4s ease; backdrop-filter: blur(4px);">
-  </div>
+  <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-  <div id="sidebarMenu" style="
-      position: fixed; top: 0; right: -320px; width: 300px; height: 100%; 
-      background: white; z-index: 100; box-shadow: -10px 0 30px rgba(0,0,0,0.1); 
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; 
-      flex-direction: column; padding: 20px 0; overflow-y: auto;">
+  <div id="sidebarMenu" class="sidebar-menu">
+    <!-- Volumetric Glow and Noise Grid background -->
+    <div class="sidebar-bg-effects">
+      <div class="sidebar-glow-spot"></div>
+      <div class="sidebar-noise"></div>
+    </div>
 
-    <div
-      style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px 20px; border-bottom: 1px solid #f3f4f6; margin-bottom: 10px;">
-      <h2 style="margin: 0; font-size: 20px; color: var(--dark); font-weight: 800;">Navigation</h2>
-      <button onclick="toggleSidebar()"
-        style="background: none; border: none; font-size: 24px; color: #6b7280; cursor: pointer; padding: 5px;">✕</button>
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Sabha Portal</h2>
+      <button onclick="toggleSidebar()" class="close-sidebar-btn" aria-label="Close Sidebar">&times;</button>
     </div>
 
     <!-- Dynamic Buttons Go Here -->
-    <div id="menu" style="display: flex; flex-direction: column; padding: 0 15px; gap: 10px;"></div>
+    <div id="menu"></div>
   </div>
 
   <script>
@@ -756,89 +744,303 @@
 
   <!-- HOME SECTION -->
   <div id="homeSection">
-    <img class="banner"
-      src="https://yt3.googleusercontent.com/K0FpCc1rgoypETYXlc1fZu5Npp602ZFqfnLSU9ppXGa8QugeatUcCWCWs5jf3Fyyg7MRl8H2=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj">
+    <!-- Atmospheric Background elements -->
+    <div class="cinematic-bg"></div>
+    <div class="volumetric-glows">
+      <div class="glow-center"></div>
+      <div class="glow-left"></div>
+      <div class="glow-right"></div>
+    </div>
+    <div class="perspective-grid-container">
+      <div class="perspective-grid" id="perspectiveGrid"></div>
+    </div>
+    <div class="cinematic-vignette"></div>
 
-    <!-- SUMMARY SECTION -->
-
-    <!-- SCROLLYTELLING SECTION -->
-    <div id="scrolly-section" style="height: 400vh; position: relative;">
-      <div class="sticky-wrapper">
-        <canvas id="scrolly-canvas"></canvas>
-
-        <!-- Loader -->
-        <div id="scrolly-loader">
-          <div class="spinner"></div>
-          <div class="loading-text">Loading Sequence...</div>
-        </div>
-
-        <!-- Overlays -->
-        <div class="scrolly-overlay center" id="overlay-0">
-          <div class="scrolly-text-content">
-            <h2 class="scrolly-title">BAPS Temple</h2>
-            <p class="scrolly-subtitle">Arusha, Tanzania</p>
+    <!-- Floating Navbar -->
+    <div class="spark-navbar-container">
+      <nav class="spark-navbar">
+        <div class="spark-logo" onclick="showHome()">
+          <div class="logo-icon-wrap">
+            <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" style="height: 24px; width: 24px;" alt="BAPS Logo">
           </div>
+          BAPS ARUSHA
         </div>
+        <ul class="spark-nav-links">
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#about')">About us</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">📅 Schedule</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">✨ Activities</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#events')">📅 Upcoming Events</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a></li>
+        </ul>
+        <div class="spark-nav-btns">
+          <button class="btn-nav-cta" onclick="toggleSidebar()">&#9776; Schedule</button>
+        </div>
+      </nav>
+    </div>
 
-        <div class="scrolly-overlay left" id="overlay-1">
-          <div class="scrolly-text-content">
-            <h2 class="scrolly-title">Grand Architecture</h2>
-            <p class="scrolly-subtitle">Built with devotion and precision.</p>
+    <!-- Hero Section -->
+    <header class="spark-hero">
+      <!-- Glowing Badge -->
+      <div class="glowing-folder-badge" onclick="scrollToSection('#portals')">
+        <div class="badge-icon">
+          <div class="badge-pulse"></div>
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <span class="badge-text">Arusha Satsang Mandal Active</span>
+      </div>
+
+      <!-- Editorial Serif Headline -->
+      <h1 class="cinematic-headline">
+        Experience The Divinity
+        <span>Of Akshar Purushottam</span>
+      </h1>
+
+      <!-- 3D Canvas Viewport Container -->
+      <div class="canvas-viewport-container" id="canvasContainer">
+        <div class="canvas-viewport-shadow"></div>
+        <div class="canvas-viewport" id="canvasViewport">
+          <!-- Glass Shine overlay -->
+          <div class="viewport-shine"></div>
+          
+          <!-- Hud Graphics -->
+          <div class="hud-layer">
+            <div class="hud-top">
+              <span class="hud-pill hud-pill-active">
+                <span class="active-dot"></span>
+                Interactive 3D Temple Model
+              </span>
+              <span class="hud-pill">FPS: 60 / WebGL</span>
+            </div>
+            <div class="hud-bottom">
+              <span class="hud-hint" id="scrolly-overlay-text">BAPS Temple Arusha</span>
+              <span class="hud-pill">Frame: <span id="hud-frame-num">001</span>/192</span>
+            </div>
           </div>
-        </div>
 
-        <div class="scrolly-overlay right" id="overlay-2">
-          <div class="scrolly-text-content">
-            <h2 class="scrolly-title">Spiritual Harmony</h2>
-            <p class="scrolly-subtitle">A place of peace and reflection.</p>
-          </div>
-        </div>
+          <!-- The Canvas -->
+          <canvas id="scrolly-canvas"></canvas>
 
-        <div class="scrolly-overlay center" id="overlay-3">
-          <div class="scrolly-text-content">
-            <h2 class="scrolly-title">Welcome Home</h2>
-            <p class="scrolly-subtitle">Experience the divinity.</p>
+          <!-- Loader -->
+          <div id="scrolly-loader">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading 3D Temple Model...</div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
 
-    <div class="summary-section">
-      <div class="summary-title">Upcoming Events <img
-          src="https://drive.google.com/thumbnail?id=1Gkrf_l8SDuIAEsVYcwn5VS_z_Ef_4khS" style="height: 25px"></div>
-      <div class="summary-wrapper" id="summaryContainer">
+    <!-- Sub-sections (Editorial Layouts) -->
+    <!-- About us / Introduction -->
+    <section class="editorial-section fade-in-section" id="about" style="margin-top: 180px;">
+      <span class="section-tag">Introduction</span>
+      <h2 class="section-title">Where <span>Devotion</span><br>Meets Community</h2>
+      <p style="font-family: var(--sans-font); font-size: 18px; line-height: 1.8; color: var(--text-muted); max-width: 800px; margin: 0 0 50px 0;">
+        Welcome to the Arusha Satsang Mandal website. Under the guidance of Pujya Mahant Swami Maharaj, BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple. We believe in living a life of devotion, service, and self-improvement, fostering spiritual harmony and ethical conduct.
+      </p>
+      
+      <!-- Info Cards (restored from original index.html but beautifully styled with images) -->
+      <div class="features-editorial-grid">
+        <div class="feature-editorial-card card-with-img">
+          <div class="card-img-wrap">
+            <img src="https://drive.google.com/thumbnail?id=10ZU3rVQiVam2Q_zsmqY4h0PkC7g1UaNX" alt="BAPS Temple Arusha">
+          </div>
+          <h3 class="feature-title">BAPS Temple Arusha</h3>
+          <p class="feature-desc">A stunning Hindu temple built with intricate carvings, peaceful atmosphere, and a variety of facilities, providing a unique, spiritually enriching experience.</p>
+        </div>
+        <div class="feature-editorial-card card-with-img">
+          <div class="card-img-wrap">
+            <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg" alt="Nilkanth Varni">
+          </div>
+          <h3 class="feature-title">Nilkanth Varni</h3>
+          <p class="feature-desc">Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement. Let us embody his virtues of compassion, kindness, and humility.</p>
+        </div>
+        <div class="feature-editorial-card card-with-img">
+          <div class="card-img-wrap">
+            <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg" alt="Akshar Purushottam Darshan">
+          </div>
+          <h3 class="feature-title">Akshar Purushottam Darshan</h3>
+          <p class="feature-desc">A Hindu philosophy that emphasizes devotion to God, ethical conduct, and pursuit of self-realization, unlocking transformative power in daily life.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upcoming Events (adapted from original summary Section) -->
+    <section class="editorial-section fade-in-section" id="events">
+      <span class="section-tag">Satsang Calendar</span>
+      <h2 class="section-title">Upcoming <span>Gatherings & Sabhas</span></h2>
+      
+      <!-- We preserve the original dynamically injected container here -->
+      <div class="summary-wrapper" id="summaryContainer" style="padding-top: 10px;">
         <!-- Injected via JS -->
       </div>
-    </div>
+    </section>
 
-    <div class="section">
-      <div class="cards">
-        <div class="info-card">
-          <img src="https://drive.google.com/thumbnail?id=10ZU3rVQiVam2Q_zsmqY4h0PkC7g1UaNX">
-          <p>
-            BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple.
-            With its intricate carvings, peaceful atmosphere, and variety of facilities,
-            it's a popular destination for visitors seeking a unique, enriching experience.
-          </p>
+    <!-- Activities Section -->
+    <section class="editorial-section fade-in-section" id="activities">
+      <span class="section-tag">Sabhas</span>
+      <h2 class="section-title">Assemblies for <span>Every Age Group</span></h2>
+      <div class="features-editorial-grid">
+        <div class="feature-editorial-card">
+          <div class="feature-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+          </div>
+          <h3 class="feature-title">Ravi Sabha</h3>
+          <p class="feature-desc">Weekly assembly for adults to engage in satsang, listen to spiritual discourses, sing devotional kirtans, and perform community service.</p>
         </div>
-        <div class="info-card">
-          <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg">
-          <p>
-            Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
-            Let us embody his virtues of compassion, kindness, and humility, and make a positive
-            impact on the world.
-          </p>
+        <div class="feature-editorial-card">
+          <div class="feature-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <h3 class="feature-title">Yuvak Sabha</h3>
+          <p class="feature-desc">Balance professional, educational, and spiritual life with targeted guidance, moral values, and community projects tailored for modern youth.</p>
         </div>
-        <div class="info-card">
-          <img
-            src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg">
-          <p>
-            Akshar Purushottam Darshan is a Hindu philosophy that emphasizes devotion to God,
-            ethical conduct, and pursuit of self-realization. Discover its transformative power.
-          </p>
+        <div class="feature-editorial-card">
+          <div class="feature-icon-box">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-3.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          </div>
+          <h3 class="feature-title">Yuvati / Bal Sabha</h3>
+          <p class="feature-desc">Assemblies for children and young women to build leadership, learn cultural traditions, and foster mutual friendship in a supportive environment.</p>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Administrative Portals Section -->
+    <section class="editorial-section fade-in-section" id="portals">
+      <span class="section-tag">Portals</span>
+      <h2 class="section-title">Administrative <span>Satsang databases</span></h2>
+      <div class="pricing-editorial-grid">
+        <!-- Portal 1 -->
+        <div class="pricing-editorial-card">
+          <div class="price-header">
+            <div class="price-tier">Volunteer Program</div>
+            <div class="price-amount">Schedule<span>/Sabha</span></div>
+            <p class="price-desc">View weekly duties, download reports, and filter schedules dynamically.</p>
+          </div>
+          <ul class="price-features">
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Live Schedule Lists</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Download as PDF Reports</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Multi-Column Filter</li>
+          </ul>
+          <button class="btn-price-buy" onclick="toggleSidebar()">View Schedule</button>
+        </div>
+        <!-- Portal 2 (Featured) -->
+        <div class="pricing-editorial-card pricing-editorial-card-featured">
+          <span class="pricing-featured-badge">Active</span>
+          <div class="price-header">
+            <div class="price-tier">Activities Portal</div>
+            <div class="price-amount">Sabhas<span>/Assemblies</span></div>
+            <p class="price-desc">Explore BAPS assemblies tailored for all ages, promoting spiritual harmony and moral education.</p>
+          </div>
+          <ul class="price-features">
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Weekly Adult Ravi Sabha</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Dynamic Youth Yuvak Assemblies</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Customized Moral Bal Sabhas</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Interactive Dynamic Photos</li>
+          </ul>
+          <button class="btn-price-buy" onclick="openActivities()">Open Activities</button>
+        </div>
+        <!-- Portal 3 -->
+        <div class="pricing-editorial-card">
+          <div class="price-header">
+            <div class="price-tier">Sampark Database</div>
+            <div class="price-amount">Sampark<span>/Karyakar</span></div>
+            <p class="price-desc">Comprehensive database tracking home visits, calls, and duplicate records.</p>
+          </div>
+          <ul class="price-features">
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Log Visits, Calls & WhatsApp</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Clean Karyakar Filters</li>
+            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Address & Remark Auditing</li>
+          </ul>
+          <button class="btn-price-buy" onclick="openSampark()">Access Sampark</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="editorial-section fade-in-section" id="faq">
+      <span class="section-tag">Inquiries</span>
+      <h2 class="section-title" style="text-align: center;">Frequently Asked <span>Questions</span></h2>
+      <div class="faq-editorial-list">
+        <div class="faq-editorial-item">
+          <button class="faq-editorial-trigger" onclick="toggleFaq(this)">
+            <h4 class="faq-question">What is BAPS Ravi Sabha Arusha?</h4>
+            <svg class="faq-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <div class="faq-editorial-content">
+            <p class="faq-answer">It is the weekly spiritual assembly of the Swaminarayan Hindu community in Arusha, Tanzania, under the spiritual guidance of Pujya Mahant Swami Maharaj. We engage in spiritual discourses, devotional singing, and moral education.</p>
+          </div>
+        </div>
+        <div class="faq-editorial-item">
+          <button class="faq-editorial-trigger" onclick="toggleFaq(this)">
+            <h4 class="faq-question">How can I join the volunteer program?</h4>
+            <svg class="faq-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <div class="faq-editorial-content">
+            <p class="faq-answer">Every active karyakar is assigned weekly duties (Pravachan, Emcee, Kirtan, Aarti, Dhun). You can view assigned duties by opening the Schedule section. Admin password is required to log or alter schedule databases.</p>
+          </div>
+        </div>
+        <div class="faq-editorial-item">
+          <button class="faq-editorial-trigger" onclick="toggleFaq(this)">
+            <h4 class="faq-question">Is the attendance dashboard secure?</h4>
+            <svg class="faq-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </button>
+          <div class="faq-editorial-content">
+            <p class="faq-answer">Yes, access to the Attendance Entry form, Announcements board, and Sampark database is secured by designated passwords to ensure privacy and security of community volunteer records.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="editorial-section fade-in-section" id="contact" style="margin-bottom: 80px;">
+      <span class="section-tag">Connect</span>
+      <h2 class="section-title">Begin Your <span>Spiritual Journey</span></h2>
+      <div class="contact-editorial-container">
+        <div class="contact-editorial-info">
+          <div>
+            <h3>Experience the peace<br>and spiritual harmony.</h3>
+            <p>Our volunteer and satsang administrative teams are available to provide support, answer questions, and welcome you to our weekly sabhas.</p>
+          </div>
+          <ul class="contact-meta-list">
+            <li class="contact-meta-item">
+              <div class="contact-meta-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+              <div>
+                <div class="contact-meta-label">Email us</div>
+                <div class="contact-meta-value">kinpatel1983@gmail.com</div>
+              </div>
+            </li>
+            <li class="contact-meta-item">
+              <div class="contact-meta-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+              <div>
+                <div class="contact-meta-label">Mandir Address</div>
+                <div class="contact-meta-value">BAPS Swaminarayan Mandir, Arusha, Tanzania</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <form class="contact-editorial-form" onsubmit="event.preventDefault(); alert('Jai Swaminarayan! Your inquiry has been sent to the Arusha Satsang Mandal team.');">
+          <div class="form-group-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" placeholder="E.g., Dev Patel" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="dev@baps.org" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Select Subject</label>
+            <input type="text" class="form-input" placeholder="General Inquiry / Volunteer Access Request">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Message</label>
+            <textarea class="form-input" placeholder="Describe your question or volunteer request..." required></textarea>
+          </div>
+          <button type="submit" class="btn-form-submit">Send Inquiry</button>
+        </form>
+      </div>
+    </section>
   </div>
 
   <!-- SCHEDULE SECTION -->
@@ -920,8 +1122,9 @@
           renderActivities(activities);
           renderAnnouncements(announcements); // New Render Call
 
-          // 3. Hide Loader
+          // 3. Hide Loader and initialize Home
           document.getElementById("loader").style.display = "none";
+          showHome();
 
           // Auto-Scroll
           const summaryWrapper = document.querySelector('.summary-wrapper');
@@ -1191,7 +1394,15 @@
         btn.style.animationDelay = getDelay();
       };
 
-      // 1. Date Buttons
+      // 1. Sabha Schedules Category Header
+      if (dates.length > 0) {
+        const schedHeader = document.createElement("div");
+        schedHeader.className = "menu-section-header";
+        schedHeader.textContent = "Sabha Schedules";
+        menu.appendChild(schedHeader);
+      }
+
+      // 2. Date Buttons
       dates.forEach(d => {
         const b = document.createElement("button");
         b.textContent = d.label;
@@ -1201,41 +1412,77 @@
         menu.appendChild(b);
       });
 
-      // 2. Dashboard Button
+      // 3. Portals & Administration Category Header
+      const portalsHeader = document.createElement("div");
+      portalsHeader.className = "menu-section-header";
+      portalsHeader.textContent = "Admin & Portals";
+      menu.appendChild(portalsHeader);
+
+      // 4. Dashboard Button
       const dashBtn = document.createElement("button");
-      dashBtn.innerHTML = "📊 Dashboard";
+      dashBtn.innerHTML = `
+        <span class="menu-btn-icon">📊</span>
+        <span class="menu-btn-content">
+          <span class="menu-btn-title">Dashboard</span>
+          <span class="menu-btn-desc">Attendance & Summary Charts</span>
+        </span>
+      `;
       dashBtn.className = "action-btn dash-btn";
       dashBtn.onclick = openDashboard;
       animateBtn(dashBtn);
       menu.appendChild(dashBtn);
 
-      // 3. Entry Button
+      // 5. Entry Button
       const entryBtn = document.createElement("button");
-      entryBtn.innerHTML = "📝 Entry";
+      entryBtn.innerHTML = `
+        <span class="menu-btn-icon">📝</span>
+        <span class="menu-btn-content">
+          <span class="menu-btn-title">Entry Portal</span>
+          <span class="menu-btn-desc">Record Sabha Attendance</span>
+        </span>
+      `;
       entryBtn.className = "action-btn entry-btn";
       entryBtn.onclick = openAttendance;
       animateBtn(entryBtn);
       menu.appendChild(entryBtn);
 
-      // 4. Activities Button (NEW)
+      // 6. Activities Button
       const activityBtn = document.createElement("button");
-      activityBtn.innerHTML = "✨ Activities";
+      activityBtn.innerHTML = `
+        <span class="menu-btn-icon">✨</span>
+        <span class="menu-btn-content">
+          <span class="menu-btn-title">Activities</span>
+          <span class="menu-btn-desc">Weekly Sabha Events & Services</span>
+        </span>
+      `;
       activityBtn.className = "action-btn activity-btn";
       activityBtn.onclick = openActivities;
       animateBtn(activityBtn);
       menu.appendChild(activityBtn);
 
-      // 5. Announcements Button (NEW)
+      // 7. Announcements Button
       const announceBtn = document.createElement("button");
-      announceBtn.innerHTML = "📢 Announcements";
+      announceBtn.innerHTML = `
+        <span class="menu-btn-icon">📢</span>
+        <span class="menu-btn-content">
+          <span class="menu-btn-title">Announcements</span>
+          <span class="menu-btn-desc">Upcoming Sabha Notices</span>
+        </span>
+      `;
       announceBtn.className = "action-btn announce-btn";
       announceBtn.onclick = openAnnouncements;
       animateBtn(announceBtn);
       menu.appendChild(announceBtn);
 
-      // 6. Sampark Button
+      // 8. Sampark Button
       const samparkBtn = document.createElement("button");
-      samparkBtn.innerHTML = "🤝 Sampark";
+      samparkBtn.innerHTML = `
+        <span class="menu-btn-icon">🤝</span>
+        <span class="menu-btn-content">
+          <span class="menu-btn-title">Sampark Directory</span>
+          <span class="menu-btn-desc">Satsang Contact Database</span>
+        </span>
+      `;
       samparkBtn.className = "action-btn sampark-btn sidebar-btn";
       samparkBtn.onclick = openSampark;
       animateBtn(samparkBtn);
@@ -1263,7 +1510,7 @@
           hamburgerSpans[2].style.transform = 'translateY(-11px) rotate(-45deg)';
         }
       } else {
-        sidebar.style.right = '-320px';
+        sidebar.style.right = '-360px';
         overlay.style.opacity = '0';
         overlay.style.visibility = 'hidden';
 
@@ -1289,10 +1536,23 @@
       bar.style.display = "flex";
       setTimeout(() => bar.classList.add("show"), 10);
 
-      document.getElementById("printDate").innerText = "Date: " + dates.find(d => d.key === key).label;
-
       const labelData = dates.find(d => d.key === key);
-      updatePageIndicator("📅 " + (labelData ? labelData.label : key));
+      const sabhaData = summaries.find(s => s.key === key);
+      const sabhaTitle = sabhaData ? sabhaData.text : "Weekly Satsang Assembly";
+
+      // 1. Update Printable & Viewable Program Header Metadata Banner (Premium Layout)
+      const dateLabel = labelData ? labelData.label : key;
+      const cleanDate = dateLabel.replace(/[\/\s-]/g, '_');
+      const cleanSabha = sabhaTitle.replace(/[\s-]/g, '_');
+      const combinedSubheading = `${cleanDate}_${cleanSabha}`;
+
+      document.getElementById("printDate").innerHTML = `
+        <div class="print-subheading-clean">${combinedSubheading}</div>
+      `;
+
+      // 2. Update Premium Glass Top Bar Page Indicator
+      const indicatorHtml = `📅 ${labelData ? labelData.label : key} &nbsp;&bull;&nbsp; <span class="indicator-sabha-name">${sabhaTitle}</span>`;
+      updatePageIndicator(indicatorHtml);
 
       scheduleSection.style.display = "block";
       renderScheduleFiltered(); // First render
@@ -1303,12 +1563,53 @@
       renderScheduleFiltered(val);
     }
 
+    // Premium Eased Smooth Scroll Mechanics
+    function scrollToSection(selector) {
+      if (homeSection.style.display === 'none') {
+        showHome();
+      }
+      setTimeout(() => {
+        const target = document.querySelector(selector);
+        if (target) {
+          smoothScrollTo(target, 1400); // 1.4s luxury cubic easing scroll
+        }
+      }, 50);
+    }
+
+    function smoothScrollTo(element, duration) {
+      const targetPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      let startTime = null;
+
+      function ease(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t * t + b;
+        t -= 2;
+        return c / 2 * (t * t * t + 2) + b;
+      }
+
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const run = ease(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        } else {
+          window.scrollTo(0, targetPosition);
+        }
+      }
+
+      requestAnimationFrame(animation);
+    }
+
     function updatePageIndicator(title) {
       const ind = document.getElementById("pageIndicator");
       if (!title || title === "Home") {
         ind.style.display = "none";
       } else {
-        ind.style.display = "inline-block";
+        ind.style.display = "inline-flex";
         ind.innerHTML = title;
       }
     }
@@ -1321,6 +1622,11 @@
       document.getElementById("pdfBar").style.display = "none";
       homeSection.style.display = "block";
       [...menu.children].forEach(b => b.classList.remove("active"));
+      // Hide the legacy topbar on the cinematic landing page
+      const tb = document.querySelector('.topbar');
+      if (tb) tb.style.display = 'none';
+      // Shift body background to dark for cinematic layout continuity
+      document.body.style.backgroundColor = '#081007';
     }
 
     function openActivities() {
@@ -1358,6 +1664,12 @@
       // Ensure specific elements are reset if needed
       document.getElementById("scheduleActionBar").classList.remove("show");
       document.getElementById("scheduleActionBar").style.display = "none";
+      
+      // Restore the legacy topbar for database pages
+      const tb = document.querySelector('.topbar');
+      if (tb) tb.style.display = 'flex';
+      // Restore normal body styling
+      document.body.style.backgroundColor = '';
     }
 
     // =============================================
@@ -2383,7 +2695,28 @@
       return 'default';
     }
 
-    function saveAsPDF() { window.print(); }
+    function saveAsPDF() {
+      const oldTitle = document.title;
+      if (activeDateKey) {
+        const labelData = dates.find(d => d.key === activeDateKey);
+        const sabhaData = summaries.find(s => s.key === activeDateKey);
+        const dateLabel = labelData ? labelData.label : activeDateKey;
+        const sabhaTitle = sabhaData ? sabhaData.text : "Weekly Satsang Assembly";
+
+        // Clean string for filename (remove invalid chars, replace spaces with underscores)
+        const cleanDate = dateLabel.replace(/[\s\/\\:*?\"<>|]/g, '_');
+        const cleanSabha = sabhaTitle.replace(/[\s\/\\:*?\"<>|]/g, '_');
+        document.title = `BAPS_Ravi_Sabha_Program_${cleanDate}_${cleanSabha}`;
+      } else {
+        document.title = "BAPS_Ravi_Sabha_Program";
+      }
+
+      window.print();
+
+      setTimeout(() => {
+        document.title = oldTitle;
+      }, 500);
+    }
 
     function printSamparkPDF() {
       document.body.classList.add('printing-sampark');
@@ -2405,12 +2738,17 @@
       }
       printDateEl.innerHTML = dateText;
 
+      const oldDocTitle = document.title;
+      const cleanDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/[\s\/\\:*?\"<>|]/g, '_');
+      document.title = `BAPS_Ravi_Sabha_Sampark_List_${cleanDate}`;
+
       window.print();
 
       setTimeout(() => {
         document.body.classList.remove('printing-sampark');
         printTitleEl.innerHTML = oldTitle;
         printDateEl.innerHTML = oldDate;
+        document.title = oldDocTitle;
       }, 500);
     }
 
@@ -2793,45 +3131,85 @@
     }
 
     // =========================================
-    // 🎞️ SCROLLYTELLING LOGIC
+    // 🎞️ SPARKSCRIBE PREMIUM INTERACTIVE ENGINE
     // =========================================
-    (function initScrolly() {
-      const section = document.getElementById('scrolly-section');
+    
+    // 1. FAQ Accordion Toggle
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const isActive = item.classList.contains('faq-editorial-item-active');
+      
+      // Close all other FAQ items first for premium feel
+      document.querySelectorAll('.faq-editorial-item').forEach(el => {
+        el.classList.remove('faq-editorial-item-active');
+      });
+      
+      if (!isActive) {
+        item.classList.add('faq-editorial-item-active');
+      }
+    }
+    
+    // 2. Editorial Section Scroll-Triggered Fade-ins
+    document.addEventListener("DOMContentLoaded", () => {
+      const fadeSections = document.querySelectorAll(".fade-in-section");
+      
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+            }
+          });
+        }, {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px"
+        });
+        
+        fadeSections.forEach(section => {
+          observer.observe(section);
+        });
+      } else {
+        // Fallback for older browsers
+        fadeSections.forEach(section => section.classList.add("is-visible"));
+      }
+    });
+
+    // 3. Main 3D Canvas Interactive Engine
+    (function initSparkEngine() {
       const canvas = document.getElementById('scrolly-canvas');
       const loader = document.getElementById('scrolly-loader');
-      if (!section || !canvas) return;
+      const viewport = document.getElementById('canvasViewport');
+      const container = document.getElementById('canvasContainer');
+      const grid = document.getElementById('perspectiveGrid');
+      const hudFrameNum = document.getElementById('hud-frame-num');
+      const overlayText = document.getElementById('scrolly-overlay-text');
+      
+      if (!canvas || !viewport) return;
 
       const context = canvas.getContext('2d');
       const frameCount = 192;
       const images = [];
-      const frames = { current: 0 };
+      const state = {
+        currentFrame: 0,
+        isUserInteracting: false,
+        lastInteractionTime: 0
+      };
 
-      // Define overlays with their active ranges (0.0 - 1.0 of scroll progress)
-      // Adjust these ranges to match the "beats" from the prompt
-      // 0% - Center
-      // 25% - Left
-      // 60% - Right
-      // 90% - Center CTA
-      const overlays = [
-        { id: 'overlay-0', start: 0.0, end: 0.15 },
-        { id: 'overlay-1', start: 0.20, end: 0.40 },
-        { id: 'overlay-2', start: 0.55, end: 0.75 },
-        { id: 'overlay-3', start: 0.85, end: 1.0 }
-      ];
-
-      // Resize Canvas
+      // Handle canvas resizing within the glassmorphic viewport
       function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        render(); // Re-render current frame on resize
+        const rect = viewport.getBoundingClientRect();
+        // Scale coordinate system for crisp rendering on high-DPI displays
+        const dpi = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpi;
+        canvas.height = rect.height * dpi;
+        drawFrame();
       }
       window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
+      // Wait slightly for DOM to settle
+      setTimeout(resizeCanvas, 100);
 
-      // Load Images
-      // Actual naming: assets/sequence/00001.jpg
-      let imagesLoaded = 0;
-
+      // Preload the 192 image sequence frames
+      let loadedCount = 0;
       const pad = (num, size) => {
         let s = num + "";
         while (s.length < size) s = "0" + s;
@@ -2840,130 +3218,163 @@
 
       for (let i = 0; i < frameCount; i++) {
         const img = new Image();
-        // Files are 1-indexed (00001.jpg) and jpg format
         const fileName = pad(i + 1, 5) + ".jpg";
         img.src = `assets/sequence/${fileName}`;
 
         img.onload = () => {
-          imagesLoaded++;
-          if (imagesLoaded === frameCount) {
-            loader.style.opacity = 0;
-            setTimeout(() => loader.style.display = 'none', 500);
-            render();
+          loadedCount++;
+          if (loadedCount === frameCount) {
+            // Hide the glass loader nicely
+            if (loader) {
+              loader.style.opacity = 0;
+              setTimeout(() => loader.style.display = 'none', 500);
+            }
+            drawFrame();
+            startAmbientRotation();
           }
         };
         img.onerror = () => {
-          console.warn(`Failed to load frame: ${fileName}`);
-          // If a frame fails, we still want to clear loader if mostly successful?
-          // For now, let's just log. 
-          // If specific important frames fail, user will see gaps.
-        }
+          console.warn(`Failed loading: ${fileName}`);
+        };
         images.push(img);
       }
 
-      // Render Frame
-      function render() {
-        // Draw current frame
-        const img = images[frames.current];
-        if (img && img.complete) {
-          // "Contain" fit logic
-          const hRatio = canvas.width / img.width;
-          const vRatio = canvas.height / img.height;
+      // Draw active frame with high-fidelity cover scaling
+      function drawFrame() {
+        const img = images[state.currentFrame];
+        if (!img || !img.complete) return;
 
-          // Fix: Use 'cover' (Math.max) for mobile to avoid vertical whitespace
-          const isMobile = window.innerWidth < 768;
-          const ratio = isMobile ? Math.max(hRatio, vRatio) : Math.min(hRatio, vRatio);
+        const hRatio = canvas.width / img.width;
+        const vRatio = canvas.height / img.height;
+        // Use cover scaling to fill container beautifully
+        const ratio = Math.max(hRatio, vRatio);
 
-          const centerShift_x = (canvas.width - img.width * ratio) / 2;
-          const centerShift_y = (canvas.height - img.height * ratio) / 2;
+        const xShift = (canvas.width - img.width * ratio) / 2;
+        const yShift = (canvas.height - img.height * ratio) / 2;
 
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(img,
-            0, 0, img.width, img.height,
-            centerShift_x, centerShift_y, img.width * ratio, img.height * ratio
-          );
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img,
+          0, 0, img.width, img.height,
+          xShift, yShift, img.width * ratio, img.height * ratio
+        );
+        
+        // Update frame counter in HUD
+        if (hudFrameNum) {
+          hudFrameNum.textContent = pad(state.currentFrame + 1, 3);
+        }
+
+        // Dynamically update the premium BAPS scrolly overlays inside HUD
+        if (overlayText) {
+          const frame = state.currentFrame;
+          if (frame <= 28) {
+            overlayText.textContent = "BAPS Temple Arusha";
+          } else if (frame > 28 && frame <= 86) {
+            overlayText.textContent = "Grand Architecture — Built with devotion & precision";
+          } else if (frame > 86 && frame <= 150) {
+            overlayText.textContent = "Spiritual Harmony — A place of peace & reflection";
+          } else {
+            overlayText.textContent = "Welcome Home — Experience the divinity";
+          }
         }
       }
 
-      // Scroll Handler
+      // 4. Scroll Scrub Integration
       window.addEventListener('scroll', () => {
-        if (homeSection.style.display === 'none') return; // Don't run if not on home
+        if (homeSection.style.display === 'none') return;
 
-        const sectionRect = section.getBoundingClientRect();
-        const startY = sectionRect.top;
-        const endY = sectionRect.bottom;
-        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const startScrub = 0;
+        const endScrub = 950; // Dynamic window scrub height
 
-        // Calculate progress 0 to 1
-        // When section top is at 0 (sticky start), progress starts increasing
-        // But we actually want progress relative to the scroll distance of the container
-        // total scrollable distance = section.offsetHeight - windowHeight
+        if (scrollTop <= endScrub) {
+          state.isUserInteracting = true;
+          state.lastInteractionTime = Date.now();
 
-        // We need to map the scroll position to [0, 1]
-        // sticky wrapper stays fixed while section moves up
+          const progress = Math.max(0, Math.min(1, scrollTop / endScrub));
+          const targetFrame = Math.min(
+            frameCount - 1,
+            Math.floor(progress * (frameCount - 1))
+          );
 
-        // Calculate how far we are scrolled INTO the section
-        // sectionRect.top is negative as we scroll down
-        const scrollDistance = -sectionRect.top;
-        const maxScroll = section.offsetHeight - windowHeight;
-
-        let progress = scrollDistance / maxScroll;
-
-        // Clamp 0 to 1
-        progress = Math.max(0, Math.min(1, progress));
-
-        // Map to frame
-        const frameIndex = Math.min(
-          frameCount - 1,
-          Math.floor(progress * (frameCount - 1))
-        );
-
-        if (frameIndex !== frames.current) {
-          frames.current = frameIndex;
-          requestAnimationFrame(render);
-        }
-
-        // DEBUG: Uncomment to see values on screen
-        /*
-        let dbg = document.getElementById('debug-box');
-        if(!dbg) {
-             dbg = document.createElement('div');
-             dbg.id = 'debug-box';
-             dbg.style.position = 'fixed';
-             dbg.style.top = '100px';
-             dbg.style.left = '10px';
-             dbg.style.background = 'rgba(0,0,0,0.8)';
-             dbg.style.color = 'white';
-             dbg.style.padding = '10px';
-             dbg.style.zIndex = '9999';
-             document.body.appendChild(dbg);
-        }
-        dbg.innerHTML = `
-           Progress: ${progress.toFixed(3)}<br>
-           Frame: ${frames.current}<br>
-           Top: ${sectionRect.top.toFixed(0)}<br>
-           H: ${section.offsetHeight}
-        `;
-        */
-
-        // Handle Overlays
-        overlays.forEach(overlay => {
-          const el = document.getElementById(overlay.id);
-          if (el) {
-            // Simple fade in/out logic
-            // If progress is within start/end, opacity 1, else 0
-            // Add a small buffer for transition smoothness if needed
-            if (progress >= overlay.start && progress <= overlay.end) {
-              el.style.opacity = 1;
-              el.style.transform = 'translateY(-50%) translateY(0px)';
-            } else {
-              el.style.opacity = 0;
-              el.style.transform = 'translateY(-50%) translateY(20px)';
-            }
+          if (targetFrame !== state.currentFrame) {
+            state.currentFrame = targetFrame;
+            requestAnimationFrame(drawFrame);
           }
-        });
+        }
       });
 
+      // 5. Ambient Rotation Engine (Slow breathing cycle when idle)
+      let ambientInterval = null;
+      function startAmbientRotation() {
+        if (ambientInterval) clearInterval(ambientInterval);
+        
+        ambientInterval = setInterval(() => {
+          if (homeSection.style.display === 'none') return;
+          
+          // Resume slow rotation if idle for more than 4 seconds
+          if (Date.now() - state.lastInteractionTime > 4000) {
+            state.isUserInteracting = false;
+            // Advance frame smoothly
+            state.currentFrame = (state.currentFrame + 1) % frameCount;
+            requestAnimationFrame(drawFrame);
+          }
+        }, 110);
+      }
+
+      // 6. Luxury Mouse Parallax tilt & light shifting
+      const hero = document.querySelector('.spark-hero');
+      const glowCenter = document.querySelector('.glow-center');
+      const glowLeft = document.querySelector('.glow-left');
+      const glowRight = document.querySelector('.glow-right');
+      const shadow = document.querySelector('.canvas-viewport-shadow');
+
+      if (hero) {
+        hero.addEventListener('mousemove', (e) => {
+          if (homeSection.style.display === 'none') return;
+          
+          state.lastInteractionTime = Date.now();
+          state.isUserInteracting = true;
+
+          // Calculate normalized mouse offsets (-1 to +1)
+          const rect = hero.getBoundingClientRect();
+          const mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          const mouseY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+          // Tilt device viewport in 3D
+          viewport.style.transform = `perspective(1000px) rotateX(${-mouseY * 8}deg) rotateY(${mouseX * 8}deg) translate3d(${mouseX * 8}px, ${mouseY * 8}px, 0)`;
+          
+          // Slide viewport shadow
+          if (shadow) {
+            shadow.style.transform = `translateX(${mouseX * -16}px) scale(${1 + mouseY * 0.03})`;
+          }
+
+          // Move perspective background grid
+          if (grid) {
+            grid.style.transform = `rotateX(75deg) translate3d(${mouseX * -30}px, ${mouseY * -15}px, 0)`;
+          }
+
+          // Shift ambient volumetric glows to create deep parallax
+          if (glowCenter) {
+            glowCenter.style.transform = `translate(-50%, -50%) translate3d(${mouseX * 25}px, ${mouseY * 25}px, 0)`;
+          }
+          if (glowLeft) {
+            glowLeft.style.transform = `translate3d(${mouseX * -40}px, ${mouseY * -40}px, 0)`;
+          }
+          if (glowRight) {
+            glowRight.style.transform = `translate3d(${mouseX * 35}px, ${mouseY * 35}px, 0)`;
+          }
+        });
+
+        // Reset device position smoothly on mouse leave
+        hero.addEventListener('mouseleave', () => {
+          viewport.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+          if (shadow) shadow.style.transform = 'translateX(0px) scale(1)';
+          if (grid) grid.style.transform = 'rotateX(75deg) translate3d(0, 0, 0)';
+          if (glowCenter) glowCenter.style.transform = 'translate(-50%, -50%) translate3d(0, 0, 0)';
+          if (glowLeft) glowLeft.style.transform = 'translate3d(0, 0, 0)';
+          if (glowRight) glowRight.style.transform = 'translate3d(0, 0, 0)';
+        });
+      }
     })();
 
   </script>
