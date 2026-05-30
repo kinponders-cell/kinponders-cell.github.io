@@ -767,10 +767,10 @@
         </div>
         <ul class="spark-nav-links">
           <li><a href="javascript:void(0)" onclick="scrollToSection('#about')">About us</a></li>
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">📅 Schedule</a></li>
+          <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">📅 Schedule</a></li>
           <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">✨ Activities</a></li>
           <li><a href="javascript:void(0)" onclick="scrollToSection('#events')">📅 Upcoming Events</a></li>
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a></li>
+          <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a></li>
         </ul>
         <div class="spark-nav-btns">
           <button class="btn-nav-cta" onclick="toggleSidebar()">&#9776; Schedule</button>
@@ -778,8 +778,8 @@
       </nav>
     </div>
 
-    <!-- Hero Section -->
-    <header class="spark-hero">
+    <!-- Hero Section: Title Only -->
+    <header class="spark-hero spark-hero-title-only">
       <!-- Glowing Badge -->
       <div class="glowing-folder-badge" onclick="scrollToSection('#portals')">
         <div class="badge-icon">
@@ -795,43 +795,36 @@
         <span>Of Akshar Purushottam</span>
       </h1>
 
-      <!-- 3D Canvas Viewport Container -->
-      <div class="canvas-viewport-container" id="canvasContainer">
-        <div class="canvas-viewport-shadow"></div>
-        <div class="canvas-viewport" id="canvasViewport">
-          <!-- Glass Shine overlay -->
-          <div class="viewport-shine"></div>
-          
-          <!-- Hud Graphics -->
-          <div class="hud-layer">
-            <div class="hud-top">
-              <span class="hud-pill hud-pill-active">
-                <span class="active-dot"></span>
-                Interactive 3D Temple Model
-              </span>
-              <span class="hud-pill">FPS: 60 / WebGL</span>
-            </div>
-            <div class="hud-bottom">
-              <span class="hud-hint" id="scrolly-overlay-text">BAPS Temple Arusha</span>
-              <span class="hud-pill">Frame: <span id="hud-frame-num">001</span>/192</span>
-            </div>
-          </div>
-
-          <!-- The Canvas -->
-          <canvas id="scrolly-canvas"></canvas>
-
-          <!-- Loader -->
-          <div id="scrolly-loader">
-            <div class="spinner"></div>
-            <div class="loading-text">Loading 3D Temple Model...</div>
-          </div>
+      <!-- Scroll Prompt -->
+      <div class="scroll-down-prompt">
+        <div class="scroll-arrow-wrap">
+          <div class="scroll-arrow"></div>
         </div>
+        <span class="scroll-prompt-text">Scroll to explore the temple</span>
       </div>
     </header>
 
+    <!-- SCROLLYTELLING SECTION: Sticky canvas driven by scroll -->
+    <div class="scrolly-section-wrapper" id="scrollySectionWrapper">
+      <!-- Sticky canvas panel -->
+      <div class="scrolly-sticky-panel" id="scrollyStickyPanel">
+        <!-- Overlay text -->
+        <div class="scrolly-text-overlay" id="scrolly-overlay-text">BAPS Temple Arusha</div>
+        <!-- Progress bar -->
+        <div class="scrolly-progress-bar"><div class="scrolly-progress-fill" id="scrollyProgressFill"></div></div>
+        <!-- Canvas -->
+        <canvas id="scrolly-canvas"></canvas>
+        <!-- Loader -->
+        <div id="scrolly-loader">
+          <div class="spinner"></div>
+          <div class="loading-text">Loading Temple Sequence...</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Sub-sections (Editorial Layouts) -->
     <!-- About us / Introduction -->
-    <section class="editorial-section fade-in-section" id="about" style="margin-top: 180px;">
+    <section class="editorial-section fade-in-section" id="about" style="margin-top: 80px;">
       <span class="section-tag">Introduction</span>
       <h2 class="section-title">Where <span>Devotion</span><br>Meets Community</h2>
       <p style="font-family: var(--sans-font); font-size: 18px; line-height: 1.8; color: var(--text-muted); max-width: 800px; margin: 0 0 50px 0;">
@@ -3174,207 +3167,134 @@
       }
     });
 
-    // 3. Main 3D Canvas Interactive Engine
-    (function initSparkEngine() {
+    // 3. Scroll-Driven Temple Animation Engine
+    (function initScrollyEngine() {
       const canvas = document.getElementById('scrolly-canvas');
       const loader = document.getElementById('scrolly-loader');
-      const viewport = document.getElementById('canvasViewport');
-      const container = document.getElementById('canvasContainer');
-      const grid = document.getElementById('perspectiveGrid');
-      const hudFrameNum = document.getElementById('hud-frame-num');
+      const stickyPanel = document.getElementById('scrollyStickyPanel');
+      const wrapper = document.getElementById('scrollySectionWrapper');
       const overlayText = document.getElementById('scrolly-overlay-text');
-      
-      if (!canvas || !viewport) return;
+      const progressFill = document.getElementById('scrollyProgressFill');
+      const grid = document.getElementById('perspectiveGrid');
+
+      if (!canvas) return;
 
       const context = canvas.getContext('2d');
       const frameCount = 192;
       const images = [];
-      const state = {
-        currentFrame: 0,
-        isUserInteracting: false,
-        lastInteractionTime: 0
-      };
+      let currentFrame = 0;
 
-      // Handle canvas resizing within the glassmorphic viewport
+      // Fit canvas to fill the sticky panel
       function resizeCanvas() {
-        const rect = viewport.getBoundingClientRect();
-        // Scale coordinate system for crisp rendering on high-DPI displays
+        if (!stickyPanel) return;
         const dpi = window.devicePixelRatio || 1;
-        canvas.width = rect.width * dpi;
-        canvas.height = rect.height * dpi;
-        drawFrame();
+        canvas.width = stickyPanel.offsetWidth * dpi;
+        canvas.height = stickyPanel.offsetHeight * dpi;
+        drawFrame(currentFrame);
       }
       window.addEventListener('resize', resizeCanvas);
-      // Wait slightly for DOM to settle
       setTimeout(resizeCanvas, 100);
 
-      // Preload the 192 image sequence frames
-      let loadedCount = 0;
       const pad = (num, size) => {
         let s = num + "";
         while (s.length < size) s = "0" + s;
         return s;
       };
 
+      // Preload all 192 frames
+      let loadedCount = 0;
+      let allLoaded = false;
       for (let i = 0; i < frameCount; i++) {
         const img = new Image();
-        const fileName = pad(i + 1, 5) + ".jpg";
-        img.src = `assets/sequence/${fileName}`;
-
+        img.src = `assets/sequence/${pad(i + 1, 5)}.jpg`;
         img.onload = () => {
           loadedCount++;
           if (loadedCount === frameCount) {
-            // Hide the glass loader nicely
+            allLoaded = true;
             if (loader) {
               loader.style.opacity = 0;
               setTimeout(() => loader.style.display = 'none', 500);
             }
-            drawFrame();
-            startAmbientRotation();
+            resizeCanvas();
+            calcWrapperPosition(); // Re-calc after DOM fully settled with content
           }
         };
-        img.onerror = () => {
-          console.warn(`Failed loading: ${fileName}`);
-        };
+        img.onerror = () => { loadedCount++; };
         images.push(img);
       }
 
-      // Draw active frame with high-fidelity cover scaling
-      function drawFrame() {
-        const img = images[state.currentFrame];
-        if (!img || !img.complete) return;
-
-        const hRatio = canvas.width / img.width;
-        const vRatio = canvas.height / img.height;
-        // Use cover scaling to fill container beautifully
+      // Draw a specific frame number
+      function drawFrame(frameIndex) {
+        const img = images[frameIndex];
+        if (!img || !img.complete || !img.naturalWidth) return;
+        const hRatio = canvas.width / img.naturalWidth;
+        const vRatio = canvas.height / img.naturalHeight;
         const ratio = Math.max(hRatio, vRatio);
-
-        const xShift = (canvas.width - img.width * ratio) / 2;
-        const yShift = (canvas.height - img.height * ratio) / 2;
-
+        const xShift = (canvas.width - img.naturalWidth * ratio) / 2;
+        const yShift = (canvas.height - img.naturalHeight * ratio) / 2;
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img,
-          0, 0, img.width, img.height,
-          xShift, yShift, img.width * ratio, img.height * ratio
-        );
-        
-        // Update frame counter in HUD
-        if (hudFrameNum) {
-          hudFrameNum.textContent = pad(state.currentFrame + 1, 3);
-        }
+        context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
+          xShift, yShift, img.naturalWidth * ratio, img.naturalHeight * ratio);
+      }
 
-        // Dynamically update the premium BAPS scrolly overlays inside HUD
-        if (overlayText) {
-          const frame = state.currentFrame;
-          if (frame <= 28) {
-            overlayText.textContent = "BAPS Temple Arusha";
-          } else if (frame > 28 && frame <= 86) {
-            overlayText.textContent = "Grand Architecture — Built with devotion & precision";
-          } else if (frame > 86 && frame <= 150) {
-            overlayText.textContent = "Spiritual Harmony — A place of peace & reflection";
-          } else {
-            overlayText.textContent = "Welcome Home — Experience the divinity";
-          }
+      // Update overlay text based on frame
+      function updateOverlay(frame) {
+        if (!overlayText) return;
+        let txt = "BAPS Temple Arusha";
+        if (frame > 28 && frame <= 86)  txt = "Grand Architecture — Built with devotion & precision";
+        else if (frame > 86 && frame <= 150) txt = "Spiritual Harmony — A place of peace & reflection";
+        else if (frame > 150) txt = "Welcome Home — Experience the divinity";
+        if (overlayText.textContent !== txt) {
+          overlayText.style.opacity = 0;
+          setTimeout(() => { overlayText.textContent = txt; overlayText.style.opacity = 1; }, 250);
         }
       }
 
-      // 4. Scroll Scrub Integration
-      window.addEventListener('scroll', () => {
-        if (homeSection.style.display === 'none') return;
+      // Cache wrapper's absolute page position (recalculate on resize too)
+      let wrapperTop = 0;
+      let wrapperScrollRange = 0;
 
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const startScrub = 0;
-        const endScrub = 950; // Dynamic window scrub height
+      function calcWrapperPosition() {
+        if (!wrapper) return;
+        // Get the wrapper's absolute top offset from the page top
+        let el = wrapper;
+        let top = 0;
+        while (el) { top += el.offsetTop; el = el.offsetParent; }
+        wrapperTop = top;
+        wrapperScrollRange = wrapper.offsetHeight - window.innerHeight;
+      }
 
-        if (scrollTop <= endScrub) {
-          state.isUserInteracting = true;
-          state.lastInteractionTime = Date.now();
+      // Calculate once after DOM is ready and images trigger resize
+      setTimeout(calcWrapperPosition, 200);
+      window.addEventListener('resize', calcWrapperPosition);
 
-          const progress = Math.max(0, Math.min(1, scrollTop / endScrub));
-          const targetFrame = Math.min(
-            frameCount - 1,
-            Math.floor(progress * (frameCount - 1))
-          );
+      // Scroll handler — purely absolute scroll position based
+      function onScroll() {
+        if (!wrapper || homeSection.style.display === 'none') return;
 
-          if (targetFrame !== state.currentFrame) {
-            state.currentFrame = targetFrame;
-            requestAnimationFrame(drawFrame);
-          }
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        // How far we've scrolled INTO the wrapper (past its top)
+        const scrolledIntoWrapper = scrollY - wrapperTop;
+        const progress = Math.max(0, Math.min(1, scrolledIntoWrapper / wrapperScrollRange));
+
+        const targetFrame = Math.min(frameCount - 1, Math.floor(progress * (frameCount - 1)));
+
+        if (targetFrame !== currentFrame) {
+          currentFrame = targetFrame;
+          requestAnimationFrame(() => drawFrame(currentFrame));
+          updateOverlay(currentFrame);
         }
-      });
 
-      // 5. Ambient Rotation Engine (Slow breathing cycle when idle)
-      let ambientInterval = null;
-      function startAmbientRotation() {
-        if (ambientInterval) clearInterval(ambientInterval);
-        
-        ambientInterval = setInterval(() => {
-          if (homeSection.style.display === 'none') return;
-          
-          // Resume slow rotation if idle for more than 4 seconds
-          if (Date.now() - state.lastInteractionTime > 4000) {
-            state.isUserInteracting = false;
-            // Advance frame smoothly
-            state.currentFrame = (state.currentFrame + 1) % frameCount;
-            requestAnimationFrame(drawFrame);
-          }
-        }, 110);
+        // Update progress bar
+        if (progressFill) progressFill.style.width = (progress * 100) + '%';
+
+        // Subtle grid parallax
+        if (grid) {
+          grid.style.transform = `rotateX(75deg) translateY(${-progress * 40}px)`;
+        }
       }
 
-      // 6. Luxury Mouse Parallax tilt & light shifting
-      const hero = document.querySelector('.spark-hero');
-      const glowCenter = document.querySelector('.glow-center');
-      const glowLeft = document.querySelector('.glow-left');
-      const glowRight = document.querySelector('.glow-right');
-      const shadow = document.querySelector('.canvas-viewport-shadow');
-
-      if (hero) {
-        hero.addEventListener('mousemove', (e) => {
-          if (homeSection.style.display === 'none') return;
-          
-          state.lastInteractionTime = Date.now();
-          state.isUserInteracting = true;
-
-          // Calculate normalized mouse offsets (-1 to +1)
-          const rect = hero.getBoundingClientRect();
-          const mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-          const mouseY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-
-          // Tilt device viewport in 3D
-          viewport.style.transform = `perspective(1000px) rotateX(${-mouseY * 8}deg) rotateY(${mouseX * 8}deg) translate3d(${mouseX * 8}px, ${mouseY * 8}px, 0)`;
-          
-          // Slide viewport shadow
-          if (shadow) {
-            shadow.style.transform = `translateX(${mouseX * -16}px) scale(${1 + mouseY * 0.03})`;
-          }
-
-          // Move perspective background grid
-          if (grid) {
-            grid.style.transform = `rotateX(75deg) translate3d(${mouseX * -30}px, ${mouseY * -15}px, 0)`;
-          }
-
-          // Shift ambient volumetric glows to create deep parallax
-          if (glowCenter) {
-            glowCenter.style.transform = `translate(-50%, -50%) translate3d(${mouseX * 25}px, ${mouseY * 25}px, 0)`;
-          }
-          if (glowLeft) {
-            glowLeft.style.transform = `translate3d(${mouseX * -40}px, ${mouseY * -40}px, 0)`;
-          }
-          if (glowRight) {
-            glowRight.style.transform = `translate3d(${mouseX * 35}px, ${mouseY * 35}px, 0)`;
-          }
-        });
-
-        // Reset device position smoothly on mouse leave
-        hero.addEventListener('mouseleave', () => {
-          viewport.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
-          if (shadow) shadow.style.transform = 'translateX(0px) scale(1)';
-          if (grid) grid.style.transform = 'rotateX(75deg) translate3d(0, 0, 0)';
-          if (glowCenter) glowCenter.style.transform = 'translate(-50%, -50%) translate3d(0, 0, 0)';
-          if (glowLeft) glowLeft.style.transform = 'translate3d(0, 0, 0)';
-          if (glowRight) glowRight.style.transform = 'translate3d(0, 0, 0)';
-        });
-      }
+      window.addEventListener('scroll', onScroll, { passive: true });
     })();
 
   </script>
