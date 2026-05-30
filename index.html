@@ -766,10 +766,10 @@
           BAPS ARUSHA
         </div>
         <ul class="spark-nav-links">
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#about')">About us</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#about')"><span class="full-nav-text">About us</span><span class="mobile-nav-text">About</span></a></li>
           <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">📅 Schedule</a></li>
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')">✨ Activities</a></li>
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#events')">📅 Upcoming Events</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')"><span class="full-nav-text">✨ Activities</span><span class="mobile-nav-text">Activities</span></a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#events')"><span class="full-nav-text">📅 Upcoming Events</span><span class="mobile-nav-text">Events</span></a></li>
           <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a></li>
         </ul>
         <div class="spark-nav-btns">
@@ -1495,7 +1495,8 @@
       isSidebarOpen = !isSidebarOpen;
 
       if (isSidebarOpen) {
-        sidebar.style.right = '0';
+        // Use class toggle — avoids !important CSS conflicts on mobile
+        sidebar.classList.add('sidebar-open');
         overlay.style.opacity = '1';
         overlay.style.visibility = 'visible';
         // Prevent body scroll while sidebar is open
@@ -1518,7 +1519,7 @@
           hamburgerSpans[2].style.transform = 'translateY(-11px) rotate(-45deg)';
         }
       } else {
-        sidebar.style.right = '-360px';
+        sidebar.classList.remove('sidebar-open');
         overlay.style.opacity = '0';
         overlay.style.visibility = 'hidden';
         // Restore body scroll
