@@ -930,35 +930,33 @@ body.dark-mode .summary-content::before {
   }
 }
 
-/* Disable summary-card complex hover transforms, moving lines (::after), and shimmer effects (::before) on all mobile and tablet viewports */
+/* =====================================================
+   MOBILE / TABLET: Remove all summary-card animations,
+   moving lines, shimmer effects, hover transforms.
+   Cards must be FULLY VISIBLE immediately (opacity:0 in base style).
+   ===================================================== */
 @media (max-width: 1024px) {
-  .summary-card {
+
+  /* Force cards visible — base style starts at opacity:0 which blocks display */
+  .summary-card,
+  .summary-card:nth-child(1),
+  .summary-card:nth-child(2),
+  .summary-card:nth-child(3),
+  .summary-card:nth-child(4),
+  .summary-card:nth-child(5),
+  .summary-card:nth-child(6) {
     opacity: 1 !important;
+    visibility: visible !important;
+    animation: none !important;
+    animation-delay: 0s !important;
     transform: none !important;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
     transition: none !important;
-    animation: none !important;
     border: none !important;
-  }
-  .summary-card::after {
-    display: none !important;
-    content: none !important;
-    animation: none !important;
-    background: none !important;
-    opacity: 0 !important;
-  }
-  .summary-card::before {
-    display: none !important;
-    content: none !important;
-    animation: none !important;
-    background: none !important;
-    opacity: 0 !important;
-  }
-  .summary-card:hover {
-    transform: none !important;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
-    animation: none !important;
   }
+
+  /* Remove rotating border lines (::after) */
+  .summary-card::after,
   .summary-card:hover::after {
     display: none !important;
     content: none !important;
@@ -966,6 +964,9 @@ body.dark-mode .summary-content::before {
     background: none !important;
     opacity: 0 !important;
   }
+
+  /* Remove shimmer sweep (::before) */
+  .summary-card::before,
   .summary-card:hover::before {
     display: none !important;
     content: none !important;
@@ -973,19 +974,24 @@ body.dark-mode .summary-content::before {
     background: none !important;
     opacity: 0 !important;
   }
-  .summary-card img {
+
+  /* Remove hover lift/scale */
+  .summary-card:hover {
+    transform: none !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
+    animation: none !important;
+  }
+
+  /* Remove image zoom on hover */
+  .summary-card img,
+  .summary-card:hover img {
     transition: none !important;
     transform: none !important;
     animation: none !important;
   }
-  .summary-card:hover img {
-    transform: none !important;
-    transition: none !important;
-  }
-  .summary-card .summary-content::after {
-    display: none !important;
-    content: none !important;
-  }
+
+  /* Remove arrow badge in summary-content */
+  .summary-card .summary-content::after,
   .summary-card:hover .summary-content::after {
     display: none !important;
     content: none !important;
