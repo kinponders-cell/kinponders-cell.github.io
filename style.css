@@ -933,6 +933,7 @@ body.dark-mode .summary-content::before {
 /* Disable summary-card complex hover transforms, moving lines (::after), and shimmer effects (::before) on all mobile and tablet viewports */
 @media (max-width: 1024px) {
   .summary-card {
+    opacity: 1 !important;
     transform: none !important;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
     transition: none !important;
@@ -980,10 +981,6 @@ body.dark-mode .summary-content::before {
   .summary-card:hover img {
     transform: none !important;
     transition: none !important;
-  }
-  .summary-card .summary-content::before {
-    display: none !important;
-    content: none !important;
   }
   .summary-card .summary-content::after {
     display: none !important;
