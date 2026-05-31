@@ -3634,3 +3634,87 @@ body.dark-mode .page-subtitle {
   }
 }
 
+/* ==========================================================================
+   🔧 MOBILE VIEWS & PREMIUM STICKY SCHEDULE ALIGNMENTS
+   ========================================================================== */
+
+/* Dark Mode Hamburger Contrast Visibility Override */
+body.dark-mode #hamburgerBtn span {
+  background: var(--gold) !important;
+}
+
+/* Mobile responsive adjustments for sticky header & search bar */
+@media (max-width: 600px) {
+  /* Prevent logo & pageIndicator from pushing buttons off-screen */
+  .home-area {
+    max-width: calc(100% - 90px) !important;
+  }
+
+  .premium-page-indicator {
+    margin-left: 8px !important;
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 50px) !important;
+    display: inline-block !important;
+    vertical-align: middle;
+  }
+
+  .premium-page-indicator .indicator-sabha-name {
+    display: inline-block;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  /* Precise mobile sticky placement underneath the 66px mobile header */
+  #scheduleActionBar {
+    position: sticky !important;
+    top: 66px !important;
+    z-index: 45 !important;
+    padding: 8px 12px !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
+  }
+
+  /* Compact input bar styling */
+  #scheduleActionBar input {
+    width: 55% !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Compact PDF export button styling */
+  #scheduleActionBar button {
+    width: 40% !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+  }
+
+  #scheduleActionBar button img {
+    height: 18px !important;
+  }
+
+  /* Dynamically replace long label with a compact one on mobile */
+  #scheduleActionBar button .pdf-btn-text {
+    font-size: 0 !important;
+  }
+
+  #scheduleActionBar button .pdf-btn-text::after {
+    content: "PDF" !important;
+    font-size: 13px !important;
+  }
+}
+
+
