@@ -930,6 +930,43 @@ body.dark-mode .summary-content::before {
   }
 }
 
+/* Disable summary-card complex hover transforms, moving lines (::after), and shimmer effects (::before) on all mobile viewports */
+@media (max-width: 768px) {
+  .summary-card {
+    transform: none !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
+    transition: none !important;
+  }
+  .summary-card::after {
+    display: none !important;
+    content: none !important;
+  }
+  .summary-card::before {
+    display: none !important;
+    content: none !important;
+  }
+  .summary-card:hover {
+    transform: none !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
+  }
+  .summary-card img {
+    transition: none !important;
+    transform: none !important;
+  }
+  .summary-card:hover img {
+    transform: none !important;
+  }
+  .summary-card .summary-content::after {
+    display: none !important;
+    content: none !important;
+  }
+  .summary-card:hover .summary-content::after {
+    display: none !important;
+    content: none !important;
+  }
+}
+
+
 /* MOBILE FIXES */
 @media (max-width: 600px) {
   html {
