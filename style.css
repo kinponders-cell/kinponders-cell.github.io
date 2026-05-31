@@ -930,31 +930,60 @@ body.dark-mode .summary-content::before {
   }
 }
 
-/* Disable summary-card complex hover transforms, moving lines (::after), and shimmer effects (::before) on all mobile viewports */
-@media (max-width: 768px) {
+/* Disable summary-card complex hover transforms, moving lines (::after), and shimmer effects (::before) on all mobile and tablet viewports */
+@media (max-width: 1024px) {
   .summary-card {
     transform: none !important;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
     transition: none !important;
+    animation: none !important;
+    border: none !important;
   }
   .summary-card::after {
     display: none !important;
     content: none !important;
+    animation: none !important;
+    background: none !important;
+    opacity: 0 !important;
   }
   .summary-card::before {
     display: none !important;
     content: none !important;
+    animation: none !important;
+    background: none !important;
+    opacity: 0 !important;
   }
   .summary-card:hover {
     transform: none !important;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.10) !important;
+    animation: none !important;
+  }
+  .summary-card:hover::after {
+    display: none !important;
+    content: none !important;
+    animation: none !important;
+    background: none !important;
+    opacity: 0 !important;
+  }
+  .summary-card:hover::before {
+    display: none !important;
+    content: none !important;
+    animation: none !important;
+    background: none !important;
+    opacity: 0 !important;
   }
   .summary-card img {
     transition: none !important;
     transform: none !important;
+    animation: none !important;
   }
   .summary-card:hover img {
     transform: none !important;
+    transition: none !important;
+  }
+  .summary-card .summary-content::before {
+    display: none !important;
+    content: none !important;
   }
   .summary-card .summary-content::after {
     display: none !important;
@@ -965,6 +994,7 @@ body.dark-mode .summary-content::before {
     content: none !important;
   }
 }
+
 
 
 /* MOBILE FIXES */
