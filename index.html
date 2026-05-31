@@ -11,7 +11,9 @@
   <!-- Custom Fonts for premium editorial look -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -27,7 +29,7 @@
     // ==========================================
     // 🚀 PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
     // ==========================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbz5tdN_LE0CYtt5S3YbiEeWOOQsROuA9Yc48Ozgma2CD6HadDo41gxy0C-3R0bXYq3w/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycby_u0f6GK6l415h_xWv6St5ouHnf_ILT20LkYEZrW21_uMmy0eqAcYKLg2Uh9KvmAZO/exec";
 
     // State Variables
     let IS_ADMIN = false;
@@ -173,7 +175,8 @@
       style="padding:10px 16px; border-radius:999px; border:none; outline:none; font-size:14px; width:220px;">
     <button onclick="saveAsPDF()"
       style="background:#065f46; color:white; padding:10px 20px; border:none; border-radius:999px; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.25);">
-      <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4" style="height: 25px"><span class="pdf-btn-text">Download as PDF</span>
+      <img src="https://drive.google.com/thumbnail?id=1r3R249nRRfndRX87iEHItbWiiGjWRaO4" style="height: 25px"><span
+        class="pdf-btn-text">Download as PDF</span>
     </button>
   </div>
 
@@ -760,19 +763,26 @@
       <nav class="spark-navbar">
         <div class="spark-logo" onclick="showHome()">
           <div class="logo-icon-wrap">
-            <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" style="height: 24px; width: 24px;" alt="BAPS Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/4/4a/Baps_logo.svg" style="height: 24px; width: 24px;"
+              alt="BAPS Logo">
           </div>
           BAPS ARUSHA
         </div>
         <ul class="spark-nav-links">
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#about')"><span class="full-nav-text">About us</span><span class="mobile-nav-text">About</span></a></li>
-          <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">📅 Schedule</a></li>
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')"><span class="full-nav-text">✨ Activities</span><span class="mobile-nav-text">Activities</span></a></li>
-          <li><a href="javascript:void(0)" onclick="scrollToSection('#events')"><span class="full-nav-text">📅 Upcoming Events</span><span class="mobile-nav-text">Events</span></a></li>
-          <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#about')"><span class="full-nav-text">About
+                us</span><span class="mobile-nav-text">About</span></a></li>
+          <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">📅 Schedule</a>
+          </li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#portals')"><span class="full-nav-text">✨
+                Activities</span><span class="mobile-nav-text">Activities</span></a></li>
+          <li><a href="javascript:void(0)" onclick="scrollToSection('#events')"><span class="full-nav-text">📅 Upcoming
+                Events</span><span class="mobile-nav-text">Events</span></a></li>
+          <li class="hide-mobile-nav"><a href="javascript:void(0)" onclick="scrollToSection('#portals')">🤝 Sampark</a>
+          </li>
         </ul>
         <div class="spark-nav-btns">
-          <button class="btn-nav-cta" onclick="toggleSidebar()">&#9776;<span class="btn-nav-cta-label"> Schedule</span></button>
+          <button class="btn-nav-cta" onclick="toggleSidebar()">&#9776;<span class="btn-nav-cta-label">
+              Schedule</span></button>
         </div>
       </nav>
     </div>
@@ -783,7 +793,10 @@
       <div class="glowing-folder-badge" onclick="scrollToSection('#portals')">
         <div class="badge-icon">
           <div class="badge-pulse"></div>
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+          </svg>
         </div>
         <span class="badge-text">Arusha Satsang Mandal Active</span>
       </div>
@@ -810,7 +823,9 @@
         <!-- Overlay text -->
         <div class="scrolly-text-overlay" id="scrolly-overlay-text">BAPS Temple Arusha</div>
         <!-- Progress bar -->
-        <div class="scrolly-progress-bar"><div class="scrolly-progress-fill" id="scrollyProgressFill"></div></div>
+        <div class="scrolly-progress-bar">
+          <div class="scrolly-progress-fill" id="scrollyProgressFill"></div>
+        </div>
         <!-- Canvas -->
         <canvas id="scrolly-canvas"></canvas>
         <!-- Loader -->
@@ -826,10 +841,13 @@
     <section class="editorial-section fade-in-section" id="about" style="margin-top: 80px;">
       <span class="section-tag">Introduction</span>
       <h2 class="section-title">Where <span>Devotion</span><br>Meets Community</h2>
-      <p style="font-family: var(--sans-font); font-size: 18px; line-height: 1.8; color: var(--text-muted); max-width: 800px; margin: 0 0 50px 0;">
-        Welcome to the Arusha Satsang Mandal website. Under the guidance of Pujya Mahant Swami Maharaj, BAPS Shri Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple. We believe in living a life of devotion, service, and self-improvement, fostering spiritual harmony and ethical conduct.
+      <p
+        style="font-family: var(--sans-font); font-size: 18px; line-height: 1.8; color: var(--text-muted); max-width: 800px; margin: 0 0 50px 0;">
+        Welcome to the Arusha Satsang Mandal website. Under the guidance of Pujya Mahant Swami Maharaj, BAPS Shri
+        Swaminarayan Mandir in Arusha, Tanzania is a stunning Hindu temple. We believe in living a life of devotion,
+        service, and self-improvement, fostering spiritual harmony and ethical conduct.
       </p>
-      
+
       <!-- Info Cards (restored from original index.html but beautifully styled with images) -->
       <div class="features-editorial-grid">
         <div class="feature-editorial-card card-with-img">
@@ -837,21 +855,27 @@
             <img src="https://drive.google.com/thumbnail?id=10ZU3rVQiVam2Q_zsmqY4h0PkC7g1UaNX" alt="BAPS Temple Arusha">
           </div>
           <h3 class="feature-title">BAPS Temple Arusha</h3>
-          <p class="feature-desc">A stunning Hindu temple built with intricate carvings, peaceful atmosphere, and a variety of facilities, providing a unique, spiritually enriching experience.</p>
+          <p class="feature-desc">A stunning Hindu temple built with intricate carvings, peaceful atmosphere, and a
+            variety of facilities, providing a unique, spiritually enriching experience.</p>
         </div>
         <div class="feature-editorial-card card-with-img">
           <div class="card-img-wrap">
-            <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg" alt="Nilkanth Varni">
+            <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/5462/WebImages/pratishtha05f.jpg"
+              alt="Nilkanth Varni">
           </div>
           <h3 class="feature-title">Nilkanth Varni</h3>
-          <p class="feature-desc">Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement. Let us embody his virtues of compassion, kindness, and humility.</p>
+          <p class="feature-desc">Nilkanth Varni inspired us to live a life of devotion, service, and self-improvement.
+            Let us embody his virtues of compassion, kindness, and humility.</p>
         </div>
         <div class="feature-editorial-card card-with-img">
           <div class="card-img-wrap">
-            <img src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg" alt="Akshar Purushottam Darshan">
+            <img
+              src="https://www.baps.org/Data/Sites/1/Media/GalleryImages/25999/WebImages/BAPS_Diwali_Annakut_Celebration_Arusha_09.jpg"
+              alt="Akshar Purushottam Darshan">
           </div>
           <h3 class="feature-title">Akshar Purushottam Darshan</h3>
-          <p class="feature-desc">A Hindu philosophy that emphasizes devotion to God, ethical conduct, and pursuit of self-realization, unlocking transformative power in daily life.</p>
+          <p class="feature-desc">A Hindu philosophy that emphasizes devotion to God, ethical conduct, and pursuit of
+            self-realization, unlocking transformative power in daily life.</p>
         </div>
       </div>
     </section>
@@ -860,7 +884,7 @@
     <section class="editorial-section fade-in-section" id="events">
       <span class="section-tag">Satsang Calendar</span>
       <h2 class="section-title">Upcoming <span>Gatherings & Sabhas</span></h2>
-      
+
       <!-- We preserve the original dynamically injected container here -->
       <div class="summary-wrapper" id="summaryContainer" style="padding-top: 10px;">
         <!-- Injected via JS -->
@@ -874,24 +898,36 @@
       <div class="features-editorial-grid">
         <div class="feature-editorial-card">
           <div class="feature-icon-box">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z" />
+            </svg>
           </div>
           <h3 class="feature-title">Ravi Sabha</h3>
-          <p class="feature-desc">Weekly assembly for adults to engage in satsang, listen to spiritual discourses, sing devotional kirtans, and perform community service.</p>
+          <p class="feature-desc">Weekly assembly for adults to engage in satsang, listen to spiritual discourses, sing
+            devotional kirtans, and perform community service.</p>
         </div>
         <div class="feature-editorial-card">
           <div class="feature-icon-box">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
           </div>
           <h3 class="feature-title">Yuvak Sabha</h3>
-          <p class="feature-desc">Balance professional, educational, and spiritual life with targeted guidance, moral values, and community projects tailored for modern youth.</p>
+          <p class="feature-desc">Balance professional, educational, and spiritual life with targeted guidance, moral
+            values, and community projects tailored for modern youth.</p>
         </div>
         <div class="feature-editorial-card">
           <div class="feature-icon-box">
-            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-3.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-3.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z" />
+            </svg>
           </div>
           <h3 class="feature-title">Yuvati / Bal Sabha</h3>
-          <p class="feature-desc">Assemblies for children and young women to build leadership, learn cultural traditions, and foster mutual friendship in a supportive environment.</p>
+          <p class="feature-desc">Assemblies for children and young women to build leadership, learn cultural
+            traditions, and foster mutual friendship in a supportive environment.</p>
         </div>
       </div>
     </section>
@@ -909,9 +945,15 @@
             <p class="price-desc">View weekly duties, download reports, and filter schedules dynamically.</p>
           </div>
           <ul class="price-features">
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Live Schedule Lists</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Download as PDF Reports</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Multi-Column Filter</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Live Schedule Lists</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Download as PDF Reports</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Multi-Column Filter</li>
           </ul>
           <button class="btn-price-buy" onclick="toggleSidebar()">View Schedule</button>
         </div>
@@ -921,13 +963,22 @@
           <div class="price-header">
             <div class="price-tier">Activities Portal</div>
             <div class="price-amount">Sabhas<span>/Assemblies</span></div>
-            <p class="price-desc">Explore BAPS assemblies tailored for all ages, promoting spiritual harmony and moral education.</p>
+            <p class="price-desc">Explore BAPS assemblies tailored for all ages, promoting spiritual harmony and moral
+              education.</p>
           </div>
           <ul class="price-features">
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Weekly Adult Ravi Sabha</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Dynamic Youth Yuvak Assemblies</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Customized Moral Bal Sabhas</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Interactive Dynamic Photos</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Weekly Adult Ravi Sabha</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Dynamic Youth Yuvak Assemblies</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Customized Moral Bal Sabhas</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Interactive Dynamic Photos</li>
           </ul>
           <button class="btn-price-buy" onclick="openActivities()">Open Activities</button>
         </div>
@@ -939,9 +990,15 @@
             <p class="price-desc">Comprehensive database tracking home visits, calls, and duplicate records.</p>
           </div>
           <ul class="price-features">
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Log Visits, Calls & WhatsApp</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Clean Karyakar Filters</li>
-            <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Address & Remark Auditing</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Log Visits, Calls & WhatsApp</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Clean Karyakar Filters</li>
+            <li><svg viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg> Address & Remark Auditing</li>
           </ul>
           <button class="btn-price-buy" onclick="openSampark()">Access Sampark</button>
         </div>
@@ -956,28 +1013,39 @@
         <div class="faq-editorial-item">
           <button class="faq-editorial-trigger" onclick="toggleFaq(this)">
             <h4 class="faq-question">What is BAPS Ravi Sabha Arusha?</h4>
-            <svg class="faq-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
           </button>
           <div class="faq-editorial-content">
-            <p class="faq-answer">It is the weekly spiritual assembly of the Swaminarayan Hindu community in Arusha, Tanzania, under the spiritual guidance of Pujya Mahant Swami Maharaj. We engage in spiritual discourses, devotional singing, and moral education.</p>
+            <p class="faq-answer">It is the weekly spiritual assembly of the Swaminarayan Hindu community in Arusha,
+              Tanzania, under the spiritual guidance of Pujya Mahant Swami Maharaj. We engage in spiritual discourses,
+              devotional singing, and moral education.</p>
           </div>
         </div>
         <div class="faq-editorial-item">
           <button class="faq-editorial-trigger" onclick="toggleFaq(this)">
             <h4 class="faq-question">How can I join the volunteer program?</h4>
-            <svg class="faq-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
           </button>
           <div class="faq-editorial-content">
-            <p class="faq-answer">Every active karyakar is assigned weekly duties (Pravachan, Emcee, Kirtan, Aarti, Dhun). You can view assigned duties by opening the Schedule section. Admin password is required to log or alter schedule databases.</p>
+            <p class="faq-answer">Every active karyakar is assigned weekly duties (Pravachan, Emcee, Kirtan, Aarti,
+              Dhun). You can view assigned duties by opening the Schedule section. Admin password is required to log or
+              alter schedule databases.</p>
           </div>
         </div>
         <div class="faq-editorial-item">
           <button class="faq-editorial-trigger" onclick="toggleFaq(this)">
             <h4 class="faq-question">Is the attendance dashboard secure?</h4>
-            <svg class="faq-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            <svg class="faq-chevron" viewBox="0 0 24 24">
+              <path d="M7 10l5 5 5-5z" />
+            </svg>
           </button>
           <div class="faq-editorial-content">
-            <p class="faq-answer">Yes, access to the Attendance Entry form, Announcements board, and Sampark database is secured by designated passwords to ensure privacy and security of community volunteer records.</p>
+            <p class="faq-answer">Yes, access to the Attendance Entry form, Announcements board, and Sampark database is
+              secured by designated passwords to ensure privacy and security of community volunteer records.</p>
           </div>
         </div>
       </div>
@@ -991,18 +1059,25 @@
         <div class="contact-editorial-info">
           <div>
             <h3>Experience the peace<br>and spiritual harmony.</h3>
-            <p>Our volunteer and satsang administrative teams are available to provide support, answer questions, and welcome you to our weekly sabhas.</p>
+            <p>Our volunteer and satsang administrative teams are available to provide support, answer questions, and
+              welcome you to our weekly sabhas.</p>
           </div>
           <ul class="contact-meta-list">
             <li class="contact-meta-item">
-              <div class="contact-meta-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+              <div class="contact-meta-icon"><svg viewBox="0 0 24 24">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg></div>
               <div>
                 <div class="contact-meta-label">Email us</div>
                 <div class="contact-meta-value">kinpatel1983@gmail.com</div>
               </div>
             </li>
             <li class="contact-meta-item">
-              <div class="contact-meta-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+              <div class="contact-meta-icon"><svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg></div>
               <div>
                 <div class="contact-meta-label">Mandir Address</div>
                 <div class="contact-meta-value">BAPS Swaminarayan Mandir, Arusha, Tanzania</div>
@@ -1010,7 +1085,8 @@
             </li>
           </ul>
         </div>
-        <form class="contact-editorial-form" onsubmit="event.preventDefault(); alert('Jai Swaminarayan! Your inquiry has been sent to the Arusha Satsang Mandal team.');">
+        <form class="contact-editorial-form"
+          onsubmit="event.preventDefault(); alert('Jai Swaminarayan! Your inquiry has been sent to the Arusha Satsang Mandal team.');">
           <div class="form-group-row">
             <div class="form-group">
               <label class="form-label">Full Name</label>
@@ -1027,7 +1103,8 @@
           </div>
           <div class="form-group">
             <label class="form-label">Your Message</label>
-            <textarea class="form-input" placeholder="Describe your question or volunteer request..." required></textarea>
+            <textarea class="form-input" placeholder="Describe your question or volunteer request..."
+              required></textarea>
           </div>
           <button type="submit" class="btn-form-submit">Send Inquiry</button>
         </form>
@@ -1684,7 +1761,7 @@
       // Ensure specific elements are reset if needed
       document.getElementById("scheduleActionBar").classList.remove("show");
       document.getElementById("scheduleActionBar").style.display = "none";
-      
+
       // Restore the legacy topbar for database pages
       const tb = document.querySelector('.topbar');
       if (tb) tb.style.display = 'flex';
@@ -3160,26 +3237,26 @@
     // =========================================
     // 🎞️ SPARKSCRIBE PREMIUM INTERACTIVE ENGINE
     // =========================================
-    
+
     // 1. FAQ Accordion Toggle
     function toggleFaq(btn) {
       const item = btn.parentElement;
       const isActive = item.classList.contains('faq-editorial-item-active');
-      
+
       // Close all other FAQ items first for premium feel
       document.querySelectorAll('.faq-editorial-item').forEach(el => {
         el.classList.remove('faq-editorial-item-active');
       });
-      
+
       if (!isActive) {
         item.classList.add('faq-editorial-item-active');
       }
     }
-    
+
     // 2. Editorial Section Scroll-Triggered Fade-ins
     document.addEventListener("DOMContentLoaded", () => {
       const fadeSections = document.querySelectorAll(".fade-in-section");
-      
+
       if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -3191,7 +3268,7 @@
           threshold: 0.1,
           rootMargin: "0px 0px -50px 0px"
         });
-        
+
         fadeSections.forEach(section => {
           observer.observe(section);
         });
@@ -3275,7 +3352,7 @@
       function updateOverlay(frame) {
         if (!overlayText) return;
         let txt = "BAPS Temple Arusha";
-        if (frame > 28 && frame <= 86)  txt = "Grand Architecture — Built with devotion & precision";
+        if (frame > 28 && frame <= 86) txt = "Grand Architecture — Built with devotion & precision";
         else if (frame > 86 && frame <= 150) txt = "Spiritual Harmony — A place of peace & reflection";
         else if (frame > 150) txt = "Welcome Home — Experience the divinity";
         if (overlayText.textContent !== txt) {
@@ -3331,6 +3408,901 @@
       window.addEventListener('scroll', onScroll, { passive: true });
     })();
 
+  </script>
+
+  <!-- ============================================================ -->
+  <!-- ADMIN EMAIL NOTIFICATION MODAL -->
+  <!-- ============================================================ -->
+
+  <!-- Floating Admin Trigger Button -->
+  <button id="adminEmailTriggerBtn" onclick="openAdminEmailLock()" title="Admin Panel" style="
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 8000;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(49,46,129,0.5), 0 0 0 0 rgba(99,102,241,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: adminPulse 3s infinite;
+    "
+    onmouseover="this.style.transform='scale(1.12)'; this.style.boxShadow='0 12px 40px rgba(49,46,129,0.7), 0 0 0 8px rgba(99,102,241,0.15)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 30px rgba(49,46,129,0.5), 0 0 0 0 rgba(99,102,241,0.4)';">
+    ✉️
+  </button>
+
+  <style>
+    @keyframes adminPulse {
+      0% {
+        box-shadow: 0 8px 30px rgba(49, 46, 129, 0.5), 0 0 0 0 rgba(99, 102, 241, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 8px 30px rgba(49, 46, 129, 0.5), 0 0 0 14px rgba(99, 102, 241, 0);
+      }
+
+      100% {
+        box-shadow: 0 8px 30px rgba(49, 46, 129, 0.5), 0 0 0 0 rgba(99, 102, 241, 0);
+      }
+    }
+
+    /* ---- OVERLAY ---- */
+    #adminEmailOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(10, 8, 28, 0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      animation: fadeInOverlay 0.35s ease;
+    }
+
+    @keyframes fadeInOverlay {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* ---- MODAL PANEL ---- */
+    #adminEmailModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.88);
+      z-index: 9100;
+      width: min(92vw, 580px);
+      max-height: 92vh;
+      overflow-y: auto;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 28px;
+      padding: 36px 32px 32px;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 32px 80px rgba(0, 0, 0, 0.6),
+        0 0 120px rgba(99, 102, 241, 0.15);
+      display: none;
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(99, 102, 241, 0.4) transparent;
+    }
+
+    #adminEmailModal.modal-open {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #adminEmailModal::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    #adminEmailModal::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #adminEmailModal::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.4);
+      border-radius: 4px;
+    }
+
+    /* ---- MODAL PARTS ---- */
+    .aem-noise {
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .aem-glow {
+      position: absolute;
+      top: -80px;
+      right: -60px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    .aem-glow2 {
+      position: absolute;
+      bottom: -60px;
+      left: -40px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.15), transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    .aem-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .aem-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .aem-title span.aem-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .aem-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.7);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .aem-close:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fff;
+      transform: rotate(90deg);
+    }
+
+    /* ---- LOCK SCREEN ---- */
+    #aemLockScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0 8px;
+      position: relative;
+    }
+
+    .aem-lock-icon {
+      font-size: 52px;
+      animation: lockBounce 2.5s infinite ease-in-out;
+    }
+
+    @keyframes lockBounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    .aem-lock-label {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 14px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .aem-pass-wrap {
+      width: 100%;
+      position: relative;
+    }
+
+    .aem-pass-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 15px 20px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      outline: none;
+      letter-spacing: 3px;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .aem-pass-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+
+    .aem-pass-input:focus {
+      border-color: rgba(99, 102, 241, 0.7);
+      background: rgba(99, 102, 241, 0.1);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    }
+
+    .aem-btn-primary {
+      width: 100%;
+      padding: 15px 24px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .aem-btn-primary:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(99, 102, 241, 0.55);
+    }
+
+    .aem-btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .aem-btn-send {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      letter-spacing: 0.2px;
+      margin-top: 18px;
+    }
+
+    .aem-btn-send:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(245, 158, 11, 0.55);
+    }
+
+    .aem-btn-send:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .aem-error-msg {
+      color: #f87171;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      min-height: 18px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ---- PANEL SCREEN ---- */
+    #aemPanel {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+
+    .aem-section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 6px;
+    }
+
+    .aem-date-selector {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='rgba(255,255,255,0.5)' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 7l4.5 4.5L14.5 7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 20px;
+    }
+
+    .aem-date-selector:focus {
+      border-color: rgba(99, 102, 241, 0.7);
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+
+    .aem-date-selector option {
+      background: #1e1b4b;
+      color: #fff;
+    }
+
+    /* ---- VOLUNTEER CARDS ---- */
+    #aemVolunteerList {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
+    }
+
+    #aemVolunteerList::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #aemVolunteerList::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.3);
+      border-radius: 4px;
+    }
+
+    .aem-vol-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: all 0.25s ease;
+      animation: slideUpCard 0.4s ease both;
+    }
+
+    .aem-vol-card:hover {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    @keyframes slideUpCard {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .aem-vol-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      color: white;
+      font-weight: 700;
+    }
+
+    .aem-vol-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .aem-vol-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .aem-vol-duty {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.25));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+
+    .aem-vol-time {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .aem-vol-email {
+      font-size: 12px;
+      color: rgba(99, 102, 241, 0.9);
+      font-family: 'Inter', sans-serif;
+      margin-top: 3px;
+      word-break: break-all;
+    }
+
+    .aem-vol-desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      font-family: 'Inter', sans-serif;
+      margin-top: 3px;
+    }
+
+    .aem-no-email-badge {
+      font-size: 11px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      margin-top: 3px;
+      display: inline-block;
+    }
+
+    .aem-email-count {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .aem-email-count-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .aem-email-count-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #a5b4fc;
+    }
+
+    .aem-status-msg {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      padding: 12px;
+      border-radius: 12px;
+      min-height: 20px;
+    }
+
+    .aem-status-msg.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+
+    .aem-status-msg.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+
+    .aem-status-msg.loading {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #a5b4fc;
+    }
+
+    .aem-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    .aem-site-link-box {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .aem-site-link-box a {
+      color: #a5b4fc;
+      font-weight: 600;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .aem-site-link-box a:hover {
+      text-decoration: underline;
+    }
+
+    .aem-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+
+  <!-- Overlay backdrop -->
+  <div id="adminEmailOverlay" onclick="closeAdminEmailModal()"></div>
+
+  <!-- Modal -->
+  <div id="adminEmailModal">
+    <div class="aem-noise"></div>
+    <div class="aem-glow"></div>
+    <div class="aem-glow2"></div>
+
+    <!-- Header -->
+    <div class="aem-header">
+      <div class="aem-title">
+        ✉️ Admin Panel
+        <span class="aem-badge">Duty Emails</span>
+      </div>
+      <button class="aem-close" onclick="closeAdminEmailModal()">✕</button>
+    </div>
+
+    <!-- LOCK SCREEN -->
+    <div id="aemLockScreen">
+      <div class="aem-lock-icon">🔐</div>
+      <p class="aem-lock-label">Enter admin password to access the<br>Volunteer Duty Email Notification panel.</p>
+      <div class="aem-pass-wrap">
+        <input type="password" id="aemPasswordInput" class="aem-pass-input" placeholder="Enter password"
+          onkeydown="if(event.key==='Enter') unlockAdminEmailModal()" />
+      </div>
+      <div id="aemPassError" class="aem-error-msg"></div>
+      <button class="aem-btn-primary" onclick="unlockAdminEmailModal()">
+        🔓 Unlock Admin Panel
+      </button>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div id="aemPanel">
+
+      <!-- Date Selection -->
+      <div>
+        <div class="aem-section-label">📅 Select Sabha Date</div>
+        <select id="aemDateSelect" class="aem-date-selector" onchange="aemLoadVolunteers()">
+          <option value="">-- Choose a date --</option>
+        </select>
+      </div>
+
+      <!-- Summary bar -->
+      <div id="aemSummaryBar" style="display:none;">
+        <div class="aem-email-count">
+          <span class="aem-email-count-label">📨 Volunteers with email</span>
+          <span class="aem-email-count-num" id="aemEmailCount">0</span>
+        </div>
+      </div>
+
+      <!-- Volunteer cards -->
+      <div id="aemVolunteerSection" style="display:none;">
+        <div class="aem-section-label">👥 Assigned Volunteers</div>
+        <div id="aemVolunteerList"></div>
+      </div>
+
+      <div class="aem-divider"></div>
+
+      <!-- Site link note -->
+      <div class="aem-site-link-box">
+        🔗 Website link included in emails: <a href="https://kinponders-cell.github.io"
+          target="_blank">https://kinponders-cell.github.io</a>
+      </div>
+
+      <!-- Status -->
+      <div id="aemStatusMsg" class="aem-status-msg" style="display:none;"></div>
+
+      <!-- Send Button -->
+      <button id="aemSendBtn" class="aem-btn-send" onclick="aemSendEmails()" disabled>
+        🚀 Send Duty Emails to All Volunteers
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // =============================================
+    // ADMIN EMAIL MODAL — LOGIC
+    // =============================================
+    const ADMIN_EMAIL_PASSWORD = "dollkin2627";
+    const SITE_URL = "https://kinponders-cell.github.io";
+    let aemUnlocked = false;
+
+    function openAdminEmailLock() {
+      const overlay = document.getElementById('adminEmailOverlay');
+      const modal = document.getElementById('adminEmailModal');
+      overlay.style.display = 'block';
+      modal.style.display = 'block';
+      // Reset state
+      document.getElementById('aemLockScreen').style.display = 'flex';
+      document.getElementById('aemPanel').style.display = 'none';
+      document.getElementById('aemPasswordInput').value = '';
+      document.getElementById('aemPassError').textContent = '';
+      // Animate in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          modal.classList.add('modal-open');
+        });
+      });
+      setTimeout(() => document.getElementById('aemPasswordInput').focus(), 400);
+    }
+
+    function closeAdminEmailModal() {
+      const overlay = document.getElementById('adminEmailOverlay');
+      const modal = document.getElementById('adminEmailModal');
+      modal.classList.remove('modal-open');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+      }, 400);
+    }
+
+    function unlockAdminEmailModal() {
+      const input = document.getElementById('aemPasswordInput');
+      const errEl = document.getElementById('aemPassError');
+      if (input.value === ADMIN_EMAIL_PASSWORD) {
+        aemUnlocked = true;
+        document.getElementById('aemLockScreen').style.display = 'none';
+        const panel = document.getElementById('aemPanel');
+        panel.style.display = 'flex';
+        // Populate dates from loaded data
+        aemPopulateDates();
+      } else {
+        errEl.textContent = '❌ Incorrect password. Please try again.';
+        input.value = '';
+        input.style.borderColor = 'rgba(239,68,68,0.6)';
+        setTimeout(() => { input.style.borderColor = ''; }, 1500);
+      }
+    }
+
+    function aemPopulateDates() {
+      const sel = document.getElementById('aemDateSelect');
+      sel.innerHTML = '<option value="">-- Choose a date --</option>';
+      if (!dates || !dates.length) {
+        sel.innerHTML += '<option disabled>No dates loaded yet</option>';
+        return;
+      }
+      // Show ALL dates (including past) for admin
+      // We use the global `rows` which has all schedule data
+      const allDates = [];
+      if (rows && rows.length) {
+        rows.forEach(r => {
+          if (!allDates.find(d => d.key === r.key)) {
+            allDates.push({ key: r.key, label: r.key });
+          }
+        });
+      } else if (dates && dates.length) {
+        dates.forEach(d => allDates.push(d));
+      }
+      // Sort by date descending (most recent first)
+      allDates.sort((a, b) => b.key.localeCompare(a.key));
+      allDates.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.key;
+        // Format label nicely
+        const [y, m, dd] = d.key.split('-');
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        opt.textContent = `${dd} ${months[parseInt(m) - 1]} ${y}`;
+        sel.appendChild(opt);
+      });
+    }
+
+    function aemGetDutyEmoji(task) {
+      if (!task) return '📋';
+      const t = task.toLowerCase();
+      if (t.includes('dhun')) return '🎵';
+      if (t.includes('kirtan')) return '🎶';
+      if (t.includes('prathna') || t.includes('prarthana')) return '🙏';
+      if (t.includes('pravchan') || t.includes('pravachan') || t.includes('speech')) return '🎤';
+      if (t.includes('aarti')) return '🪔';
+      if (t.includes('emcee')) return '🎙️';
+      return '📋';
+    }
+
+    function aemLoadVolunteers() {
+      const sel = document.getElementById('aemDateSelect');
+      const selectedKey = sel.value;
+      const listEl = document.getElementById('aemVolunteerList');
+      const sectionEl = document.getElementById('aemVolunteerSection');
+      const summaryEl = document.getElementById('aemSummaryBar');
+      const sendBtn = document.getElementById('aemSendBtn');
+      const statusEl = document.getElementById('aemStatusMsg');
+
+      // Reset
+      listEl.innerHTML = '';
+      sectionEl.style.display = 'none';
+      summaryEl.style.display = 'none';
+      sendBtn.disabled = true;
+      statusEl.style.display = 'none';
+
+      if (!selectedKey) return;
+
+      // Filter rows for the selected date
+      const dayRows = (rows || []).filter(r => r.key === selectedKey);
+
+      if (!dayRows.length) {
+        listEl.innerHTML = '<p style="color:rgba(255,255,255,0.4); text-align:center; font-family:Inter,sans-serif;">No volunteers assigned for this date.</p>';
+        sectionEl.style.display = 'block';
+        return;
+      }
+
+      let emailCount = 0;
+      dayRows.forEach((v, idx) => {
+        const hasEmail = v.email && v.email.trim();
+        if (hasEmail) emailCount++;
+        const initial = (v.name || '?').charAt(0).toUpperCase();
+        const emoji = aemGetDutyEmoji(v.task);
+        const card = document.createElement('div');
+        card.className = 'aem-vol-card';
+        card.style.animationDelay = (idx * 0.07) + 's';
+        card.innerHTML = `
+          <div class="aem-vol-avatar">${initial}</div>
+          <div class="aem-vol-info">
+            <div class="aem-vol-name">${v.name || 'Unknown'}</div>
+            <div class="aem-vol-duty">${emoji} ${v.task || 'Duty'}</div>
+            <div class="aem-vol-time">⏰ ${v.time || 'Time TBD'}</div>
+            ${v.details ? `<div class="aem-vol-desc">📝 ${v.details}</div>` : ''}
+            ${hasEmail
+            ? `<div class="aem-vol-email">📧 ${v.email}</div>`
+            : `<div class="aem-no-email-badge">⚠️ No email on record</div>`
+          }
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+
+      document.getElementById('aemEmailCount').textContent = emailCount;
+      summaryEl.style.display = 'block';
+      sectionEl.style.display = 'block';
+      sendBtn.disabled = (emailCount === 0);
+    }
+
+    async function aemSendEmails() {
+      const sel = document.getElementById('aemDateSelect');
+      const selectedKey = sel.value;
+      if (!selectedKey) return;
+
+      const dayRows = (rows || []).filter(r => r.key === selectedKey);
+      const withEmail = dayRows.filter(r => r.email && r.email.trim());
+      if (!withEmail.length) return;
+
+      const sendBtn = document.getElementById('aemSendBtn');
+      const statusEl = document.getElementById('aemStatusMsg');
+
+      sendBtn.disabled = true;
+      sendBtn.innerHTML = '<span class="aem-spinner"></span> Sending emails...';
+      statusEl.className = 'aem-status-msg loading';
+      statusEl.style.display = 'block';
+      statusEl.textContent = '⏳ Connecting to server...';
+
+      // Format the date nicely for the email
+      const [y, m, d] = selectedKey.split('-');
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const formattedDate = `${d} ${months[parseInt(m) - 1]} ${y}`;
+
+      try {
+        const payload = {
+          action: "sendDutyEmails",
+          password: ADMIN_EMAIL_PASSWORD,
+          date: selectedKey,
+          formattedDate: formattedDate,
+          siteUrl: SITE_URL,
+          volunteers: withEmail.map(v => ({
+            name: v.name,
+            task: v.task,
+            time: v.time,
+            details: v.details,
+            email: v.email
+          }))
+        };
+
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          statusEl.className = 'aem-status-msg success';
+          statusEl.textContent = `✅ Emails sent successfully to ${withEmail.length} volunteer(s)!`;
+        } else {
+          throw new Error(data.error || 'Failed to send emails');
+        }
+      } catch (err) {
+        statusEl.className = 'aem-status-msg error';
+        statusEl.textContent = '❌ Error: ' + err.message;
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '🚀 Send Duty Emails to All Volunteers';
+      }
+    }
   </script>
 
 </body>
