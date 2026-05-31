@@ -3134,6 +3134,13 @@
     }
 
     function autoScrollSummary(wrapper) {
+      // Disable auto-scroll on touch-capable devices or mobile viewports to prevent jerky motion, scrolling conflicts, and flickering
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isMobileViewport = window.innerWidth <= 768;
+      if (isTouchDevice || isMobileViewport) {
+        return;
+      }
+
       let scrollSpeed = 0.5;
       let direction = 1;
       let isPaused = false;
